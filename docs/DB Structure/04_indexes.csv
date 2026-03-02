@@ -1,0 +1,1581 @@
+SchemaName,TableName,IndexName,IndexType,is_unique,is_primary_key,IndexColumns
+dbo,ap1099,PK__ap1099__B9AB22767F60ED59,CLUSTERED,1,1,"cvendno, cyear"
+dbo,ap99up,PK__ap99up__B9AB22761E10BF58,CLUSTERED,1,1,"cvendno, cyear"
+dbo,apamrt,PK__apamrt__2CDD98A64065D75C,CLUSTERED,1,1,cuid
+dbo,apamrt,xvndinvuid,NONCLUSTERED,0,0,"cvendno, cinvno, capuid"
+dbo,apamrth,PK__apamrth__2CDD98A6509C3F25,CLUSTERED,1,1,cuid
+dbo,apamrth,xvndinvuid,NONCLUSTERED,0,0,"cvendno, cinvno, capuid"
+dbo,apcacb,apcacb_xbankchk,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,apcacb,PK__apcacb__2CDD98A631EC6D26,CLUSTERED,1,1,cuid
+dbo,apcapp,apcapp_xbnkchkinv,NONCLUSTERED,0,0,"cbankno, cchkno, cvendno, cinvno"
+dbo,apcapp,apcapp_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apcapp,PK__apcapp__2CDD98A6403A8C7D,CLUSTERED,1,1,cuid
+dbo,apchck,apchck_xcheck,NONCLUSTERED,0,0,dcheck
+dbo,apchck,apchck_xcreate,NONCLUSTERED,0,0,"dcreate, cchktype"
+dbo,apchck,apchck_xpayto,NONCLUSTERED,0,0,cpayto
+dbo,apchck,apchck_xtrf1,NONCLUSTERED,0,0,"ctogl, dcheck, cbankno, cchkno"
+dbo,apchck,apchck_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,apchck,PK__apchck__4446B1E95CD6CB2B,CLUSTERED,1,1,"cbankno, cchkno"
+dbo,apcont,apcont_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,apcont,PK__apcont__2CDD98A66FE99F9F,CLUSTERED,1,1,cuid
+dbo,apdapp,apdapp_xdate,NONCLUSTERED,0,0,ddate
+dbo,apdapp,apdapp_xvenddinv,NONCLUSTERED,0,0,"cvendno, cinvno, cdinvno"
+dbo,apdapp,PK__apdapp__2CDD98A67B5B524B,CLUSTERED,1,1,cuid
+dbo,apdist,apdist_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apdist,apdist_xtrf1,NONCLUSTERED,0,0,"ctogl, dtrs, cglacc, cvendno, cinvno"
+dbo,apdist,apdist_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno, ctype"
+dbo,apdist,PK__apdist__2CDD98A605D8E0BE,CLUSTERED,1,1,cuid
+dbo,apdisth,apdisth_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apdisth,apdisth_xtrf1,NONCLUSTERED,0,0,"ctogl, dtrs, cglacc, cvendno, cinvno"
+dbo,apdisth,apdisth_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno, ctype"
+dbo,apdisth,PK__apdisth__2CDD98A6208CD6FA,CLUSTERED,1,1,cuid
+dbo,apdnot,PK__apdnot__D3DF6FB93B40CD36,CLUSTERED,1,1,"cvendno, cinvno"
+dbo,apdsta,apdsta_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apdsta,PK__apdsta__2CDD98A660D2A6EE,CLUSTERED,1,1,cuid
+dbo,apdstah,apdstah_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apdstah,PK__apdstah__2CDD98A6013F7680,CLUSTERED,1,1,cuid
+dbo,apdstc,PK__apdstc__2CDD98A621AC4612,CLUSTERED,1,1,cuid
+dbo,apetrs,apetrs_xbankchk,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,apetrs,apetrs_xebatcno,NONCLUSTERED,0,0,cebatcno
+dbo,apetrs,PK__apetrs__0902B47E2FFA6569,CLUSTERED,1,1,"cbankno, ctrsno"
+dbo,apfinc,apfinc_xchgdate,NONCLUSTERED,0,0,dfincharge
+dbo,apfinc,apfinc_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apfinc,apfinc_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apfinc,PK__apfinc__2CDD98A641EDCAC5,CLUSTERED,1,1,cuid
+dbo,apfinch,apfinch_xchgdate,NONCLUSTERED,0,0,dfincharge
+dbo,apfinch,apfinch_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apfinch,apfinch_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apfinch,PK__apfinch__2CDD98A64A8310C6,CLUSTERED,1,1,cuid
+dbo,apinvc,apinvc_xbankno,NONCLUSTERED,0,0,cbankno
+dbo,apinvc,apinvc_xclosed,NONCLUSTERED,0,0,dclosed
+dbo,apinvc,apinvc_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apinvc,apinvc_xdiscdate,NONCLUSTERED,0,0,"ddisc, cvendno"
+dbo,apinvc,apinvc_xduedate,NONCLUSTERED,0,0,"ddue, cvendno"
+dbo,apinvc,apinvc_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,apinvc,apinvc_xinvoice,NONCLUSTERED,0,0,dinvoice
+dbo,apinvc,apinvc_xpayurgenc,NONCLUSTERED,0,0,"cpayurgenc, cvendno"
+dbo,apinvc,apinvc_xpono,NONCLUSTERED,0,0,cpono
+dbo,apinvc,apinvc_xref,NONCLUSTERED,0,0,"cref, cvendno"
+dbo,apinvc,apinvc_xvendbank,NONCLUSTERED,0,0,"cvendno, cbankno"
+dbo,apinvc,apinvc_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,apinvc,apinvc_xvoucherno,NONCLUSTERED,0,0,cvoucherno
+dbo,apinvc,PK__apinvc__D3DF6FB9531856C7,CLUSTERED,1,1,"cvendno, cinvno"
+dbo,apinvch,apinvch_xbankno,NONCLUSTERED,0,0,cbankno
+dbo,apinvch,apinvch_xclosed,NONCLUSTERED,0,0,dclosed
+dbo,apinvch,apinvch_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apinvch,apinvch_xdiscdate,NONCLUSTERED,0,0,"ddisc, cvendno"
+dbo,apinvch,apinvch_xduedate,NONCLUSTERED,0,0,"ddue, cvendno"
+dbo,apinvch,apinvch_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,apinvch,apinvch_xinvoice,NONCLUSTERED,0,0,dinvoice
+dbo,apinvch,apinvch_xpayurgenc,NONCLUSTERED,0,0,"cpayurgenc, cvendno"
+dbo,apinvch,apinvch_xpono,NONCLUSTERED,0,0,cpono
+dbo,apinvch,apinvch_xref,NONCLUSTERED,0,0,"cref, cvendno"
+dbo,apinvch,apinvch_xvendbank,NONCLUSTERED,0,0,"cvendno, cbankno"
+dbo,apinvch,apinvch_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,apinvch,apinvch_xvoucherno,NONCLUSTERED,0,0,cvoucherno
+dbo,apinvch,PK__apinvch__D3DF6FB914E61A24,CLUSTERED,1,1,"cvendno, cinvno"
+dbo,apraca,apraca_xporcpt,NONCLUSTERED,0,0,"cpono, crcptno"
+dbo,apraca,apraca_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apraca,PK__apraca__2CDD98A656B3DD81,CLUSTERED,1,1,cuid
+dbo,apracah,apracah_xporcpt,NONCLUSTERED,0,0,"cpono, crcptno"
+dbo,apracah,apracah_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apracah,PK__apracah__2CDD98A66319B466,CLUSTERED,1,1,cuid
+dbo,apracq,apracq_cpouid,NONCLUSTERED,0,0,cpouid
+dbo,apracq,apracq_xporcptln,NONCLUSTERED,0,0,"cpono, crcptno, clineitem"
+dbo,apracq,apracq_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apracq,PK__apracq__2CDD98A66F7F8B4B,CLUSTERED,1,1,cuid
+dbo,apracqh,apracqh_cpouid,NONCLUSTERED,0,0,cpouid
+dbo,apracqh,apracqh_xporcptln,NONCLUSTERED,0,0,"cpono, crcptno, clineitem"
+dbo,apracqh,apracqh_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apracqh,PK__apracqh__2CDD98A6056ECC6A,CLUSTERED,1,1,cuid
+dbo,aprchg,aprchg_xtrsvendinv,NONCLUSTERED,0,0,"ctrsno, cvendno, cinvno"
+dbo,aprchg,aprchg_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,aprchg,PK__aprchg__2CDD98A61B5E0D89,CLUSTERED,1,1,cuid
+dbo,aprchgh,aprchgh_xtrsvendinv,NONCLUSTERED,0,0,"ctrsno, cvendno, cinvno"
+dbo,aprchgh,aprchgh_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,aprchgh,PK__aprchgh__2CDD98A62D7CBDC4,CLUSTERED,1,1,cuid
+dbo,aprcrd,aprcrd_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,aprcrd,PK__aprcrd__2CDD98A63F9B6DFF,CLUSTERED,1,1,cuid
+dbo,aprcri,aprcri_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,aprcri,PK__aprcri__D3DF6FB94CF5691D,CLUSTERED,1,1,"cvendno, cinvno"
+dbo,apvacb,apvacb_xchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,apvacb,apvacb_xchkuid,NONCLUSTERED,0,0,cchkuid
+dbo,apvacb,apvacb_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apvacb,PK__apvacb__2CDD98A62A363CC5,CLUSTERED,1,1,cuid
+dbo,apvact,apvact_xdate,NONCLUSTERED,0,0,ddate
+dbo,apvact,apvact_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,apvact,PK__apvact__2CDD98A639788055,CLUSTERED,1,1,cuid
+dbo,apvadr,apvadr_xvendcomp,NONCLUSTERED,0,0,"cvendno, ccompany"
+dbo,apvadr,apvadr_xvendphone,NONCLUSTERED,0,0,"cvendno, cphone"
+dbo,apvadr,apvadr_xvendzip,NONCLUSTERED,0,0,"cvendno, czip"
+dbo,apvadr,PK__apvadr__CFD2261D44EA3301,CLUSTERED,1,1,"cvendno, ctype, caddrno"
+dbo,apvapp,apvapp_xchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,apvapp,apvapp_xchkuid,NONCLUSTERED,0,0,cchkuid
+dbo,apvapp,apvapp_xvendinv,NONCLUSTERED,0,0,"cvendno, cinvno"
+dbo,apvapp,PK__apvapp__2CDD98A6542C7691,CLUSTERED,1,1,cuid
+dbo,apvark,PK__apvark__2CDD98A66C040022,CLUSTERED,1,1,cuid
+dbo,apvchk,apvchk_xcheck,NONCLUSTERED,0,0,dcheck
+dbo,apvchk,apvchk_xchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,apvchk,apvchk_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apvchk,apvchk_xpayto,NONCLUSTERED,0,0,cpayto
+dbo,apvchk,apvchk_xtrf1,NONCLUSTERED,0,0,"ctogl, dvoid, cbankno, cchkno"
+dbo,apvchk,apvchk_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,apvchk,apvchk_xvoid,NONCLUSTERED,0,0,dvoid
+dbo,apvchk,PK__apvchk__2CDD98A672B0FDB1,CLUSTERED,1,1,cuid
+dbo,apvcnt,apvcnt_xuidvend,NONCLUSTERED,0,0,cuid
+dbo,apvcnt,PK__apvcnt__2CDD98A602E7657A,CLUSTERED,1,1,cuid
+dbo,apvend,apvend_xbuyer,NONCLUSTERED,0,0,"cbuyer, cvendno"
+dbo,apvend,apvend_xclass,NONCLUSTERED,0,0,"cclass, cvendno"
+dbo,apvend,apvend_xcompany,NONCLUSTERED,0,0,ccompany
+dbo,apvend,apvend_xcompany2,NONCLUSTERED,0,0,ccompany2
+dbo,apvend,apvend_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apvend,apvend_xemail,NONCLUSTERED,0,0,cemail
+dbo,apvend,apvend_xfname,NONCLUSTERED,0,0,"cfname, clname, cvendno"
+dbo,apvend,apvend_xindustry,NONCLUSTERED,0,0,"cindustry, cvendno"
+dbo,apvend,apvend_xlname,NONCLUSTERED,0,0,"clname, cfname, cvendno"
+dbo,apvend,apvend_xphone1,NONCLUSTERED,0,0,cphone1
+dbo,apvend,apvend_xstate,NONCLUSTERED,0,0,"cstate, czip, cvendno"
+dbo,apvend,apvend_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,apvend,apvend_xzip,NONCLUSTERED,0,0,"czip, cvendno"
+dbo,apvend,PK__apvend__45F96A5409946309,CLUSTERED,1,1,cvendno
+dbo,apvendh,apvendh_xbuyer,NONCLUSTERED,0,0,"cbuyer, cvendno"
+dbo,apvendh,apvendh_xclass,NONCLUSTERED,0,0,"cclass, cvendno"
+dbo,apvendh,apvendh_xcompany,NONCLUSTERED,0,0,ccompany
+dbo,apvendh,apvendh_xcompany2,NONCLUSTERED,0,0,ccompany2
+dbo,apvendh,apvendh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apvendh,apvendh_xemail,NONCLUSTERED,0,0,cemail
+dbo,apvendh,apvendh_xfname,NONCLUSTERED,0,0,"cfname, clname, cvendno"
+dbo,apvendh,apvendh_xindustry,NONCLUSTERED,0,0,"cindustry, cvendno"
+dbo,apvendh,apvendh_xlname,NONCLUSTERED,0,0,"clname, cfname, cvendno"
+dbo,apvendh,apvendh_xphone1,NONCLUSTERED,0,0,cphone1
+dbo,apvendh,apvendh_xstate,NONCLUSTERED,0,0,"cstate, czip, cvendno"
+dbo,apvendh,apvendh_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,apvendh,apvendh_xzip,NONCLUSTERED,0,0,"czip, cvendno"
+dbo,apvendh,PK__apvendh__45F96A5469E6AD86,CLUSTERED,1,1,cvendno
+dbo,apvgla,apvgla_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,apvgla,PK__apvgla__2CDD98A64A38F803,CLUSTERED,1,1,cuid
+dbo,apvglr,apvglr_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,apvglr,PK__apvglr__2CDD98A64FF1D159,CLUSTERED,1,1,cuid
+dbo,apvinv,apvinv_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,apvinv,apvinv_xvoucherno,NONCLUSTERED,0,0,cvoucherno
+dbo,apvinv,PK__apvinv__D3DF6FB9569ECEE8,CLUSTERED,1,1,"cvendno, cinvno"
+dbo,apvnot,PK__apvnot__45F96A54064DE20A,CLUSTERED,1,1,cvendno
+dbo,aramrt,aramrt_xinvitem,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,aramrt,PK__aramrt__2CDD98A644015E16,CLUSTERED,1,1,cuid
+dbo,aramrth,aramrt_xinvitem,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,aramrth,PK__aramrth__2CDD98A6552BEA18,CLUSTERED,1,1,cuid
+dbo,arcacb,arcacb_xappuid,NONCLUSTERED,0,0,cappuid
+dbo,arcacb,PK__arcacb__2CDD98A60C06BB60,CLUSTERED,1,1,cuid
+dbo,arcacbh,arcacbh_xappuid,NONCLUSTERED,0,0,cappuid
+dbo,arcacbh,PK__arcacbh__2CDD98A61B48FEF0,CLUSTERED,1,1,cuid
+dbo,arcact,_dta_index_arcact_8_681769486__K2_K9_K3_K1,NONCLUSTERED,0,0,"ccustno, ddate, ctype, cuid"
+dbo,arcact,arcact_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,arcact,arcact_xdate,NONCLUSTERED,0,0,ddate
+dbo,arcact,PK__arcact__2CDD98A62A8B4280,CLUSTERED,1,1,cuid
+dbo,arcadr,arcadr_xcustcomp,NONCLUSTERED,0,0,"ccustno, ccompany"
+dbo,arcadr,arcadr_xcustphone,NONCLUSTERED,0,0,"ccustno, cphone"
+dbo,arcadr,arcadr_xcustzip,NONCLUSTERED,0,0,"ccustno, czip"
+dbo,arcadr,IX_arcadr_it_modified_yn,NONCLUSTERED,0,0,"ccustno, caddrno, it_modified_yn"
+dbo,arcadr,PK__arcadr__8289DC7235FCF52C,CLUSTERED,1,1,"ccustno, caddrno"
+dbo,arcadr_it_log,pk_arcadr_it_log,CLUSTERED,1,1,"ccustno, caddrno"
+dbo,arcadrh,PK__arcadrh__8289DC728C6B5B2F,CLUSTERED,1,1,"ccustno, caddrno"
+dbo,arcapp,_dta_index_arcapp_8_1129771082__K17_K1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_16_18_19_20_21_22_23_24_25_26_27_28_29_30,NONCLUSTERED,0,0,"ccustno, cinvno, crcptno, ccinvno, cpcustno, cccustno, crfndno, caracc, cdiscacc, cadjacc, cdebtacc, cappuid, cinvcuid, crfnduid, ctogl, lvoid, ltemp, npaidamt, ndiscamt, nadjamt, ndebtamt, ncbkamt, nmcvaramt, nfpaidamt, nfdiscamt, nfadjamt, nfdebtamt, nfcbkamt, dpaid, cuid"
+dbo,arcapp,arcapp_xappuid,NONCLUSTERED,0,0,cappuid
+dbo,arcapp,arcapp_xcinvdate,NONCLUSTERED,0,0,"ccinvno, dpaid"
+dbo,arcapp,arcapp_xcustinvdt,NONCLUSTERED,0,0,"ccustno, cinvno, dpaid"
+dbo,arcapp,arcapp_xcustrcpt,NONCLUSTERED,0,0,"ccustno, crcptno, dpaid, nfpaidamt"
+dbo,arcapp,arcapp_xpaid,NONCLUSTERED,0,0,"dpaid, ccustno"
+dbo,arcapp,arcapp_xrcptdate,NONCLUSTERED,0,0,"crcptno, dpaid"
+dbo,arcapp,arcapp_xrfnddate,NONCLUSTERED,0,0,"crfndno, dpaid"
+dbo,arcapp,arcapp_xtrf1,NONCLUSTERED,0,0,"ctogl, dpaid, cinvno"
+dbo,arcapp,IX_arcapp_cinvno,NONCLUSTERED,0,0,cinvno
+dbo,arcapp,PK__arcapp__2CDD98A6453F38BC,CLUSTERED,1,1,cuid
+dbo,arcapph,arcapph_xappuid,NONCLUSTERED,0,0,cappuid
+dbo,arcapph,arcapph_xcinvdate,NONCLUSTERED,0,0,"ccinvno, dpaid"
+dbo,arcapph,arcapph_xcustinvdt,NONCLUSTERED,0,0,"ccustno, cinvno, dpaid"
+dbo,arcapph,arcapph_xcustrcpt,NONCLUSTERED,0,0,"ccustno, crcptno, dpaid, nfpaidamt"
+dbo,arcapph,arcapph_xpaid,NONCLUSTERED,0,0,"dpaid, ccustno"
+dbo,arcapph,arcapph_xrcptdate,NONCLUSTERED,0,0,"crcptno, dpaid"
+dbo,arcapph,arcapph_xrfnddate,NONCLUSTERED,0,0,"crfndno, dpaid"
+dbo,arcapph,arcapph_xtrf1,NONCLUSTERED,0,0,"ctogl, dpaid, cinvno"
+dbo,arcapph,IX_arcapph_dpaid_nfadjamt,NONCLUSTERED,0,0,"ccustno, cinvno, cpcustno, dpaid, nfadjamt"
+dbo,arcapph,IX_arcapph_dpaid_nfdebtamt,NONCLUSTERED,0,0,"ccustno, cinvno, cpcustno, dpaid, nfdebtamt"
+dbo,arcapph,IX_arcapph_dpaid_nfdiscamt,NONCLUSTERED,0,0,"ccustno, cinvno, cpcustno, dpaid, nfdiscamt"
+dbo,arcapph,PK__arcapph__2CDD98A662CF9BA3,CLUSTERED,1,1,cuid
+dbo,arcard,arcard_xcustcard,NONCLUSTERED,0,0,"ccustno, cpaycode, ccardno"
+dbo,arcard,PK__arcard__2CDD98A6005FFE8A,CLUSTERED,1,1,cuid
+dbo,arcark,PK__arcark__2CDD98A609E968C4,CLUSTERED,1,1,cuid
+dbo,arcash,_dta_index_arcash_8_246291937__K26_3_20,NONCLUSTERED,0,0,"crcptno, nfpaidamt, csono"
+dbo,arcash,arcash_xbankno,NONCLUSTERED,0,0,"cbankno, dpaid, dcreate, npaytype"
+dbo,arcash,arcash_xbankrcpt,NONCLUSTERED,0,0,"cbankno, crcptno"
+dbo,arcash,arcash_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,arcash,arcash_xcustrcpt,NONCLUSTERED,0,0,"ccustno, crcptno"
+dbo,arcash,arcash_xdeprcpt,NONCLUSTERED,0,0,"cdepno, crcptno"
+dbo,arcash,arcash_xpaid,NONCLUSTERED,0,0,"dpaid, lvoid, ccustno, nfpaidamt, nfappamt"
+dbo,arcash,arcash_xpaycode,NONCLUSTERED,0,0,cpaycode
+dbo,arcash,arcash_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,arcash,arcash_xtrf1,NONCLUSTERED,0,0,"ctogl, dpaid, ccustno"
+dbo,arcash,arcash_xvoid,NONCLUSTERED,0,0,lvoid
+dbo,arcash,IX_arcash_lvoid,NONCLUSTERED,0,0,"ccustno, crcptno, cdepno, cpaycode, cbankno, dpaid, npaytype, npaidamt, centerby, lvoid"
+dbo,arcash,IX_arcash_lvoid_centerby_dpaid,NONCLUSTERED,0,0,"ccustno, cpaycode, cbankno, npaidamt, lvoid, centerby, dpaid"
+dbo,arcash,PK__arcash__2CDD98A610966653,CLUSTERED,1,1,cuid
+dbo,arcashh,arcashh_xbankno,NONCLUSTERED,0,0,"cbankno, dpaid, dcreate, npaytype"
+dbo,arcashh,arcashh_xbankrcpt,NONCLUSTERED,0,0,"cbankno, crcptno"
+dbo,arcashh,arcashh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,arcashh,arcashh_xcustrcpt,NONCLUSTERED,0,0,"ccustno, crcptno"
+dbo,arcashh,arcashh_xdeprcpt,NONCLUSTERED,0,0,"cdepno, crcptno"
+dbo,arcashh,arcashh_xpaid,NONCLUSTERED,0,0,"dpaid, lvoid, ccustno, nfpaidamt, nfappamt"
+dbo,arcashh,arcashh_xpaycode,NONCLUSTERED,0,0,cpaycode
+dbo,arcashh,arcashh_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,arcashh,arcashh_xtrf1,NONCLUSTERED,0,0,"ctogl, dpaid, ccustno"
+dbo,arcashh,arcashh_xvoid,NONCLUSTERED,0,0,lvoid
+dbo,arcashh,PK__arcashh__2CDD98A62C3E80C8,CLUSTERED,1,1,cuid
+dbo,arccnt,PK__arccnt__2CDD98A647E69B3D,CLUSTERED,1,1,cuid
+dbo,arcnot,PK__arcnot__05074A0E4E9398CC,CLUSTERED,1,1,ccustno
+dbo,arcont,arcont_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,arcont,IX_arcont_it_modified_yn,NONCLUSTERED,0,0,"cuid, ccustno, it_modified_yn"
+dbo,arcont,PK__arcont__2CDD98A6544C7222,CLUSTERED,1,1,cuid
+dbo,arconth,PK__arconth__2CDD98A6A2AE363F,CLUSTERED,1,1,cuid
+dbo,arcpos,IX_arcpos_cdepno_cpaycode_cbankno_dpaid_cusername,NONCLUSTERED,0,0,"cdepno, cpaycode, cbankno, dpaid, cusername"
+dbo,arcpos,IX_arcpos_crcptno,NONCLUSTERED,0,0,"cpaycode, nPOSpdAmt, crcptno"
+dbo,arcust,_dta_index_arcust_8_1574296668__K1_K13_K2_11,NONCLUSTERED,0,0,"cphone2, ccustno, cemail, ccompany"
+dbo,arcust,_dta_index_arcust_8_1574296668__K1_K22_K2_K20_K24,NONCLUSTERED,0,0,"ccustno, cclass, ccompany, cslpnno, cterr"
+dbo,arcust,arcust_xclass,NONCLUSTERED,0,0,"cclass, ccustno"
+dbo,arcust,arcust_xcompany,NONCLUSTERED,0,0,ccompany
+dbo,arcust,arcust_xcompany2,NONCLUSTERED,0,0,ccompany2
+dbo,arcust,arcust_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,arcust,arcust_xemail,NONCLUSTERED,0,0,cemail
+dbo,arcust,arcust_xfax,NONCLUSTERED,0,0,cfax
+dbo,arcust,arcust_xindustry,NONCLUSTERED,0,0,"cindustry, ccustno"
+dbo,arcust,arcust_xlcall,NONCLUSTERED,0,0,"tlcall, ccustno"
+dbo,arcust,arcust_xpcustno,NONCLUSTERED,0,0,cpcustno
+dbo,arcust,arcust_xphone1,NONCLUSTERED,0,0,cphone1
+dbo,arcust,arcust_xphone2,NONCLUSTERED,0,0,cphone2
+dbo,arcust,arcust_xrecall,NONCLUSTERED,0,0,"trecall, ccustno"
+dbo,arcust,arcust_xslpnno,NONCLUSTERED,0,0,"cslpnno, ccustno"
+dbo,arcust,arcust_xslpnrcal,NONCLUSTERED,0,0,"cslpnno, trecall, ccustno"
+dbo,arcust,arcust_xstate,NONCLUSTERED,0,0,"cstate, czip, ccustno"
+dbo,arcust,arcust_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,arcust,arcust_xterr,NONCLUSTERED,0,0,"cterr, ccustno"
+dbo,arcust,arcust_xzip,NONCLUSTERED,0,0,"czip, ccustno"
+dbo,arcust,PK__arcust__05074A0E5FBE24CE,CLUSTERED,1,1,ccustno
+dbo,arcust_it_log,pk_arcust_it_log,CLUSTERED,1,1,ccustno
+dbo,arcusth,PK__arcusth__05074A0E31C24FF4,CLUSTERED,1,1,ccustno
+dbo,ardeps,PK__ardeps__895D703A7D9A9ABA,CLUSTERED,1,1,cdepcode
+dbo,ardpst,ardpst_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,ardpst,ardpst_xdeposit,NONCLUSTERED,0,0,ddeposit
+dbo,ardpst,PK__ardpst__09AFC00003C67B1A,CLUSTERED,1,1,"cbankno, cdepno"
+dbo,aretrs,aretrs_xbankno,NONCLUSTERED,0,0,"cbankno, crcptno"
+dbo,aretrs,aretrs_xebatcno,NONCLUSTERED,0,0,cebatcno
+dbo,aretrs,PK__aretrs__040CC2366656761A,CLUSTERED,1,1,"cbankno, crcptno, cdepno"
+dbo,arfchg,arfchg_xcustinvdt,NONCLUSTERED,0,0,"ccustno, cinvno, dfinance"
+dbo,arfchg,arfchg_xfchguid,NONCLUSTERED,0,0,cfchguid
+dbo,arfchg,arfchg_xinvcuid,NONCLUSTERED,0,0,cinvcuid
+dbo,arfchg,arfchg_xtrf1,NONCLUSTERED,0,0,"ctogl, dfinance, ccustno, cinvno"
+dbo,arfchg,PK__arfchg__2CDD98A6102C51FF,CLUSTERED,1,1,cuid
+dbo,arfchgh,arfchgh_xcustinvdt,NONCLUSTERED,0,0,"ccustno, cinvno, dfinance"
+dbo,arfchgh,arfchgh_xfchguid,NONCLUSTERED,0,0,cfchguid
+dbo,arfchgh,arfchgh_xinvcuid,NONCLUSTERED,0,0,cinvcuid
+dbo,arfchgh,arfchgh_xtrf1,NONCLUSTERED,0,0,"ctogl, dfinance, ccustno, cinvno"
+dbo,arfchgh,PK__arfchgh__2CDD98A62156DE01,CLUSTERED,1,1,cuid
+dbo,arfrgt,arfrgt_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,arfrgt,PK__arfrgt__47CB5C3F32816A03,CLUSTERED,1,1,cfrgtcode
+dbo,arikit,arikit_xinvcline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,arikit,PK__arikit__2CDD98A645943E77,CLUSTERED,1,1,cuid
+dbo,arinvc,_dta_index_arinvc_8_1423344135__K1_K2_K5_K33_K9_K51_K52_K45_K80_K81_K82_K83_K84_K85_K90_K89_115,NONCLUSTERED,0,0,"nfbalance, cuid, cinvno, ccustno, cpono, cslpnno, dorder, dinvoice, ccurrcode, nsalesamt, ndiscamt, nfrtamt, ntaxamt1, ntaxamt2, ntaxamt3, nfinamt, nadjamt"
+dbo,arinvc,_dta_index_arinvc_8_1423344135__K124_K59_K52_K5_K2,NONCLUSTERED,0,0,"lgenrebate, lvoid, dinvoice, ccustno, cinvno"
+dbo,arinvc,_dta_index_arinvc_8_1423344135__K2_K4_52,NONCLUSTERED,0,0,"dinvoice, cinvno, ctype"
+dbo,arinvc,_dta_index_arinvc_8_1423344135__K4_K52_2,NONCLUSTERED,0,0,"cinvno, ctype, dinvoice"
+dbo,arinvc,_dta_index_arinvc_8_1423344135__K52_K4_K33_K1_K5_K2,NONCLUSTERED,0,0,"dinvoice, ctype, cpono, cuid, ccustno, cinvno"
+dbo,arinvc,arinvc_xbalance,NONCLUSTERED,0,0,nbalance
+dbo,arinvc,arinvc_xclosed,NONCLUSTERED,0,0,"dclosed, dinvoice"
+dbo,arinvc,arinvc_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,arinvc,arinvc_xcustinv,NONCLUSTERED,0,0,"ccustno, cinvno"
+dbo,arinvc,arinvc_xcustinvdt,NONCLUSTERED,0,0,"ccustno, cinvno, dinvoice"
+dbo,arinvc,arinvc_xdue,NONCLUSTERED,0,0,ddue
+dbo,arinvc,arinvc_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arinvc,arinvc_xinvoice,NONCLUSTERED,0,0,"dinvoice, nfbalance, ctype"
+dbo,arinvc,arinvc_xpono,NONCLUSTERED,0,0,cpono
+dbo,arinvc,arinvc_xrmano,NONCLUSTERED,0,0,crmano
+dbo,arinvc,arinvc_xslpninv,NONCLUSTERED,0,0,"cslpnno, cinvno"
+dbo,arinvc,arinvc_xtrf1,NONCLUSTERED,0,0,"ctogl, ctype, lvoid, dinvoice"
+dbo,arinvc,arinvc_xtrf2,NONCLUSTERED,0,0,"nmcround, ctype, lvoid, dclosed"
+dbo,arinvc,arinvc_xtypeinv,NONCLUSTERED,0,0,"ctype, cinvno"
+dbo,arinvc,arinvc_xwhsinv,NONCLUSTERED,0,0,"cwarehouse, cinvno"
+dbo,arinvc,idx_ctypensalesamt,NONCLUSTERED,0,0,"cinvno, ccustno, dinvoice, ctype, nsalesamt"
+dbo,arinvc,IX_arinvc_ccustno_nbalance_ctype_dclosed,NONCLUSTERED,0,0,"ccustno, nbalance, ctype, dclosed"
+dbo,arinvc,IX_arinvc_linvoicing,NONCLUSTERED,0,0,"cinvno, ccustno, cmlmlink, linvoicing"
+dbo,arinvc,PK__arinvc__2CDD98A656BECA79,CLUSTERED,1,1,cuid
+dbo,arinvch,_dta_index_arinvch_8_1371867954__K4_K52_2,NONCLUSTERED,0,0,"cinvno, ctype, dinvoice"
+dbo,arinvch,_dta_index_arinvch_8_1371867954__K5_K59_K4_K2_K1_K33_K9_K51_K52_K45_K80_K81_K82_K83_K84_K85_89_90_115,NONCLUSTERED,0,0,"nadjamt, nfinamt, nfbalance, ccustno, lvoid, ctype, cinvno, cuid, cpono, cslpnno, dorder, dinvoice, ccurrcode, nsalesamt, ndiscamt, nfrtamt, ntaxamt1, ntaxamt2, ntaxamt3"
+dbo,arinvch,_dta_index_arinvch_8_1371867954__K52_K1_K5_K2,NONCLUSTERED,0,0,"dinvoice, cuid, ccustno, cinvno"
+dbo,arinvch,arinvch_xclosed,NONCLUSTERED,0,0,"dclosed, dinvoice"
+dbo,arinvch,arinvch_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,arinvch,arinvch_xcustinv,NONCLUSTERED,0,0,"ccustno, cinvno"
+dbo,arinvch,arinvch_xdue,NONCLUSTERED,0,0,ddue
+dbo,arinvch,arinvch_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arinvch,arinvch_xinvoice,NONCLUSTERED,0,0,"dinvoice, nfbalance, ctype"
+dbo,arinvch,arinvch_xpono,NONCLUSTERED,0,0,cpono
+dbo,arinvch,arinvch_xrmano,NONCLUSTERED,0,0,crmano
+dbo,arinvch,arinvch_xslpninv,NONCLUSTERED,0,0,"cslpnno, cinvno"
+dbo,arinvch,arinvch_xtrf1,NONCLUSTERED,0,0,"ctogl, ctype, lvoid, dinvoice"
+dbo,arinvch,arinvch_xtrf2,NONCLUSTERED,0,0,"nmcround, ctype, lvoid, dclosed"
+dbo,arinvch,arinvch_xtypeinv,NONCLUSTERED,0,0,"ctype, cinvno"
+dbo,arinvch,arinvch_xwhsinv,NONCLUSTERED,0,0,"cwarehouse, cinvno"
+dbo,arinvch,IX_arinvch_ccustno_nbalance_ctype_dclosed,NONCLUSTERED,0,0,"dinvoice, ccustno, nbalance, ctype, dclosed"
+dbo,arinvch,IX_arinvch_coriginvno,NONCLUSTERED,0,0,"cinvno, ccustno, coriginvno"
+dbo,arinvch,PK__arinvch__2CDD98A653AD53A4,CLUSTERED,1,1,cuid
+dbo,arirmk,arirmk_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arirmk,PK__arirmk__2CDD98A6509BDCCF,CLUSTERED,1,1,cuid
+dbo,aritci,PK__aritci__090D2C595748DA5E,CLUSTERED,1,1,"cinvno, clineitem"
+dbo,aritrk,PK__aritrk__2CDD98A65FDE205F,CLUSTERED,1,1,cuid
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K1_K12_K2_K33_K34_K19_K54_K24_K35_K4_K31,NONCLUSTERED,0,0,"cuid, citemno, cinvno, nsalesamt, ndiscamt, crevncode, ccmpprodln, lstock, ntaxamt1, cwarehouse, ndiscrate"
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K12_K1_K2_K44,NONCLUSTERED,0,0,"citemno, cuid, cinvno, nshipqty"
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K12_K31_K1_K3_K2_44_49,NONCLUSTERED,0,0,"nshipqty, nprcinctx, citemno, ndiscrate, cuid, ccustno, cinvno"
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K2_K1_K5,NONCLUSTERED,0,0,"cinvno, cuid, csono"
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K31_K12_K1_K3_K2_44_49,NONCLUSTERED,0,0,"nshipqty, nprcinctx, ndiscrate, citemno, cuid, ccustno, cinvno"
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K4_K12_K2_K44_1,NONCLUSTERED,0,0,"cuid, cwarehouse, citemno, cinvno, nshipqty"
+dbo,aritrs,_dta_index_aritrs_8_1688393084__K6_2,NONCLUSTERED,0,0,"cinvno, cshipno"
+dbo,aritrs,aritrs_idx_csono,NONCLUSTERED,0,0,csono
+dbo,aritrs,aritrs_xcustinv,NONCLUSTERED,0,0,"ccustno, cinvno"
+dbo,aritrs,aritrs_xinvline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,aritrs,aritrs_xiteminv,NONCLUSTERED,0,0,"citemno, cinvno"
+dbo,aritrs,aritrs_xrmano,NONCLUSTERED,0,0,crmano
+dbo,aritrs,aritrs_xtrf1,NONCLUSTERED,0,0,"cinvno, lstock, citemno, cwarehouse"
+dbo,aritrs,aritrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,aritrs,idx_cshipno_cinvno,NONCLUSTERED,0,0,"cinvno, cshipno"
+dbo,aritrs,idx_csono_cinvno,NONCLUSTERED,0,0,"cinvno, csono"
+dbo,aritrs,PK__aritrs__2CDD98A6668B1DEE,CLUSTERED,1,1,cuid
+dbo,aritrs_T,_dta_index_aritrs_T_8_1723998810__K12_K8_K13_K5_K6_K9_K2_K1_K7,NONCLUSTERED,0,0,"ctrantype, nprice, dmodified, cusername, nshipqty, nprcinctx, citemno, cinvno, ndiscrate"
+dbo,aritrsh,_dta_index_aritrsh_8_580913141__K12_K1_K2_K44,NONCLUSTERED,0,0,"citemno, cuid, cinvno, nshipqty"
+dbo,aritrsh,_dta_index_aritrsh_8_580913141__K2_K12_K24_K4_K33_K34_K19_K54_K35_K31_1,NONCLUSTERED,0,0,"cuid, cinvno, citemno, lstock, cwarehouse, nsalesamt, ndiscamt, crevncode, ccmpprodln, ntaxamt1, ndiscrate"
+dbo,aritrsh,_dta_index_aritrsh_8_580913141__K4_K12_K44_1_2,NONCLUSTERED,0,0,"cuid, cinvno, cwarehouse, citemno, nshipqty"
+dbo,aritrsh,aritrsh_xcustinv,NONCLUSTERED,0,0,"ccustno, cinvno"
+dbo,aritrsh,aritrsh_xinvline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,aritrsh,aritrsh_xiteminv,NONCLUSTERED,0,0,"citemno, cinvno"
+dbo,aritrsh,aritrsh_xrmano,NONCLUSTERED,0,0,crmano
+dbo,aritrsh,aritrsh_xtrf1,NONCLUSTERED,0,0,"cinvno, lstock, citemno, cwarehouse"
+dbo,aritrsh,aritrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,aritrsh,idx_cshipno_cinvno,NONCLUSTERED,0,0,"cinvno, cshipno"
+dbo,aritrsh,idx_csono_cinvno,NONCLUSTERED,0,0,"cinvno, csono"
+dbo,aritrsh,IX_aritrsh_ccustno_citemno,NONCLUSTERED,0,0,"ccustno, citemno"
+dbo,aritrsh,IX_Aritrsh_ccustno_cSono,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,aritrsh,IX_aritrsh_citemno,NONCLUSTERED,0,0,"cinvno, nsalesamt, ndiscamt, nshipqty, nitmcnvqty, ntrscnvqty, citemno"
+dbo,aritrsh,PK__aritrsh__2CDD98A624885067,CLUSTERED,1,1,cuid
+dbo,aritsp,aritsp_xinvline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,aritsp,PK__aritsp__2CDD98A7628582E0,NONCLUSTERED,1,1,cuid
+dbo,aritsph,aritsph_xinvline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,aritsph,PK__aritsph__2CDD98A770D3A237,NONCLUSTERED,1,1,cuid
+dbo,arjrnl,IX_arjrnl_cjrnlno,NONCLUSTERED,0,0,cjrnlno
+dbo,arjrnl,PK__arjrnl__2CDD98A63D2C4304,CLUSTERED,1,1,cuid
+dbo,arjtrs,IX_arjtrs_cjrnlno,NONCLUSTERED,0,0,cjrnlno
+dbo,arjtrs,IX_arjtrs_cjtype,NONCLUSTERED,0,0,cjtype
+dbo,arjtrs,PK__arjtrs__2CDD98A647A9D177,CLUSTERED,1,1,cuid
+dbo,aropcr,PK__aropcr__2CDD98A67F21C18E,CLUSTERED,1,1,cuid
+dbo,arpdtb,PK__arpdtb__282C5A33099F5001,CLUSTERED,1,1,"cpaycode, cstartday"
+dbo,arpkls,PK__arpkls__EF1A1C1A5CD9F887,CLUSTERED,1,1,cWyblNo
+dbo,arpycd,arpycd_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,arpycd,PK__arpycd__6A7A05D9141CDE74,CLUSTERED,1,1,cpaycode
+dbo,arrcri,PK__arrcri__93214FE32823D721,CLUSTERED,1,1,"ccustno, cinvno"
+dbo,arrevn,arrevn_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,arrevn,PK__arrevn__05815CEF068DD92C,CLUSTERED,1,1,crevncode
+dbo,arrfnd,arrfnd_xcustrfnd,NONCLUSTERED,0,0,"ccustno, crfndno"
+dbo,arrfnd,arrfnd_xrefund,NONCLUSTERED,0,0,drefund
+dbo,arrfnd,arrfnd_xrfndno,NONCLUSTERED,0,0,crfndno
+dbo,arrfnd,arrfnd_xvoid,NONCLUSTERED,0,0,lvoid
+dbo,arrfnd,IX_arrfnd_cdepno_cbankno,NONCLUSTERED,0,0,"cdepno, cbankno"
+dbo,arrfnd,PK__arrfnd__2CDD98A60C46B282,CLUSTERED,1,1,cuid
+dbo,arrrmk,PK__arrrmk__93214FE31F5986F6,CLUSTERED,1,1,"ccustno, cinvno"
+dbo,arrtci,PK__arrtci__859798CB26068485,CLUSTERED,1,1,"ccustno, cinvno, clineitem"
+dbo,arrtrk,PK__arrtrk__2CDD98A62F8FEEBF,CLUSTERED,1,1,cuid
+dbo,arrtrs,arrtrs_xcustinv,NONCLUSTERED,0,0,"ccustno, cinvno"
+dbo,arrtrs,PK__arrtrs__2CDD98A637311087,CLUSTERED,1,1,cuid
+dbo,arsktp,arsktp_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arsktp,PK__arsktp__2CDD98A66AB0B48D,CLUSTERED,1,1,cuid
+dbo,arsktph,arsktph_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arsktph,PK__arsktph__2CDD98A679F2F81D,CLUSTERED,1,1,cuid
+dbo,arsktr,arsktr_xinvline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,arsktr,arsktr_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arsktr,arsktr_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,arsktr,PK__arsktr__2CDD98A609353BAD,CLUSTERED,1,1,cuid
+dbo,arsktrh,arsktrh_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,arsktrh,PK__arsktrh__2CDD98A61C481021,CLUSTERED,1,1,cuid
+dbo,arslpn,arslpn_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,arslpn,arslpn_xname,NONCLUSTERED,0,0,cname
+dbo,arslpn,PK__arslpn__0E175ED72F5AE495,CLUSTERED,1,1,cslpnno
+dbo,arsnot,PK__arsnot__0E175ED73E9D2825,CLUSTERED,1,1,cslpnno
+dbo,arsrmk,arsrmk_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,arsrmk,PK__arsrmk__F3DB60F64456017B,CLUSTERED,1,1,csrmkno
+dbo,brctrl,brctrl_xbnkchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,brctrl,brctrl_xbnktrsno,NONCLUSTERED,0,0,"cbankno, ctrsno"
+dbo,brctrl,brctrl_xcancel,NONCLUSTERED,0,0,dcancel
+dbo,brctrl,brctrl_xchkno,NONCLUSTERED,0,0,cchkno
+dbo,brctrl,brctrl_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brctrl,brctrl_xdepno,NONCLUSTERED,0,0,cdepno
+dbo,brctrl,brctrl_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,brctrl,brctrl_xtrscode,NONCLUSTERED,0,0,ctrscode
+dbo,brctrl,brctrl_xtypbnkchk,NONCLUSTERED,0,0,"ctrstype, cbankno, cchkno"
+dbo,brctrl,brctrl_xtypbnkdep,NONCLUSTERED,0,0,"ctrstype, cbankno, cdepno"
+dbo,brctrl,brctrl_xtypbnktrs,NONCLUSTERED,0,0,"ctrstype, cbankno, ctrsno"
+dbo,brctrl,IX_brctrl_cbankno_dstmtend_dcancel,NONCLUSTERED,0,0,"ctrsno, ctrscode, ctrstype, cchkno, cdepno, cdescript, cref, csource, cpospaybat, cpospayfil, dcreate, dtrs, dpospaysnd, dvoid, lvoid, lcancel, namount, nxchgrate, cebatcno, lcombrec, cepdesc, ctype, cmatchuid, cbankno, dstmtend, dcancel"
+dbo,brctrl,PK__brctrl__58D6DC674026AB91,CLUSTERED,1,1,"cbankno, csource, ctrsno, cchkno, cdepno, ctype"
+dbo,brctrlh,brctrlh_xbnkchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,brctrlh,brctrlh_xbnktrsno,NONCLUSTERED,0,0,"cbankno, ctrsno"
+dbo,brctrlh,brctrlh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brctrlh,brctrlh_xtypbnkchk,NONCLUSTERED,0,0,"ctrstype, cbankno, cchkno"
+dbo,brctrlh,brctrlh_xtypbnkdep,NONCLUSTERED,0,0,"ctrstype, cbankno, cdepno"
+dbo,brctrlh,brctrlh_xtypbnktrs,NONCLUSTERED,0,0,"ctrstype, cbankno, ctrsno"
+dbo,brctrlh,IX_brctrlh_cbankno_cdepno,NONCLUSTERED,0,0,"csource, dcancel, lcancel, cbankno, cdepno"
+dbo,brctrlh,PK__brctrlh__58D6DC674303183C,CLUSTERED,1,1,"cbankno, csource, ctrsno, cchkno, cdepno, ctype"
+dbo,brdist,brdist_xbnktrsno,NONCLUSTERED,0,0,"cbankno, ctrsno, lvoid"
+dbo,brdist,PK__brdist__2CDD98A62161CAF9,CLUSTERED,1,1,cuid
+dbo,brebat,brebat_xebatcbank,NONCLUSTERED,0,0,"cebatcno, cbankno"
+dbo,brebat,brebat_xebatcno,NONCLUSTERED,0,0,cebatcno
+dbo,brebat,PK__brebat__C87C0D3C768CDDE3,CLUSTERED,1,1,cebatcno
+dbo,bribts,PK__bribts__B387E87001FE908F,CLUSTERED,1,1,cimpcode
+dbo,bricdf,bricdf_xcodefld,NONCLUSTERED,0,0,"cimpcode, ccolfield"
+dbo,bricdf,bricdf_xcolfldnm,NONCLUSTERED,0,0,"ccolfield, ccolname"
+dbo,bricdf,bricdf_ximpcode,NONCLUSTERED,0,0,cimpcode
+dbo,bricdf,PK__bricdf__2CDD98A6104CAFE6,CLUSTERED,1,1,cuid
+dbo,bricmc,bricmc_xcdimpam1,NONCLUSTERED,0,0,"cimpcode, cimpcol, camcol1"
+dbo,bricmc,bricmc_xcdimpam2,NONCLUSTERED,0,0,"cimpcode, cimpcol, camcol2"
+dbo,bricmc,bricmc_xcodefld,NONCLUSTERED,0,0,"cimpcode, ccolfield"
+dbo,bricmc,bricmc_ximpamcol1,NONCLUSTERED,0,0,"cimpcol, camcol1"
+dbo,bricmc,bricmc_ximpcode,NONCLUSTERED,0,0,cimpcode
+dbo,bricmc,bricmc_ximpfld,NONCLUSTERED,0,0,"cimpcol, ccolfield"
+dbo,bricmc,PK__bricmc__2CDD98A61ACA3E59,CLUSTERED,1,1,cuid
+dbo,bricnd,PK__bricnd__2CDD98A628243977,CLUSTERED,1,1,cuid
+dbo,bricnv,PK__bricnv__4489049630B97F78,CLUSTERED,1,1,cconvno
+dbo,brimpt,PK__brimpt__21651A9D37667D07,CLUSTERED,1,1,cimptuid
+dbo,brrcrt,brrcrt_xbnktrsno,NONCLUSTERED,0,0,"cbankno, ctrsno"
+dbo,brrcrt,brrcrt_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brrcrt,brrcrt_xnextrecur,NONCLUSTERED,0,0,dnextrecur
+dbo,brrcrt,brrcrt_xtrscode,NONCLUSTERED,0,0,ctrscode
+dbo,brrcrt,brrcrt_xtypetrsno,NONCLUSTERED,0,0,"ctrstype, ctrsno"
+dbo,brrcrt,PK__brrcrt__8CC401CD33807B34,CLUSTERED,1,1,"cbankno, ctrstype, ctrsno"
+dbo,brrglr,brrglr_xbnktrsno,NONCLUSTERED,0,0,"cbankno, ctrsno"
+dbo,brrglr,brrglr_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brrglr,brrglr_xtrscode,NONCLUSTERED,0,0,ctrscode
+dbo,brrglr,brrglr_xtypetrsno,NONCLUSTERED,0,0,"ctrstype, ctrsno"
+dbo,brrglr,PK__brrglr__2CDD98A64F2895A9,CLUSTERED,1,1,cuid
+dbo,brstmt,PK__brstmt__2CDD98A65C8290C7,CLUSTERED,1,1,cuid
+dbo,brtglr,brtglr_xtrscode,NONCLUSTERED,0,0,ctrscode
+dbo,brtglr,PK__brtglr__2CDD98A6039C5DE8,CLUSTERED,1,1,cuid
+dbo,brtran,brtran_xbnktrsno1,NONCLUSTERED,0,0,"cbankno1, ctrsno1"
+dbo,brtran,brtran_xbnktrsno2,NONCLUSTERED,0,0,"cbankno2, ctrsno2"
+dbo,brtran,brtran_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brtran,brtran_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,brtran,brtran_xtrscode,NONCLUSTERED,0,0,ctrscode
+dbo,brtran,brtran_xtrstype,NONCLUSTERED,0,0,ctrstype
+dbo,brtran,pk_brtran,CLUSTERED,1,1,cuid
+dbo,brtrsn,brtrsn_xbnkchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,brtrsn,brtrsn_xbnkdepno,NONCLUSTERED,0,0,"cbankno, cdepno"
+dbo,brtrsn,brtrsn_xchkno,NONCLUSTERED,0,0,cchkno
+dbo,brtrsn,brtrsn_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brtrsn,brtrsn_xref,NONCLUSTERED,0,0,cref
+dbo,brtrsn,brtrsn_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,brtrsn,brtrsn_xtrscode,NONCLUSTERED,0,0,ctrscode
+dbo,brtrsn,brtrsn_xtrstype,NONCLUSTERED,0,0,ctrstype
+dbo,brtrsn,PK__brtrsn__0902B47E2220E508,CLUSTERED,1,1,"cbankno, ctrsno"
+dbo,brttyp,brttyp_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,brttyp,brttyp_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,brttyp,brttyp_xreqno,NONCLUSTERED,0,0,"lreqno, ctrstype, ctrscode"
+dbo,brttyp,brttyp_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,brttyp,brttyp_xtrstype,NONCLUSTERED,0,0,"ctrstype, ctrscode"
+dbo,brttyp,PK__brttyp__A98537143533B97C,CLUSTERED,1,1,ctrscode
+dbo,CalcOfEarning,PK__CalcOfEa__A9FDEC123015C0F8,CLUSTERED,1,1,C_ID
+dbo,Campaign,Campaign_ID,CLUSTERED,1,1,ID
+dbo,CampBrand,CampBrand_ID,CLUSTERED,1,1,ID
+dbo,CampCat,CampCat_ID,CLUSTERED,1,1,ID
+dbo,CampComp,CampComp_ID,CLUSTERED,1,1,ID
+dbo,CampDetail,CampStype_ID,CLUSTERED,1,1,ID
+dbo,CampKit,CampKit_ID,CLUSTERED,1,1,ID
+dbo,CampSku,CampSku_ID,CLUSTERED,1,1,ID
+dbo,CampSpon,CampSpon_ID,CLUSTERED,1,1,ID
+dbo,CampSponSum,CampSponSum_ID,CLUSTERED,1,1,ID
+dbo,cfflds,PK__cfflds__CCBBB06056DF2860,CLUSTERED,1,1,"ctable, cfield"
+dbo,cflkcd,PK__cflkcd__A61720AC652D47B7,CLUSTERED,1,1,"ctype, ccode"
+dbo,cflktp,PK__cflktp__253A52E56CCE697F,CLUSTERED,1,1,ctype
+dbo,cfsfld,cfsfld_xtblfld,NONCLUSTERED,0,0,"ctable, cfield"
+dbo,cfsfld,PK__cfsfld__506119CC737B670E,CLUSTERED,1,1,"cform, ctable, cfield"
+dbo,cfsfrm,PK__cfsfrm__4CAAA2CA7EED19BA,CLUSTERED,1,1,cform
+dbo,cfspge,PK__cfspge__57E0CA9B03B1CED7,CLUSTERED,1,1,"cform, npageno"
+dbo,cfstbl,PK__cfstbl__4AB919520A5ECC66,CLUSTERED,1,1,"ctable, cform"
+dbo,cftble,PK__cftble__FE73B37E13E836A0,CLUSTERED,1,1,ctable
+dbo,changes,IX_changes_cfieldname,NONCLUSTERED,0,0,"ccustno, codlvalue, cnewvalue, InsUpdDate, cuser, cfieldname"
+dbo,changescamp,campno,NONCLUSTERED,0,0,cCampno
+dbo,cmcudf,PK__cmcudf__05074A0E3EBD23B6,CLUSTERED,1,1,ccustno
+dbo,cmfacc,PK__cmfacc__C01E59374381D8D3,CLUSTERED,1,1,"cfilterno, cuserid"
+dbo,cmfexp,PK__cmfexp__BF97C86F493AB229,CLUSTERED,1,1,cfilterno
+dbo,cmfnot,PK__cmfnot__BF97C86F53B8409C,CLUSTERED,1,1,cfilterno
+dbo,cmfopt,PK__cmfopt__BF97C86F597119F2,CLUSTERED,1,1,cfilterno
+dbo,cmmisc,PK__cmmisc__A61720AC5F29F348,CLUSTERED,1,1,"ctype, ccode"
+dbo,cmrrpt,PK__cmrrpt__24DA335B65D6F0D7,CLUSTERED,1,1,ctitle
+dbo,coacpd,PK__coacpd__34795B207AD20DBD,CLUSTERED,1,1,"cyear, cpdno"
+dbo,coacpd2,xperiod,NONCLUSTERED,0,0,"dbegin, dend"
+dbo,coactr,_dta_index_coactr_8_505104890__K3_1_2_4_5,NONCLUSTERED,0,0,"cuid, ctype, lupdate, lview, cuserid"
+dbo,coactr,_dta_index_coactr_8_505104890__K5_K3_K2_K1,NONCLUSTERED,0,0,"lview, cuserid, ctype, cuid"
+dbo,coactr,coactr_xtype,NONCLUSTERED,0,0,ctype
+dbo,coactr,coactr_xusr,NONCLUSTERED,0,0,cuserid
+dbo,coactr,PK__coactr__2CDD98A62003926C,CLUSTERED,1,1,cuid
+dbo,coacts,coacts_xseq,NONCLUSTERED,0,0,nseq
+dbo,coacts,PK__coacts__2CDD98A62A8120DF,CLUSTERED,1,1,cuid
+dbo,coacty,PK__coacty__253A52E5331666E0,CLUSTERED,1,1,ctype
+dbo,coatch,coatch_xfilename,NONCLUSTERED,0,0,cfilename
+dbo,coatch,coatch_xtypekey,NONCLUSTERED,0,0,"ctype, ckeyvalue1, ckeyvalue2"
+dbo,coatch,IX_coatch_ctype_ckeyvalue2,NONCLUSTERED,0,0,"ctype, ckeyvalue2"
+dbo,coatch,PK__coatch__2CDD98A638CF4036,CLUSTERED,1,1,cuid
+dbo,coaudt,PK__coaudt__2CDD98A61B895868,CLUSTERED,1,1,cuid
+dbo,cobank,cobank_xbankname,NONCLUSTERED,0,0,cbankname
+dbo,cobank,PK__cobank__E9DF204C434CCEA9,CLUSTERED,1,1,cbankno
+dbo,cobatc,cobatc_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,cobatc,cobatc_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,cobatc,PK__cobatc__41A8CC8A0055DCE9,CLUSTERED,1,1,cbatchid
+dbo,cobatd,cobatd_xrptbatid,NONCLUSTERED,0,0,"crptid, cbatchid"
+dbo,cobatd,cobatd_xrptidmac,NONCLUSTERED,0,0,"crptid, cmacroname"
+dbo,cobatd,PK__cobatd__7EAA7A68060EB63F,CLUSTERED,1,1,"cbatchid, crptid, cmacroname"
+dbo,cobnot,PK__cobnot__E9DF204C0CBBB3CE,CLUSTERED,1,1,cbankno
+dbo,cocfg,PK__cocfg__D7171D3A27EF2F4D,CLUSTERED,1,1,cproperty
+dbo,cocurr,cocurr_xcurrname,NONCLUSTERED,0,0,ccurrname
+dbo,cocurr,PK__cocurr__EC35BDFD12748D24,CLUSTERED,1,1,ccurrcode
+dbo,coerlg,PK__coerlg__4B304F901CF21B97,CLUSTERED,1,1,nentryno
+dbo,colbas,PK__colbas__09ADDDFD2863CE43,CLUSTERED,1,1,cbascode
+dbo,comisc,PK__comisc__A61720AC2F10CBD2,CLUSTERED,1,1,"ctype, ccode"
+dbo,comisc2,PK__comisc2__A61720AC2DA808A3,CLUSTERED,1,1,"ctype, ccode"
+dbo,corfld,PK__corfld__2CDD98A6389A360C,CLUSTERED,1,1,cuid
+dbo,coschd,cocurr_xsource,NONCLUSTERED,0,0,csource
+dbo,coschd,PK__coschd__297B0E64373172DD,CLUSTERED,1,1,cjobname
+dbo,cosign,PK__cosign__44B5B20945000CF1,CLUSTERED,1,1,csigncode
+dbo,cosptg,PK__cosptg__EF7DF9334BAD0A80,CLUSTERED,1,1,csptgid
+dbo,costax,costax_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,costax,PK__costax__F9848F32534E2C48,CLUSTERED,1,1,"ctaxcode, nversion"
+dbo,costen,PK__costen__BEE3C3B77E388A4D,CLUSTERED,1,1,centycode
+dbo,cotbas,PK__cotbas__7CEBA30D1CBD116D,CLUSTERED,1,1,ctaxcode
+dbo,Dashboardinfo,PK__Dashboar__A9FDEC125A7908F1,CLUSTERED,1,1,C_ID
+dbo,Dashbpardinfo,PK__Dashbpar__A9FDEC12E4BC84D6,CLUSTERED,1,1,C_ID
+dbo,dpibdg,IX_dpibdg,CLUSTERED,0,0,"cItemNo, cWarehouse, dEndDate"
+dbo,dpibdg_T,IX_dpibdg_T_cwarehouse_citemno_dEndDate_nunits_ndollars,NONCLUSTERED,0,0,"cwarehouse, citemno, dEndDate, nunits, ndollars"
+dbo,dpitem,PK__dpitem__39B06CFB15735765,CLUSTERED,1,1,cItemNo
+dbo,dprqmt,IX_dprqmt,CLUSTERED,0,0,"cItemNo, cType, cWarehouse"
+dbo,fw_consignment,IX_fw_consignment_cConsignmentID,NONCLUSTERED,0,0,cConsignmentID
+dbo,fw_consignment,IX_fw_consignment_cShipno,NONCLUSTERED,0,0,"cConsignmentID, cShipno"
+dbo,fw_items,_dta_index_fw_items_c_8_1154112685__K2,CLUSTERED,0,0,cConsignmentID
+dbo,fw_items,NonClusteredIndex-20200507-143918,NONCLUSTERED,0,0,cConsignmentID
+dbo,glabal,PK__glabal__7247EE982922E852,CLUSTERED,1,1,"cyear, cacctid"
+dbo,glabalh,PK__glabalh__7247EE983C35BCC6,CLUSTERED,1,1,"cyear, cacctid"
+dbo,glabud,PK__glabud__8748E6A44F48913A,CLUSTERED,1,1,cbudid
+dbo,glacct,glacct_xcatggrp,NONCLUSTERED,0,0,"ccatgid, cgrpid, cacctid"
+dbo,glacct,glacct_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,glacct,glacct_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,glacct,PK__glacct__7636CB6A57DDD73B,CLUSTERED,1,1,cacctid
+dbo,gladis,gladis_xacctid,NONCLUSTERED,0,0,cacctid
+dbo,gladis,PK__gladis__2CDD98A6097532CF,CLUSTERED,1,1,cuid
+dbo,glagrp,glagrp_xcatggrp,NONCLUSTERED,0,0,"cgrpid, ccatgid"
+dbo,glagrp,glagrp_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,glagrp,PK__glagrp__184BD75011165497,CLUSTERED,1,1,cgrpid
+dbo,glagrph,glagrph_xcatggrp,NONCLUSTERED,0,0,"cgrpid, ccatgid"
+dbo,glagrph,glagrph_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,glagrph,PK__glagrph__184BD750439749C2,CLUSTERED,1,1,cgrpid
+dbo,glalst,PK__glalst__8C6768CE18B7765F,CLUSTERED,1,1,coldchart
+dbo,glanot,PK__glanot__7636CB6A1E704FB5,CLUSTERED,1,1,cacctid
+dbo,glbatc,glbatc_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,glbatc,glbatc_xstatusje,NONCLUSTERED,0,0,"cstatus, njetype"
+dbo,glbatc,PK__glbatc__56A7EF692429290B,CLUSTERED,1,1,cbatcno
+dbo,glbfer,glbfer_xbudacct,NONCLUSTERED,0,0,"cscompid, csbudid, cbudid, cacctid"
+dbo,glbrmk,PK__glbrmk__56A7EF693EDD1F47,CLUSTERED,1,1,cbatcno
+dbo,glbsmd,PK__glbsmd__7F3BFEAF4495F89D,CLUSTERED,1,1,"cuserid, cmodule"
+dbo,glbsys,PK__glbsys__F89915864C371A65,CLUSTERED,1,1,cuserid
+dbo,glbtdt,PK__glbtdt__AED9E54D55B5F9FD,CLUSTERED,1,1,"cjobname, cmodule"
+dbo,glbtfr,PK__glbtfr__297B0E64751996BD,CLUSTERED,1,1,cjobname
+dbo,glbugt,PK__glbugt__302B8A1267DF34DA,CLUSTERED,1,1,"cbudid, cacctid"
+dbo,glcatg,glcatg_xseqcatg,NONCLUSTERED,0,0,"cseq, ccatgid"
+dbo,glcatg,PK__glcatg__A64ED4BC29E264B7,CLUSTERED,1,1,ccatgid
+dbo,glcatgh,glcatgh_xseqcatg,NONCLUSTERED,0,0,"cseq, ccatgid"
+dbo,glcatgh,PK__glcatgh__A64ED4BC5D571BC5,CLUSTERED,1,1,ccatgid
+dbo,glcflw,glcflw_xcflmethod,NONCLUSTERED,0,0,ccflmethod
+dbo,glcflw,PK__glcflw__2CDD98A603874F4F,CLUSTERED,1,1,cuid
+dbo,glcflwh,glcflwh_xcflmethod,NONCLUSTERED,0,0,ccflmethod
+dbo,glcflwh,PK__glcflwh__2CDD98A665EC61C6,CLUSTERED,1,1,cuid
+dbo,glfseg,PK__glfseg__16D51FFF0B287117,CLUSTERED,1,1,"csegno, csegvalue"
+dbo,gljeid,PK__gljeid__A0AA32EC12C992DF,CLUSTERED,1,1,"cbatcno, cjeid"
+dbo,glpdis,glpdis_xacctid,NONCLUSTERED,0,0,cacctid
+dbo,glpdis,PK__glpdis__2CDD98A620238DFD,CLUSTERED,1,1,cuid
+dbo,glsegv,PK__glsegv__16D51FFF25DC6753,CLUSTERED,1,1,"csegno, csegvalue"
+dbo,gltfertemp,PK__gltferte__2CDD98A65A8C142D,CLUSTERED,1,1,cuid
+dbo,gltrsn,IX_gltrsn_cacctid_cstatus,NONCLUSTERED,0,0,"cuid, cbatcno, cjeid, cdescript, creference, ccurrcode, cyear, cpdno, csource, cobjno, ctrsno, ctrstype, cinterfund, dtrs, ntrsamt, nftrsamt, nxchgrate, cmasterno, cacctid, cstatus"
+dbo,gltrsn,IX_gltrsn_cbatcno,NONCLUSTERED,0,0,"cuid, cjeid, cacctid, cdescript, creference, ccurrcode, cyear, cpdno, cstatus, csource, cobjno, ctrsno, ctrstype, cinterfund, dtrs, ntrsamt, nftrsamt, nxchgrate, cclosedyr, cclosedpd, cmasterno, cname, nseq, ncfxcgrate, ncftrsamt, cprattrib1, cprattrib2, cprattrib3, cprattrib4, cbatcno"
+dbo,gltrsn,IX_gltrsn_cuid_cstatus,NONCLUSTERED,0,0,"cuid, cstatus"
+dbo,glunje,glunje_xbatcjeid,NONCLUSTERED,0,0,"cbatcno, cjeid"
+dbo,glunje,PK__glunje__2CDD98A61388ACEE,CLUSTERED,1,1,cuid
+dbo,glxcgd,glxcgd_xcurryear,NONCLUSTERED,0,0,"ccurrcode, cyear"
+dbo,glxcgd,glxcgd_xcurryrtrs,NONCLUSTERED,0,0,"ccurrcode, cyear, dtrs"
+dbo,glxcxg,glxcxg_xcurrcode,NONCLUSTERED,0,0,ccurrcode
+dbo,glxcxg,glxcxg_xcurryr,NONCLUSTERED,0,0,"ccurrcode, cyear"
+dbo,iccprc,iccprc_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,iccprc,PK__iccprc__2CDD98A623BF14B7,CLUSTERED,1,1,cuid
+dbo,iccprh,PK__iccprh__2CDD98A634E9A0B9,CLUSTERED,1,1,cuid
+dbo,iciadj,iciadj_xadjno,NONCLUSTERED,0,0,cadjno
+dbo,iciadj,iciadj_xadjust,NONCLUSTERED,0,0,dadjust
+dbo,iciadj,iciadj_xitemno,NONCLUSTERED,0,0,citemno
+dbo,iciadj,iciadj_xmodadjust,NONCLUSTERED,0,0,"cmodule, dadjust"
+dbo,iciadj,iciadj_xtrf1,NONCLUSTERED,0,0,"cmodule, cadjacc, ctogl, dadjust"
+dbo,iciadj,PK__iciadj__2CDD98A639AE55D6,CLUSTERED,1,1,cuid
+dbo,iciadjh,iciadjh_xadjno,NONCLUSTERED,0,0,cadjno
+dbo,iciadjh,iciadjh_xitemno,NONCLUSTERED,0,0,citemno
+dbo,iciadjh,iciadjh_xmodadjust,NONCLUSTERED,0,0,"cmodule, dadjust"
+dbo,iciadjh,PK__iciadjh__2CDD98A64CC12A4A,CLUSTERED,1,1,cuid
+dbo,icibal,icibal_xitemwhse,NONCLUSTERED,0,0,"citemno, cwarehouse"
+dbo,icibal,PK__icibal__2CDD98A65FD3FEBE,CLUSTERED,1,1,cuid
+dbo,icibalh,icibalh_xitemwhse,NONCLUSTERED,0,0,"citemno, cwarehouse"
+dbo,icibalh,PK__icibalh__2CDD98A675C33FDD,CLUSTERED,1,1,cuid
+dbo,icibin,icibin_xbinno,NONCLUSTERED,0,0,cbin
+dbo,icibin,icibin_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icibin,icibin_xitemwhsbin,NONCLUSTERED,0,0,"citemno, cwarehouse, cbin"
+dbo,icibin,icibin_xwarehouse,NONCLUSTERED,0,0,cwarehouse
+dbo,icibin,IX_icibin_cwarehouse_cbin_nonhand,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2, cwarehouse, cbin, nonhand"
+dbo,icibin,IX_icibin_nseq,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2, cwarehouse, nseq"
+dbo,icibin,PK__icibin__2CDD98A60BB280FC,CLUSTERED,1,1,cuid
+dbo,icicst,icicst_xitemdate,NONCLUSTERED,0,0,"citemno, ditem"
+dbo,icicst,icicst_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icicst,icicst_xitemwhsdt,NONCLUSTERED,0,0,"citemno, cwarehouse, ditem, dcreate"
+dbo,icicst,icicst_xrcptuid,NONCLUSTERED,0,0,crcptrsuid
+dbo,icicst,icicst_xuidcost,NONCLUSTERED,0,0,"cuid, ncost"
+dbo,icicst,PK__icicst__2CDD98A71AF4C48C,NONCLUSTERED,1,1,cuid
+dbo,iciimg,PK__iciimg__E58F14F87622C98F,CLUSTERED,1,1,citemno
+dbo,iciimgNew,PK__iciimgNe__E58F14F87C230785,CLUSTERED,1,1,citemno
+dbo,icikit,icikit_xkitcomp,NONCLUSTERED,0,0,"ckititemno, ccompno"
+dbo,icikit,icikit_xkitspccode,NONCLUSTERED,0,0,"ckititemno, ckspeccode1, ckspeccode2"
+dbo,icikit,PK__icikit__2CDD98A626667738,CLUSTERED,1,1,cuid
+dbo,icilot,icilot_xitem,NONCLUSTERED,0,0,citemno
+dbo,icilot,icilot_xitemlot,NONCLUSTERED,0,0,"citemno, clotno"
+dbo,icilot,icilot_xitemvend,NONCLUSTERED,0,0,"citemno, cvendno"
+dbo,icilot,icilot_xitemvendlot,NONCLUSTERED,0,0,"citemno, cvendno, cvendlotno"
+dbo,icilot,PK__icilot__2CDD98A638852773,CLUSTERED,1,1,cuid
+dbo,icimcp,PK__icimcp__478E9617420E91AD,CLUSTERED,1,1,"ctype, citemno, ccurrcode"
+dbo,icimlp,_dta_index_icimlp_8_332657820__K4_2_3_5_6,NONCLUSTERED,0,0,"citemno, cspeccode1, cmeasure, cpricecd, cspeccode2"
+dbo,icimlp,IX_icimlp_citemno,NONCLUSTERED,0,0,citemno
+dbo,icimlp,IX_icimlp_cuid,NONCLUSTERED,0,0,cuid
+dbo,icimve,icimve_xitemwhs,NONCLUSTERED,0,0,"citemno, cwarehouse"
+dbo,icimve,IX_icimve_cmveno,NONCLUSTERED,0,0,cmveno
+dbo,icimve,IX_icimve_cwarehouse_cbin2_dmove,NONCLUSTERED,0,0,"cwarehouse, cbin2, dmove"
+dbo,icimve,PK__icimve__2CDD98A657FDD2CC,CLUSTERED,1,1,cuid
+dbo,icinot,PK__icinot__E58F14F86557CDEA,CLUSTERED,1,1,citemno
+dbo,icinst,PK__icinst__816247F02D13D71D,CLUSTERED,1,1,"citemno, cspeccode1, cspeccode2"
+dbo,iciprc,iciprc_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,iciprc,PK__iciprc__2CDD98A670C98096,CLUSTERED,1,1,cuid
+dbo,icircv,icircv_xcrcptno,NONCLUSTERED,0,0,crcptno
+dbo,icircv,icircv_xitemwhs,NONCLUSTERED,0,0,"citemno, cwarehouse"
+dbo,icircv,icircv_xtrfno,NONCLUSTERED,0,0,ctrfno
+dbo,icircv,icircv_xtrfnoline,NONCLUSTERED,0,0,"ctrfno, clineitem"
+dbo,icircv,PK__icircv__2CDD98A601F40C98,CLUSTERED,1,1,cuid
+dbo,icircvh,icircvh_xcrcptno,NONCLUSTERED,0,0,crcptno
+dbo,icircvh,icircvh_xitemwhs,NONCLUSTERED,0,0,"citemno, cwarehouse"
+dbo,icircvh,icircvh_xtrfno,NONCLUSTERED,0,0,ctrfno
+dbo,icircvh,PK__icircvh__2CDD98A611365028,CLUSTERED,1,1,cuid
+dbo,icirmk,PK__icirmk__E58F14F8207893B8,CLUSTERED,1,1,citemno
+dbo,icispc,icispc_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icispc,PK__icispc__2CDD98A627259147,CLUSTERED,1,1,cuid
+dbo,icisti,PK__icisti__BD6FCE0230AEFB81,CLUSTERED,1,1,cissueno
+dbo,icistih,PK__icistih__BD6FCE023C20AE2D,CLUSTERED,1,1,cissueno
+dbo,icistr,IX_icistr_cissueno,NONCLUSTERED,0,0,cissueno
+dbo,icistr,PK__icistr__2CDD98A6479260D9,CLUSTERED,1,1,cuid
+dbo,icistrh,IX_icistrh_cissueno,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2, cdescript, cmeasure, cwarehouse, cbin, nqtydec, nissueqty, ncost, ntotcost, nseq, cissueno"
+dbo,icistrh,IX_icistrh_cissueno_nissueqty,NONCLUSTERED,0,0,"cissueno, nissueqty"
+dbo,icistrh,PK__icistrh__2CDD98A65D81A1F8,CLUSTERED,1,1,cuid
+dbo,icisub,icisub_xitemno,NONCLUSTERED,0,0,citemno
+dbo,icisub,PK__icisub__936F7AC07370E317,CLUSTERED,1,1,"citemno, csubitemno"
+dbo,icitem,_dta_index_icitem_8_2016778292__K1_10_73,NONCLUSTERED,0,0,"cmeasure, nqtydec, citemno"
+dbo,icitem,_dta_index_icitem_8_2016778292__K1_2_4_10_13_14_20_24_25_27_35_37_38_39_44_45_46_47_48_49_50_51_62_68_69_71_74_75_79_80_81_82_,NONCLUSTERED,0,0,"cdescript, ctype, cmeasure, cclass, cprodline, ctaxcode, dspstart, dspend, lusespec, lsubitem, lmlprice, lchkonhand, lupdonhand, lnegprice, lowdesc, lowprice, lowdisc, lowtax, lowweight, lowrevncd, lowcomp, lowcoms, lprebkit, lupsitem, ncosttype, ndiscrate, nweight, nprice, nprcinctx, nspprice, nspprinctx, lregitem, linvksales, citemno"
+dbo,icitem,_dta_index_icitem_8_2016778292__K7_K8_1,NONCLUSTERED,0,0,"citemno, cbarcode1, cbarcode2"
+dbo,icitem,_dta_index_icitem_8_2016778292__K8,NONCLUSTERED,0,0,cbarcode2
+dbo,icitem,icitem_xaritem,NONCLUSTERED,0,0,"laritem, citemno"
+dbo,icitem,icitem_xclass,NONCLUSTERED,0,0,"cclass, citemno"
+dbo,icitem,icitem_xcosttype,NONCLUSTERED,0,0,"ncosttype, citemno"
+dbo,icitem,icitem_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,icitem,icitem_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,icitem,icitem_xpoitem,NONCLUSTERED,0,0,"lpoitem, citemno"
+dbo,icitem,icitem_xprodline,NONCLUSTERED,0,0,"cprodline, citemno"
+dbo,icitem,icitem_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,icitem,icitem_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,icitem,IX_icitem_cnxsponcat,NONCLUSTERED,0,0,"citemno, deffective, cnxsponcat"
+dbo,icitem,IX_icitem_it_modified_yn,NONCLUSTERED,0,0,"citemno, cdescript, cfdescript, ctype, cspectype1, cspectype2, cbarcode1, cbarcode2, cstatus, cmeasure, csmeasure, cpmeasure, cclass, cprodline, ccommiss, cvendno, cminptype, cbuyer, ctaxcode, dcreate, dlastsale, dlastfnh, dspstart, dspend, tmodified, lusespec, laritem, lpoitem, lmiitem, lioitem, lkititem, lusekitno, llot, lsubitem, lcomplst, lmlprice, lchkonhand, lupdonhand, ltaxable1, ltaxable2, lallownupd, lallowneg, lnegprice, lowdesc, lowprice, lowdisc, lowtax, lowweight, lowrevncd, lowcomp, lprtsn, lprtlotno, lowivrmk, lptivrmk, lowsormk, lptsormk, lowpormk, lptpormk, lowmirmk, lptmirmk, lowcoms, ldiscard, lrepair, lowrarmk, lptrarmk, llifetime, lprebkit, lupsitem, lupsubspec, ncosttype, nminprice, nqtydec, ndiscrate, nweight, nstdcost, nrtrncost, nlfnhcost, nprice, nprcinctx, nspprice, nspprinctx, nlsalprice, nlsprinctx, nrstkpct, nminrstk, nmrsinctx, nrepprice, nrpprinctx, cvernum, dversion, cstkcycle, ccurstat, cprevstat, dcurstat, dprevstat, csponcat, lmlm, ldscntble, it_tmodified, ldrp, cusername, ctype1, ctype2, ctype3, ldisc, cdfsponcat, cnxsponcat, deffective, csubcat, nnwprice, nnwprinctx, dnwstart, dnwend, duntstart, duntend, lregitem, linvksales, lrecoup, lSalesaid, nBoxCount, nQv, nsp, lptarpsrmk, lptsoplrmk, lptsopsrmk, lptraplrmk, camrtmethd, camrtrecur, cccostacc, ccobliacc, ccdiscacc, lamortize, namrtcycle, lusestdcst, it_modified_yn"
+dbo,icitem,PK__icitem__E58F14F87A1DE0A6,CLUSTERED,1,1,citemno
+dbo,icitem_it_log,pk_icitem_it_log,CLUSTERED,1,1,citemno
+dbo,icitemh,icitemh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,icitemh,PK__icitemh__E58F14F87BD11EEE,CLUSTERED,1,1,citemno
+dbo,icitrf,icitrf_xsitemspccode,NONCLUSTERED,0,0,"citemno1, csspeccode1, csspeccode2"
+dbo,icitrf,icitrf_xtitemspccode,NONCLUSTERED,0,0,"citemno2, ctspeccode1, ctspeccode2"
+dbo,icitrf,icitrf_xtrfline,NONCLUSTERED,0,0,"ctrfno, clineitem"
+dbo,icitrf,icitrf_xtrfno,NONCLUSTERED,0,0,ctrfno
+dbo,icitrf,icitrf_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,icitrf,icitrf_xwhsitem1,NONCLUSTERED,0,0,"cwhouse1, citemno1"
+dbo,icitrf,icitrf_xwhsitem2,NONCLUSTERED,0,0,"cwhouse2, citemno2"
+dbo,icitrf,PK__icitrf__2CDD98A67D845D36,CLUSTERED,1,1,cuid
+dbo,icitrfh,icitrfh_xsitemspccode,NONCLUSTERED,0,0,"citemno1, csspeccode1, csspeccode2"
+dbo,icitrfh,icitrfh_xtitemspccode,NONCLUSTERED,0,0,"citemno2, ctspeccode1, ctspeccode2"
+dbo,icitrfh,icitrfh_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,icitrfh,icitrfh_xwhsitem1,NONCLUSTERED,0,0,"cwhouse1, citemno1"
+dbo,icitrfh,icitrfh_xwhsitem2,NONCLUSTERED,0,0,"cwhouse2, citemno2"
+dbo,icitrfh,PK__icitrfh__2CDD98A61EE55101,CLUSTERED,1,1,cuid
+dbo,icitsp,icitsp_xcstuid,NONCLUSTERED,0,0,ccstuid
+dbo,icitsp,icitsp_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icitsp,icitsp_xitemwhsbin,NONCLUSTERED,0,0,"citemno, cwarehouse, cbin"
+dbo,icitsp,PK__icitsp__2CDD98A6404644CC,CLUSTERED,1,1,cuid
+dbo,iciumk,PK__iciumk__E58F14F8507CAC95,CLUSTERED,1,1,citemno
+dbo,iciups,iciups_xitemno,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,iciups,PK__iciups__2CDD98A6563585EB,CLUSTERED,1,1,cuid
+dbo,iciwhs,_dta_index_iciwhs_8_1622348894__K2_20,NONCLUSTERED,0,0,"nbook, citemno"
+dbo,iciwhs,_dta_index_iciwhs_8_1622348894__K5_K2_16_20_29,NONCLUSTERED,0,0,"nonhand, nbook, nportalOH, cwarehouse, citemno"
+dbo,iciwhs,iciwhs_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,iciwhs,iciwhs_xitemwhs,NONCLUSTERED,0,0,"citemno, cwarehouse"
+dbo,iciwhs,iciwhs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,iciwhs,PK__iciwhs__2CDD98A6629B5CD0,CLUSTERED,1,1,cuid
+dbo,iciwtf,iciwtf_xtrfno,NONCLUSTERED,0,0,ctrfno
+dbo,iciwtf,PK__iciwtf__2CDD98A67F379B7E,CLUSTERED,1,1,cuid
+dbo,iciwtfh,iciwtfh_xtrfno,NONCLUSTERED,0,0,ctrfno
+dbo,iciwtfh,PK__iciwtfh__2CDD98A609B529F1,CLUSTERED,1,1,cuid
+dbo,icktrs,icktrs_xkititem,NONCLUSTERED,0,0,"ckitno, citemno"
+dbo,icktrs,PK__icktrs__2CDD98A61432B864,CLUSTERED,1,1,cuid
+dbo,icktsp,icktsp_xkititem,NONCLUSTERED,0,0,"ckitno, citemno"
+dbo,icktsp,PK__icktsp__2CDD98A62CFE662E,CLUSTERED,1,1,cuid
+dbo,icpclg,icpclg_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icpclg,icpclg_xitemwhsbin,NONCLUSTERED,0,0,"citemno, cwarehouse, cbin"
+dbo,icpclg,icpclg_xupdate,NONCLUSTERED,0,0,dupdate
+dbo,icpclg,PK__icpclg__2CDD98A63A58614C,CLUSTERED,1,1,cuid
+dbo,icpcnt,icpcnt_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icpcnt,icpcnt_xitemwhsbin,NONCLUSTERED,0,0,"citemno, cwarehouse, cbin"
+dbo,icpcnt,PK__icpcnt__2CDD98A644D5EFBF,CLUSTERED,1,1,cuid
+dbo,icpcsp,icpcsp_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,icpcsp,icpcsp_xitemwhskit,NONCLUSTERED,0,0,"citemno, cwarehouse, ckitno"
+dbo,icpcsp,icpcsp_xitemwhslot,NONCLUSTERED,0,0,"citemno, cwarehouse, clotno"
+dbo,icpcsp,icpcsp_xitemwhssn,NONCLUSTERED,0,0,"citemno, cwarehouse, csernum"
+dbo,icpcsp,icpcsp_xwhsitemsn,NONCLUSTERED,0,0,"cwarehouse, citemno, csernum"
+dbo,icpcsp,PK__icpcsp__2CDD98A65047A26B,CLUSTERED,1,1,cuid
+dbo,icspec,PK__icspec__A9ED159D5F89E5FB,CLUSTERED,1,1,"cspectype, cspeccode"
+dbo,icspty,icspty_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,icspty,PK__icspty__34EB860C672B07C3,CLUSTERED,1,1,cspectype
+dbo,ictbin,PK__ictbin__5CEC6A6B392F32E9,CLUSTERED,1,1,"ctype, cwarehouse, cbin"
+dbo,ictfsp,ictfsp_xtrfitem,NONCLUSTERED,0,0,"ctrfno, citemno"
+dbo,ictfsp,PK__ictfsp__2CDD98A642B89D23,CLUSTERED,1,1,cuid
+dbo,ictfsph,ictfsph_xtrfitem,NONCLUSTERED,0,0,"ctrfno, citemno"
+dbo,ictfsph,PK__ictfsph__2CDD98A65106BC7A,CLUSTERED,1,1,cuid
+dbo,ictrmk,PK__ictrmk__253A52E55F54DBD1,CLUSTERED,1,1,ctype
+dbo,ictrsn,ictrsn_xitemspccode,NONCLUSTERED,0,0,"citemno, cspeccode1, cspeccode2"
+dbo,ictrsn,ictrsn_xitemwhsbin,NONCLUSTERED,0,0,"citemno, cwarehouse, cbin"
+dbo,ictrsn,ictrsn_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,ictrsn,ictrsn_xlotno,NONCLUSTERED,0,0,clotno
+dbo,ictrsn,ictrsn_xmodtrs,NONCLUSTERED,0,0,"cmodule, ctrsno"
+dbo,ictrsn,ictrsn_xsernum,NONCLUSTERED,0,0,csernum
+dbo,ictrsn,ictrsn_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,ictrsn,ictrsn_xtypetrs,NONCLUSTERED,0,0,"ctrstype, ctrsno"
+dbo,ictrsn,PK__ictrsn__2CDD98A76601D960,NONCLUSTERED,1,1,cuid
+dbo,ictrsnh,ictrsnh_xitemwhsbin,NONCLUSTERED,0,0,"citemno, cwarehouse, cbin"
+dbo,ictrsnh,ictrsnh_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,ictrsnh,ictrsnh_xlotno,NONCLUSTERED,0,0,clotno
+dbo,ictrsnh,ictrsnh_xmodtrs,NONCLUSTERED,0,0,"cmodule, ctrsno"
+dbo,ictrsnh,ictrsnh_xsernum,NONCLUSTERED,0,0,csernum
+dbo,ictrsnh,ictrsnh_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,ictrsnh,ictrsnh_xtypetrs,NONCLUSTERED,0,0,"ctrstype, ctrsno"
+dbo,ictrsnh,PK__ictrsnh__2CDD98A67A08D20D,CLUSTERED,1,1,cuid
+dbo,ictwhs,PK__ictwhs__95C4751E0E0FCABA,CLUSTERED,1,1,"ctype, cwarehouse"
+dbo,ictype,PK__ictype__253A52E515B0EC82,CLUSTERED,1,1,ctype
+dbo,icunit,icunit_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,icunit,icunit_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,icunit,PK__icunit__AF8CD5A67AC7EC1C,CLUSTERED,1,1,cmeasure
+dbo,icuprc,idxIcuprc_1,NONCLUSTERED,0,0,"citemno, dspstart, dspend, nstdcost, ctype"
+dbo,icvend,icvend_xitmvenddt,NONCLUSTERED,0,0,"citemno, cvendno, dasof"
+dbo,icvend,icvend_xvenditmum,NONCLUSTERED,0,0,"cvendno, citemno, cmeasure"
+dbo,icvend,PK__icvend__167F0E8804515656,CLUSTERED,1,1,"citemno, cvendno, cmeasure"
+dbo,icwbin,PK__icwbin__9D6388E6139399E6,CLUSTERED,1,1,"cwarehouse, cbin"
+dbo,icwhse,icwhse_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,icwhse,icwhse_xstatewhs,NONCLUSTERED,0,0,"cstate, czip, cwarehouse"
+dbo,icwhse,icwhse_xzipwhs,NONCLUSTERED,0,0,"czip, cwarehouse"
+dbo,icwhse,PK__icwhse__0FE27FBA1F054C92,CLUSTERED,1,1,cwarehouse
+dbo,icWSupdate,idx_icWsUpdate,NONCLUSTERED,0,0,"cItemno, cGuid"
+dbo,iwpycd,PK__iwpycd__8945DFE72DB4F54A,CLUSTERED,1,1,"cwarehouse, cpaycode"
+dbo,iwuser,PK__iwuser__F899158635561712,CLUSTERED,1,1,cuserid
+dbo,iwusrb,PK__iwusrb__2604E78269D4CC49,CLUSTERED,1,1,"cuserid, cbankno"
+dbo,iwusrp,IX_iwusrp_lactive,NONCLUSTERED,0,0,"cuserid, cpaycode, lactive"
+dbo,iwusrp,PK__iwusrp__7E3EB5DB613F8648,CLUSTERED,1,1,"cuserid, cpaycode"
+dbo,log_events,IX_event_time,NONCLUSTERED,0,0,event_time
+dbo,log_events,IX_event_type,NONCLUSTERED,0,0,event_type
+dbo,log_events,IX_execution_id,NONCLUSTERED,0,0,execution_id
+dbo,log_events,IX_process_name,NONCLUSTERED,0,0,process_name
+dbo,log_events,IX_step_name,NONCLUSTERED,0,0,step_name
+dbo,log_events,PK__log_even__2370F7270D1B3EBE,CLUSTERED,1,1,event_id
+dbo,miboml,miboml_xitemno,NONCLUSTERED,0,0,citemno
+dbo,miboml,miboml_xtype,NONCLUSTERED,0,0,ctype
+dbo,miboml,PK__miboml__C7FDEDF62A376A72,CLUSTERED,1,1,"citemno, cspeccode1, cspeccode2, nstep, ccompno, ctype"
+dbo,mifinh,mifinh_xcompno,NONCLUSTERED,0,0,citemno
+dbo,mifinh,mifinh_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,mifinh,mifinh_xfinish,NONCLUSTERED,0,0,dfinish
+dbo,mifinh,mifinh_xitemno,NONCLUSTERED,0,0,"cwono, citemno"
+dbo,mifinh,mifinh_xjobno,NONCLUSTERED,0,0,cjobno
+dbo,mifinh,mifinh_xlvlnode,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, clevel, cnode, dfinish"
+dbo,mifinh,mifinh_xparent,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, cparentlvl, cparentnod, dfinish"
+dbo,mifinh,mifinh_xsernum,NONCLUSTERED,0,0,csernum
+dbo,mifinh,PK__mifinh__2CDD98A63BA18B40,CLUSTERED,1,1,cuid
+dbo,mifinhh,mifinhh_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,mifinhh,PK__mifinhh__2CDD98A6668BE945,CLUSTERED,1,1,cuid
+dbo,milabr,milbar_xclass,NONCLUSTERED,0,0,"cclass, claborno"
+dbo,milabr,milbar_xdescript,NONCLUSTERED,0,0,"cdescript, claborno"
+dbo,milabr,milbar_xidno,NONCLUSTERED,0,0,cidno
+dbo,milabr,milbar_xshift,NONCLUSTERED,0,0,"cshift, claborno"
+dbo,milabr,milbar_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,milabr,PK__milabr__CDF33BDE1176474A,CLUSTERED,1,1,claborno
+dbo,milnot,PK__milnot__CDF33BDE22A0D34C,CLUSTERED,1,1,claborno
+dbo,mimach,mimach_xclass,NONCLUSTERED,0,0,"cclass, cmachno"
+dbo,mimach,mimach_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,mimach,mimach_xidno,NONCLUSTERED,0,0,cidno
+dbo,mimach,mimach_xshift,NONCLUSTERED,0,0,"cshift, cmachno"
+dbo,mimach,mimach_xstatus,NONCLUSTERED,0,0,cstatus
+dbo,mimach,PK__mimach__879035B22859ACA2,CLUSTERED,1,1,cmachno
+dbo,mimnot,PK__mimnot__879035B23C60A54F,CLUSTERED,1,1,cmachno
+dbo,misrmk,PK__misrmk__F3DB60F642197EA5,CLUSTERED,1,1,csrmkno
+dbo,miurmk,PK__miurmk__2CDD98A61ACAA75A,CLUSTERED,1,1,cuid
+dbo,miuxpl,miuxpl_xitemno,NONCLUSTERED,0,0,citemno
+dbo,miuxpl,miuxpl_xlvlnode,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, clevel, cnode"
+dbo,miuxpl,PK__miuxpl__2CDD98A62177A4E9,CLUSTERED,1,1,cuid
+dbo,miwips,miwips_xcompno,NONCLUSTERED,0,0,citemno
+dbo,miwips,miwips_xitemno,NONCLUSTERED,0,0,"cwono, citemno"
+dbo,miwips,miwips_xjobno,NONCLUSTERED,0,0,cjobno
+dbo,miwips,miwips_xlvlnode,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, clevel, cnode, dstart"
+dbo,miwips,miwips_xparent,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, cparentlvl, cparentnod, dstart"
+dbo,miwips,miwips_xsernum,NONCLUSTERED,0,0,csernum
+dbo,miwips,miwips_xstart,NONCLUSTERED,0,0,dstart
+dbo,miwips,miwips_xtype,NONCLUSTERED,0,0,ctype
+dbo,miwips,miwips_xvoid,NONCLUSTERED,0,0,lvoid
+dbo,miwips,miwips_xwipqty,NONCLUSTERED,0,0,nwipqty
+dbo,miwips,PK__miwips__2CDD98A6394F2E7A,CLUSTERED,1,1,cuid
+dbo,miwipsh,PK__miwipsh__2CDD98A66068FB9B,CLUSTERED,1,1,cuid
+dbo,miword,miword_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,miword,PK__miword__DE4BCD820782C8BC,CLUSTERED,1,1,cwono
+dbo,miwordh,PK__miwordh__DE4BCD8218AD54BE,CLUSTERED,1,1,cwono
+dbo,miwrmk,PK__miwrmk__DE4BCD8229D7E0C0,CLUSTERED,1,1,cwono
+dbo,miwtin,PK__miwtin__2CDD98A62F90BA16,CLUSTERED,1,1,cuid
+dbo,miwtrk,PK__miwtrk__2CDD98A6363DB7A5,CLUSTERED,1,1,cuid
+dbo,miwtrs,miwtrs_xcompno,NONCLUSTERED,0,0,citemno
+dbo,miwtrs,miwtrs_xitemno,NONCLUSTERED,0,0,"cwono, citemno"
+dbo,miwtrs,miwtrs_xjobno,NONCLUSTERED,0,0,cjobno
+dbo,miwtrs,miwtrs_xlvlnode,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, clevel, cnode"
+dbo,miwtrs,miwtrs_xorder,NONCLUSTERED,0,0,dorder
+dbo,miwtrs,miwtrs_xparent,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, cparentlvl, cparentnod"
+dbo,miwtrs,miwtrs_xparentlvl,NONCLUSTERED,0,0,"cwono, cmparent, clineitem, cparentlvl, cparentnod, clevel, cnode"
+dbo,miwtrs,miwtrs_xrequest,NONCLUSTERED,0,0,drequest
+dbo,miwtrs,miwtrs_xwojobno,NONCLUSTERED,0,0,"cwono, cjobno"
+dbo,miwtrs,PK__miwtrs__2CDD98A63CEAB534,CLUSTERED,1,1,cuid
+dbo,miwtrsh,PK__miwtrsh__2CDD98A668C93772,CLUSTERED,1,1,cuid
+dbo,poacca,PK__poacca__2CDD98A614A7B9B0,CLUSTERED,1,1,cuid
+dbo,poacca,poacca_xrcptcnlno,NONCLUSTERED,0,0,"crcptno, ccnlno"
+dbo,poacca,poacca_xrcptuid,NONCLUSTERED,0,0,crcptuid
+dbo,poacca,poacca_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poaccah,PK__poaccah__2CDD98A626C669EB,CLUSTERED,1,1,cuid
+dbo,poaccah,poaccah_xrcptcnlno,NONCLUSTERED,0,0,"crcptno, ccnlno"
+dbo,poaccah,poaccah_xrcptuid,NONCLUSTERED,0,0,crcptuid
+dbo,poaccah,poaccah_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poaccq,IX_poaccq_cvendno_ctype,NONCLUSTERED,0,0,"cvendno, ctype"
+dbo,poaccq,PK__poaccq__2CDD98A638E51A26,CLUSTERED,1,1,cuid
+dbo,poaccq,poaccq_xrcptcnlln,NONCLUSTERED,0,0,"crcptno, ccnlno, clineitem, ctype"
+dbo,poaccq,poaccq_xrcptuid,NONCLUSTERED,0,0,crcptuid
+dbo,poaccq,poaccq_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poaccqh,PK__poaccqh__2CDD98A64FC87F7E,CLUSTERED,1,1,cuid
+dbo,poaccqh,poaccqh_xrcptcnlln,NONCLUSTERED,0,0,"crcptno, ccnlno, clineitem, ctype"
+dbo,poaccqh,poaccqh_xrcptuid,NONCLUSTERED,0,0,crcptuid
+dbo,poaccqh,poaccqh_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poachg,PK__poachg__2CDD98A666ABE4D6,CLUSTERED,1,1,cuid
+dbo,poachg,poachg_xcnlno,NONCLUSTERED,0,0,ccnlno
+dbo,poachg,poachg_xpoachguid,NONCLUSTERED,0,0,cpoachguid
+dbo,poachg,poachg_xtrf1,NONCLUSTERED,0,0,"ctogl, dtrs, cglacc"
+dbo,poachg,poachg_xtrsline,NONCLUSTERED,0,0,"ctrsno, clineitem"
+dbo,poachg,poachg_xtrstype,NONCLUSTERED,0,0,"ctrsno, ctrs"
+dbo,poachg,poachg_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,poachgh,PK__poachgh__2CDD98A60253FF4B,CLUSTERED,1,1,cuid
+dbo,poachgh,poachgh_xcnlno,NONCLUSTERED,0,0,ccnlno
+dbo,poachgh,poachgh_xpoachguid,NONCLUSTERED,0,0,cpoachguid
+dbo,poachgh,poachgh_xtrf1,NONCLUSTERED,0,0,"ctogl, dtrs, cglacc"
+dbo,poachgh,poachgh_xtrsline,NONCLUSTERED,0,0,"ctrsno, clineitem"
+dbo,poachgh,poachgh_xtrstype,NONCLUSTERED,0,0,"ctrsno, ctrs"
+dbo,poachgh,poachgh_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,poatrs,PK__poatrs__2CDD98A61DFC19C0,CLUSTERED,1,1,cuid
+dbo,poatrs,poatrs_xtrsline,NONCLUSTERED,0,0,"ctrsno, clineitem"
+dbo,poatrs,poatrs_xvenrcptl,NONCLUSTERED,0,0,"cvendno, crcptno, clineitem"
+dbo,poatrsh,PK__poatrsh__2CDD98A632F736A6,CLUSTERED,1,1,cuid
+dbo,poatrsh,poatrsh_xtrsline,NONCLUSTERED,0,0,"ctrsno, clineitem"
+dbo,poatrsh,poatrsh_xvenrcptl,NONCLUSTERED,0,0,"cvendno, crcptno, clineitem"
+dbo,pochrg,PK__pochrg__0DD9432F47F2538C,CLUSTERED,1,1,ctrsno
+dbo,pochrg,pochrg_xvendrcpt,NONCLUSTERED,0,0,"cvendno, crcptno"
+dbo,pochrgh,PK__pochrgh__0DD9432F5ED5B8E4,CLUSTERED,1,1,ctrsno
+dbo,pochrgh,pochrgh_xvendrcpt,NONCLUSTERED,0,0,"cvendno, crcptno"
+dbo,pocnlg,PK__pocnlg__2C81F6CF75B91E3C,CLUSTERED,1,1,ccnlno
+dbo,pocnlg,pocnlg_xdtcnlno,NONCLUSTERED,0,0,"dcancel, ccnlno"
+dbo,pocnlg,pocnlg_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poctrs,PK__poctrs__2CDD98A60C9C8394,CLUSTERED,1,1,cuid
+dbo,poctrs,poctrs_xcnlno,NONCLUSTERED,0,0,"ccnlno, clineitem"
+dbo,poctrs,poctrs_xrcptline,NONCLUSTERED,0,0,"crcptno, clineitem"
+dbo,poctsp,PK__poctsp__2CDD98A62DFD775F,CLUSTERED,1,1,cuid
+dbo,poctsp,poctsp_xrcptlineitem,NONCLUSTERED,0,0,"crcptno, clineitem"
+dbo,poctsp,poctsp_xtrsuid,NONCLUSTERED,0,0,cctrsuid
+dbo,podist,PK__podist__2CDD98A6396F2A0B,CLUSTERED,1,1,cuid
+dbo,podist,podist_xporcpt,NONCLUSTERED,0,0,"cpono, crcptno, ctrs"
+dbo,podist,podist_xporcptln,NONCLUSTERED,0,0,"cpono, crcptno, clineitem"
+dbo,podist,podist_xtrf1,NONCLUSTERED,0,0,"ctogl, dtrs, cglacc"
+dbo,podist,podist_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,podisth,PK__podisth__2CDD98A647BD4962,CLUSTERED,1,1,cuid
+dbo,podisth,podisth_xporcpt,NONCLUSTERED,0,0,"cpono, crcptno, ctrs"
+dbo,podisth,podisth_xporcptln,NONCLUSTERED,0,0,"cpono, crcptno, clineitem"
+dbo,podisth,podisth_xtrf1,NONCLUSTERED,0,0,"ctogl, dtrs, cglacc"
+dbo,podisth,podisth_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,popobk,PK__popobk__CC7DB657560B68B9,CLUSTERED,1,1,cbpono
+dbo,poporb,PK__poporb__CC7DB6575BC4420F,CLUSTERED,1,1,cbpono
+dbo,poporbh,PK__poporbh__CC7DB657328D2252,CLUSTERED,1,1,cbpono
+dbo,popord,PK__popord__170FBBEC09560295,CLUSTERED,1,1,cpono
+dbo,popord,popord_xbuyerpo,NONCLUSTERED,0,0,"cbuyer, cpono"
+dbo,popord,popord_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,popord,popord_xquotepo,NONCLUSTERED,0,0,"lquote, cpono"
+dbo,popord,popord_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,popordh,PK__popordh__170FBBEC69A84D12,CLUSTERED,1,1,cpono
+dbo,popordh,popordh_xbuyerpo,NONCLUSTERED,0,0,"cbuyer, cpono"
+dbo,popordh,popordh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,popordh,popordh_xquotepo,NONCLUSTERED,0,0,"lquote, cpono"
+dbo,popordh,popordh_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,popork,PK__popork__170FBBEC49FA978F,CLUSTERED,1,1,cpono
+dbo,poptrb,PK__poptrb__2CDD98A64FB370E5,CLUSTERED,1,1,cuid
+dbo,poptrbh,PK__poptrbh__2CDD98A60056A840,CLUSTERED,1,1,cuid
+dbo,poptrs,PK__poptrs__2CDD98A630F9DF9B,CLUSTERED,1,1,cuid
+dbo,poptrs,poptrs_xitempo,NONCLUSTERED,0,0,"citemno, cpono"
+dbo,poptrs,poptrs_xpoline,NONCLUSTERED,0,0,"cpono, clineitem"
+dbo,poptrs,poptrs_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,poptrs,poptrs_xsoline,NONCLUSTERED,0,0,csolineitm
+dbo,poptrs,poptrs_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poptrs,poptrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,poptrsh,IX_poptrsh_clineitem,NONCLUSTERED,0,0,"cuid, cpartno, lptrmk, clineitem"
+dbo,poptrsh,PK__poptrsh__2CDD98A662913B2F,CLUSTERED,1,1,cuid
+dbo,poptrsh,poptrsh_xitempo,NONCLUSTERED,0,0,"citemno, cpono"
+dbo,poptrsh,poptrsh_xpoline,NONCLUSTERED,0,0,"cpono, clineitem"
+dbo,poptrsh,poptrsh_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,poptrsh,poptrsh_xsoline,NONCLUSTERED,0,0,csolineitm
+dbo,poptrsh,poptrsh_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,poptrsh,poptrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,porecg,PK__porecg__34DB5792142896C3,CLUSTERED,1,1,"cpono, crcptno"
+dbo,porecg,porecg_xdtrcpt,NONCLUSTERED,0,0,"dreceive, crcptno"
+dbo,porecg,porecg_xinvrcpt,NONCLUSTERED,0,0,"cinvno, crcptno"
+dbo,porecg,porecg_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,porecg,porecg_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,porecgh,PK__porecgh__34DB57923C36881D,CLUSTERED,1,1,"cpono, crcptno"
+dbo,porecgh,porecgh_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,portrs,PK__portrs__2CDD98A664447977,CLUSTERED,1,1,cuid
+dbo,portrs,portrs_xitemno,NONCLUSTERED,0,0,citemno
+dbo,portrs,portrs_xitempo,NONCLUSTERED,0,0,"citemno, cpono"
+dbo,portrs,portrs_xpoline,NONCLUSTERED,0,0,"cpono, clineitem"
+dbo,portrs,portrs_xporcpt,NONCLUSTERED,0,0,"cpono, crcptno"
+dbo,portrs,portrs_xpowhsitm,NONCLUSTERED,0,0,"cpono, cwarehouse, citemno, csernum"
+dbo,portrs,portrs_xrcptline,NONCLUSTERED,0,0,"crcptno, clineitem"
+dbo,portrs,portrs_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,portrs,portrs_xreceive,NONCLUSTERED,0,0,dreceive
+dbo,portrs,portrs_xvendpo,NONCLUSTERED,0,0,"cvendno, cpono"
+dbo,portrs,portrs_xwhspoitem,NONCLUSTERED,0,0,"cwarehouse, cpono, citemno"
+dbo,portrsh,PK__portrsh__2CDD98A61022FBB5,CLUSTERED,1,1,cuid
+dbo,portrsh,portrsh_xitemno,NONCLUSTERED,0,0,citemno
+dbo,portrsh,portrsh_xpoline,NONCLUSTERED,0,0,"cpono, clineitem"
+dbo,portrsh,portrsh_xporcpt,NONCLUSTERED,0,0,"cpono, crcptno"
+dbo,portrsh,portrsh_xpowhsitm,NONCLUSTERED,0,0,"cpono, cwarehouse, citemno, csernum"
+dbo,portrsh,portrsh_xrcptline,NONCLUSTERED,0,0,"crcptno, clineitem"
+dbo,portrsh,portrsh_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,portsp,PK__portsp__2CDD98A63C017DF3,CLUSTERED,1,1,cuid
+dbo,portsp,portsp_xrcptlineitem,NONCLUSTERED,0,0,"crcptno, clineitem"
+dbo,posrmk,PK__posrmk__F3DB60F6486754D8,CLUSTERED,1,1,csrmkno
+dbo,posrmk,posrmk_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,post,_dta_index_post_8_1152904816__K2_1_3,NONCLUSTERED,0,0,"SUBURB, AREA, STR-PCODE"
+dbo,potrbk,PK__potrbk__2CDD98A6500876A0,CLUSTERED,1,1,cuid
+dbo,potrmk,PK__potrmk__2CDD98A656B5742F,CLUSTERED,1,1,cuid
+dbo,prchck,pk_prchck,CLUSTERED,1,1,"cempno, cbankno, cchkno, cchktype"
+dbo,prchck,prchck_xbnkchkdchk,NONCLUSTERED,0,0,"cbankno, cchkno, dcheck"
+dbo,prchck,prchck_xdcheck,NONCLUSTERED,0,0,dcheck
+dbo,prchck,prchck_xdeptno,NONCLUSTERED,0,0,cdeptno
+dbo,prchck,prchck_xlname,NONCLUSTERED,0,0,clname
+dbo,prculv,PK__prculv__2CDD98A67BDBA2E5,CLUSTERED,1,1,cuid
+dbo,prculv,prculv_xpost,NONCLUSTERED,0,0,dpost
+dbo,prdchk,PK__prdchk__E9C4B88145DF84E7,CLUSTERED,1,1,"cdeptype, cbankno, cchkno, cchktype"
+dbo,prdchk,prdchk_xbnkchk,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,prdeda,PK__prdeda__2CDD98A62B960C00,CLUSTERED,1,1,cuid
+dbo,prdeda,prdeda_xdedcode,NONCLUSTERED,0,0,cdedcode
+dbo,prdedl,PK__prdedl__CC474C8637FBE2E5,CLUSTERED,1,1,"cdedcode, cstate, cltaxcd"
+dbo,prdeds,PK__prdeds__B406879C409128E6,CLUSTERED,1,1,"cstate, cdedcode"
+dbo,prdedu,PK__prdedu__33C41AD3558C45CC,CLUSTERED,1,1,cdedcode
+dbo,prdept,PK__prdept__F525AF301665E4F0,CLUSTERED,1,1,cdeptno
+dbo,prdept,prdept_xdeptname,NONCLUSTERED,0,0,cdeptname
+dbo,prdist,PK__prdist__2CDD98A624B40447,CLUSTERED,1,1,cuid
+dbo,prdist,prdist_xemptrsno,NONCLUSTERED,0,0,"cempno, ctrsno"
+dbo,prdisth,PK__prdisth__2CDD98A63302239E,CLUSTERED,1,1,cuid
+dbo,prdisth,prdisth_xemptrsno,NONCLUSTERED,0,0,"cempno, ctrsno"
+dbo,prdmatc,PK__prdmatc__2CDD98A60B1DE675,CLUSTERED,1,1,cuid
+dbo,prdmatc,prdmatc_xtrsno,NONCLUSTERED,0,0,ctrsno
+dbo,prdmath,PK__prdmath__2CDD98A61783BD5A,CLUSTERED,1,1,cuid
+dbo,prdmath,prdmath_xtrsno,NONCLUSTERED,0,0,ctrsno
+dbo,prearg,PK__prearg__2CDD98A6415042F5,CLUSTERED,1,1,cuid
+dbo,prearg,prearg_xearncode,NONCLUSTERED,0,0,cearncode
+dbo,prearl,PK__prearl__D95CB21647FD4084,CLUSTERED,1,1,"cearncode, cleavecode"
+dbo,prearn,PK__prearn__633A2ADB4F9E624C,CLUSTERED,1,1,cearncode
+dbo,predep,PK__predep__2CDD98A661BD1287,CLUSTERED,1,1,cuid
+dbo,predep,predep_xempno,NONCLUSTERED,0,0,cempno
+dbo,preerg,PK__preerg__2CDD98A66F170DA5,CLUSTERED,1,1,cuid
+dbo,preerg,preerg_xempearn,NONCLUSTERED,0,0,"cempno, cearncode"
+dbo,preern,PK__preern__110719AC76B82F6D,CLUSTERED,1,1,"cempno, cyear, cearncode"
+dbo,prehst,PK__prehst__37366BA40E8FB8FE,CLUSTERED,1,1,cempno
+dbo,prelve,PK__prelve__10C24A0A14489254,CLUSTERED,1,1,"cempno, cyear, cleavecode"
+dbo,prempd,PK__prempd__1957E79C2943AF3A,CLUSTERED,1,1,"cempno, cyear, cdedcode"
+dbo,prempe,PK__prempe__37366BA44E7533E9,CLUSTERED,1,1,cempno
+dbo,prempf,PK__prempf__CB642386627C2C96,CLUSTERED,1,1,"cempno, cyear"
+dbo,prempl,PK__prempl__E2153DA119CC6180,CLUSTERED,1,1,"cempno, cyear, cltaxstate, cltaxcd"
+dbo,premps,PK__premps__0867C1FE290EA510,CLUSTERED,1,1,"cempno, cyear, ctaxstate"
+dbo,prempy,PK__prempy__807040996FA11D8A,CLUSTERED,1,1,"cempno, cstatus"
+dbo,prempy,prempy_xdeptempno,NONCLUSTERED,0,0,"cdeptno, cempno"
+dbo,prempy,prempy_xname,NONCLUSTERED,0,0,"clname, cfname, cinitial"
+dbo,prempy,prempy_xpaytype,NONCLUSTERED,0,0,cpaytype
+dbo,prempy,prempy_xtaxpytypdst,NONCLUSTERED,0,0,"ctaxstate, cpaytype, cpayperiod, cstate"
+dbo,premw2,PK__premw2__86C1C8565A70F67A,CLUSTERED,1,1,"cw2year, cempno"
+dbo,premwl,PK__premwl__AFB0D6710FD8E2F2,CLUSTERED,1,1,"cw2year, cempno, cltaxstate, cltaxcd"
+dbo,premwl,premwl_xyearemp,NONCLUSTERED,0,0,"cw2year, cempno"
+dbo,premws,PK__premws__45C22A2E1A567165,CLUSTERED,1,1,"cw2year, cempno, ctaxstate"
+dbo,premws,premws_xyearemp,NONCLUSTERED,0,0,"cw2year, cempno"
+dbo,prenot,PK__prenot__37366BA42B80FD67,CLUSTERED,1,1,cempno
+dbo,prepmt,PK__prepmt__702188F23139D6BD,CLUSTERED,1,1,cbatctxt
+dbo,pretrs,PK__pretrs__0902B47E23E9943F,CLUSTERED,1,1,"cbankno, ctrsno"
+dbo,pretrs,pretrs_xbankchk,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,pretrs,pretrs_xebatcno,NONCLUSTERED,0,0,cebatcno
+dbo,prhire,PK__prhire__91BDBA9C36FC68B3,CLUSTERED,1,1,"cempno, cyear, cchkno"
+dbo,pricdf,PK__pricdf__2CDD98A6426E1B5F,CLUSTERED,1,1,cuid
+dbo,pricdf,pricdf_xcodefld,NONCLUSTERED,0,0,"cimpcode, ccolfield"
+dbo,pricdf,pricdf_xcolfldnm,NONCLUSTERED,0,0,"ccolfield, ccolname"
+dbo,pricdf,pricdf_ximpcode,NONCLUSTERED,0,0,cimpcode
+dbo,pricmc,PK__pricmc__2CDD98A64CEBA9D2,CLUSTERED,1,1,cuid
+dbo,pricmc,pricmc_xcdimpam,NONCLUSTERED,0,0,"cimpcode, cimpcol, camcol"
+dbo,pricmc,pricmc_xcodefld,NONCLUSTERED,0,0,"cimpcode, ccolfield"
+dbo,pricmc,pricmc_ximpamcol,NONCLUSTERED,0,0,"cimpcol, camcol"
+dbo,pricmc,pricmc_ximpcode,NONCLUSTERED,0,0,cimpcode
+dbo,pricmc,pricmc_ximpfld,NONCLUSTERED,0,0,"cimpcol, ccolfield"
+dbo,pricnd,PK__pricnd__2CDD98A657693845,CLUSTERED,1,1,cuid
+dbo,pricnv,PK__pricnv__448904965F0A5A0D,CLUSTERED,1,1,cconvno
+dbo,pritcs,PK__pritcs__B387E87065B7579C,CLUSTERED,1,1,cimpcode
+dbo,prleav,PK__prleav__A6698CDA3F87F614,CLUSTERED,1,1,cleavecode
+dbo,prlsys,PK__prlsys__F835655E4BEDCCF9,CLUSTERED,1,1,"cstate, cltaxcd"
+dbo,prlvet,PK__prlvet__2CDD98A6529ACA88,CLUSTERED,1,1,cuid
+dbo,prlvet,prlvet_xleavtier,NONCLUSTERED,0,0,"cleavecode, ctier"
+dbo,prmisc,PK__prmisc__2CDD98A65FF4C5A6,CLUSTERED,1,1,cuid
+dbo,prmisc,prmisc_xempno,NONCLUSTERED,0,0,cempno
+dbo,prmisc,prmisc_xlineitem,NONCLUSTERED,0,0,clineitem
+dbo,prmisc,prmisc_xtrs,NONCLUSTERED,0,0,dtrs
+dbo,prmisch,PK__prmisch__2CDD98A67E794CC6,CLUSTERED,1,1,cuid
+dbo,prmisg,PK__prmisg__2CDD98A61CFDD3E6,CLUSTERED,1,1,cuid
+dbo,prmisg,prmisg_xempno,NONCLUSTERED,0,0,cempno
+dbo,prmisg,prmisg_xlineitem,NONCLUSTERED,0,0,clineitem
+dbo,prmisgh,PK__prmisgh__2CDD98A626873E20,CLUSTERED,1,1,cuid
+dbo,prmisgh,prmisgh_xempno,NONCLUSTERED,0,0,cempno
+dbo,prmtch,PK__prmtch__2CDD98A63010A85A,CLUSTERED,1,1,cuid
+dbo,prpaye,PK__prpaye__1BB76516399A1294,CLUSTERED,1,1,cpayeeid
+dbo,prpwkp,PK__prpwkp__2CDD98A6450BC540,CLUSTERED,1,1,cuid
+dbo,prpwkph,PK__prpwkph__2CDD98A651719C25,CLUSTERED,1,1,cuid
+dbo,prpwrk,PK__prpwrk__C4DAB49C5DD7730A,CLUSTERED,1,1,cpwrkno
+dbo,prpwrk,prpwrk_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,prssys,PK__prssys__973AC631657894D2,CLUSTERED,1,1,cstate
+dbo,prstat,PK__prstat__B8A418DC0F6ECE9E,CLUSTERED,1,1,"cstate, lactive"
+dbo,prtceg,PK__prtceg__2CDD98A66A083FC5,CLUSTERED,1,1,cuid
+dbo,prtceg,prtceg_xtcearn,NONCLUSTERED,0,0,"ctcno, clineitem, cearncode"
+dbo,prtcegh,PK__prtcegh__2CDD98A67391A9FF,CLUSTERED,1,1,cuid
+dbo,prtcegh,prtcegh_xtcearn,NONCLUSTERED,0,0,"ctcno, clineitem, cearncode"
+dbo,prtcer,PK__prtcer__2CDD98A67D1B1439,CLUSTERED,1,1,cuid
+dbo,prtcer,prtcer_xtcearn,NONCLUSTERED,0,0,"ctcno, clineitem, cearncode"
+dbo,prtcerh,PK__prtcerh__2CDD98A615E6C203,CLUSTERED,1,1,cuid
+dbo,prtcerh,prtcerh_xtcearn,NONCLUSTERED,0,0,"ctcno, clineitem, cearncode"
+dbo,prtcrd,PK__prtcrd__3CD4AA602EB26FCD,CLUSTERED,1,1,ctcno
+dbo,prtcrd,prtcrd_xempno,NONCLUSTERED,0,0,cempno
+dbo,prtcrd,prtcrd_xtrsno,NONCLUSTERED,0,0,"dtrs, ctrsno"
+dbo,prtcrdh,PK__prtcrdh__3CD4AA603FDCFBCF,CLUSTERED,1,1,ctcno
+dbo,prtern,PK__prtern__2CDD98A6510787D1,CLUSTERED,1,1,cuid
+dbo,prtern,prtern_xearncode,NONCLUSTERED,0,0,cearncode
+dbo,prtern,prtern_xtrsearn,NONCLUSTERED,0,0,"ctrsno, cearncode"
+dbo,prternh,PK__prternh__2CDD98A66BBB7E0D,CLUSTERED,1,1,cuid
+dbo,prternh,prternh_xearncode,NONCLUSTERED,0,0,cearncode
+dbo,prternh,prternh_xtrsearn,NONCLUSTERED,0,0,"ctrsno, cearncode"
+dbo,prtlog,PK__prtlog__2CDD98A6066F7449,CLUSTERED,1,1,cuid
+dbo,prtlve,PK__prtlve__2CDD98A613C96F67,CLUSTERED,1,1,cuid
+dbo,prtlve,prtlve_xleavecode,NONCLUSTERED,0,0,cleavecode
+dbo,prtlve,prtlve_xtrsnoearn,NONCLUSTERED,0,0,"ctrsno, cearncode"
+dbo,prtlveh,PK__prtlveh__2CDD98A6202F464C,CLUSTERED,1,1,cuid
+dbo,prtlveh,prtlveh_xleavecode,NONCLUSTERED,0,0,cleavecode
+dbo,prtlveh,prtlveh_xtrsnoearn,NONCLUSTERED,0,0,"ctrsno, cearncode"
+dbo,prtrsd,PK__prtrsd__2CDD98A62C951D31,CLUSTERED,1,1,cuid
+dbo,prtrsd,prtrsd_xtrsempded,NONCLUSTERED,0,0,"ctrsno, cempno, cdedcode"
+dbo,prtrsdh,PK__prtrsdh__2CDD98A63CCB84FA,CLUSTERED,1,1,cuid
+dbo,prtrsdh,prtrsdh_xtrsempded,NONCLUSTERED,0,0,"ctrsno, cempno, cdedcode"
+dbo,prtrsl,PK__prtrsl__2CDD98A64D01ECC3,CLUSTERED,1,1,cuid
+dbo,prtrsl,prtrsl_xtrsempstatcd,NONCLUSTERED,0,0,"ctrsno, cempno, cltaxstate, cltaxcd"
+dbo,prtrslh,PK__prtrslh__2CDD98A658739F6F,CLUSTERED,1,1,cuid
+dbo,prtrslh,prtrslh_xtrsempstatcd,NONCLUSTERED,0,0,"ctrsno, cempno, cltaxstate, cltaxcd"
+dbo,prtrss,PK__prtrss__2CDD98A663E5521B,CLUSTERED,1,1,cuid
+dbo,prtrss,prtrss_xtrsempstat,NONCLUSTERED,0,0,"ctrsno, cempno, ctaxstate"
+dbo,prtrssh,PK__prtrssh__2CDD98A6045221AD,CLUSTERED,1,1,cuid
+dbo,prtrssh,prtrssh_xtrsempstat,NONCLUSTERED,0,0,"ctrsno, cempno, ctaxstate"
+dbo,prtrst,PK__prtrst__2CDD98A624BEF13F,CLUSTERED,1,1,cuid
+dbo,prtrst,prtrst_xbnkchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,prtrst,prtrst_xcheck,NONCLUSTERED,0,0,dcheck
+dbo,prtrst,prtrst_xdeptno,NONCLUSTERED,0,0,cdeptno
+dbo,prtrst,prtrst_xempdstend,NONCLUSTERED,0,0,"cempno, dstart, dend"
+dbo,prtrst,prtrst_xenptrsno,NONCLUSTERED,0,0,"cempno, ctrsno"
+dbo,prtrst,prtrst_xstpaytypechk,NONCLUSTERED,0,0,"ctaxstate, cpaytype, cchkno"
+dbo,prtrst,prtrst_xtrsno,NONCLUSTERED,0,0,ctrsno
+dbo,prtrsth,PK__prtrsth__2CDD98A65DF76E9B,CLUSTERED,1,1,cuid
+dbo,prtrsth,prtrsth_xbnkchkno,NONCLUSTERED,0,0,"cbankno, cchkno"
+dbo,prtrsth,prtrsth_xcheck,NONCLUSTERED,0,0,dcheck
+dbo,prtrsth,prtrsth_xdeptno,NONCLUSTERED,0,0,cdeptno
+dbo,prtrsth,prtrsth_xempdstend,NONCLUSTERED,0,0,"cempno, dstart, dend"
+dbo,prtrsth,prtrsth_xenptrsno,NONCLUSTERED,0,0,"cempno, ctrsno"
+dbo,prtrsth,prtrsth_xstpaytypechk,NONCLUSTERED,0,0,"ctaxstate, cpaytype, cchkno"
+dbo,prtrsth,prtrsth_xtrsno,NONCLUSTERED,0,0,ctrsno
+dbo,prwccd,PK__prwccd__1B8F2A00172FEBF7,CLUSTERED,1,1,cwccode
+dbo,prwcgd,PK__prwcgd__2CDD98A61CE8C54D,CLUSTERED,1,1,cuid
+dbo,prwcgd,prwcgd_xwcgrp,NONCLUSTERED,0,0,cwcgrp
+dbo,prwcgp,PK__prwcgp__6CBD5490276653C0,CLUSTERED,1,1,cwcgrp
+dbo,raccit,PK__raccit__E26912952F077588,CLUSTERED,1,1,"crmano, crmaline"
+dbo,racktp,PK__racktp__2CDD98A674F99B2C,CLUSTERED,1,1,cuid
+dbo,racktr,PK__racktr__2CDD98A6053002F5,CLUSTERED,1,1,cuid
+dbo,racktrh,PK__racktrh__2CDD98A6174EB330,CLUSTERED,1,1,cuid
+dbo,raclpn,PK__raclpn__4D4B5081379CBB89,CLUSTERED,1,1,cclpnno
+dbo,raclpn,raclpn_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,raclpn,raclpn_xname,NONCLUSTERED,0,0,cname
+dbo,racnlg,PK__racnlg__2CDD98A645EADAE0,CLUSTERED,1,1,cuid
+dbo,racnlg,racnlg_xcancel,NONCLUSTERED,0,0,dcancel
+dbo,racnlg,racnlg_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,racnlg,racnlg_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,racnlg,racnlg_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,racnlg,racnlg_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno"
+dbo,racnlg,racnlg_xrtvline,NONCLUSTERED,0,0,"crtvno, crtvline"
+dbo,racnlg,racnlg_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno"
+dbo,racnlg,racnlg_xshipno,NONCLUSTERED,0,0,cshipno
+dbo,racnlg,racnlg_xtyperma,NONCLUSTERED,0,0,"ctype, crmano"
+dbo,racnlg,racnlg_xtypertv,NONCLUSTERED,0,0,"ctype, crtvno"
+dbo,racnlg,racnlg_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,racnot,PK__racnot__4D4B5081768E123B,CLUSTERED,1,1,cclpnno
+dbo,racord,PK__racord__FA75E1597C46EB91,CLUSTERED,1,1,crmano
+dbo,racord,racord_xclpnrma,NONCLUSTERED,0,0,"cclpnno, crmano"
+dbo,racord,racord_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,racord,racord_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,racord,racord_xorder,NONCLUSTERED,0,0,dorder
+dbo,racord,racord_xpono,NONCLUSTERED,0,0,cpono
+dbo,racord,racord_xslpnrma,NONCLUSTERED,0,0,"cslpnno, crmano"
+dbo,racordh,PK__racordh__FA75E1597564E3D8,CLUSTERED,1,1,crmano
+dbo,racordh,racordh_xclpnrma,NONCLUSTERED,0,0,"cclpnno, crmano"
+dbo,racordh,racordh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,racordh,racordh_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,racordh,racordh_xorder,NONCLUSTERED,0,0,dorder
+dbo,racordh,racordh_xpono,NONCLUSTERED,0,0,cpono
+dbo,racordh,racordh_xslpnrma,NONCLUSTERED,0,0,"cslpnno, crmano"
+dbo,racrmk,PK__racrmk__FA75E1596E82DC1F,CLUSTERED,1,1,crmano
+dbo,racshp,PK__racshp__2CDD98A6743BB575,CLUSTERED,1,1,cuid
+dbo,racshp,racshp_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,racshp,racshp_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,racshp,racshp_xlineitem,NONCLUSTERED,0,0,"crmano, clineitem"
+dbo,racshp,racshp_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,racshp,racshp_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,racshp,racshp_xrmano,NONCLUSTERED,0,0,crmano
+dbo,racshp,racshp_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,racshph,PK__racshph__2CDD98A627BB597B,CLUSTERED,1,1,cuid
+dbo,racshph,racshph_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,racshph,racshph_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,racshph,racshph_xlineitem,NONCLUSTERED,0,0,"crmano, clineitem"
+dbo,racshph,racshph_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,racshph,racshph_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,racshph,racshph_xrmano,NONCLUSTERED,0,0,crmano
+dbo,racshph,racshph_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,racsrk,PK__racsrk__2CDD98A65B3AFD81,CLUSTERED,1,1,cuid
+dbo,ractrk,PK__ractrk__2CDD98A661E7FB10,CLUSTERED,1,1,cuid
+dbo,ractrs,PK__ractrs__2CDD98A669891CD8,CLUSTERED,1,1,cuid
+dbo,ractrs,ractrs_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,ractrs,ractrs_xicktrsuid,NONCLUSTERED,0,0,cicktrsuid
+dbo,ractrs,ractrs_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,ractrs,ractrs_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,ractrs,ractrs_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,ractrs,ractrs_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,ractrs,ractrs_xrtrncode,NONCLUSTERED,0,0,crtrncode
+dbo,ractrs,ractrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,ractrsh,PK__ractrsh__2CDD98A63F5DD8E2,CLUSTERED,1,1,cuid
+dbo,ractrsh,ractrsh_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,ractrsh,ractrsh_xicktrsuid,NONCLUSTERED,0,0,cicktrsuid
+dbo,ractrsh,ractrsh_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,ractrsh,ractrsh_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,ractrsh,ractrsh_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,ractrsh,ractrsh_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,ractrsh,ractrsh_xrtrncode,NONCLUSTERED,0,0,crtrncode
+dbo,ractrsh,ractrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,ractsp,PK__ractsp__2CDD98A6153294EC,CLUSTERED,1,1,cuid
+dbo,ractsp,ractsp_xitemno,NONCLUSTERED,0,0,citemno
+dbo,ractsp,ractsp_xrmalineitem,NONCLUSTERED,0,0,"crmano, clineitem"
+dbo,radist,PK__radist__2CDD98A621986BD1,CLUSTERED,1,1,cuid
+dbo,radist,radist_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,radist,radist_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno, ctype"
+dbo,radist,radist_xrmashipln,NONCLUSTERED,0,0,"crmano, cshipno, clineitem, ctype"
+dbo,radist,radist_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno, ctype"
+dbo,radist,radist_xrtvrcptln,NONCLUSTERED,0,0,"crtvno, crcptno, clineitem, ctype"
+dbo,radist,radist_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,radisth,PK__radisth__2CDD98A631CED39A,CLUSTERED,1,1,cuid
+dbo,radisth,radisth_xcustno,NONCLUSTERED,0,0,ccustno
+dbo,radisth,radisth_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno, ctype"
+dbo,radisth,radisth_xrmashipln,NONCLUSTERED,0,0,"crmano, cshipno, clineitem, ctype"
+dbo,radisth,radisth_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno, ctype"
+dbo,radisth,radisth_xrtvrcptln,NONCLUSTERED,0,0,"crtvno, crcptno, clineitem, ctype"
+dbo,radisth,radisth_xvendno,NONCLUSTERED,0,0,cvendno
+dbo,raiadj,PK__raiadj__2CDD98A642053B63,CLUSTERED,1,1,cuid
+dbo,raitrf,PK__raitrf__0A60A570523BA32C,CLUSTERED,1,1,ctrfno
+dbo,raivrk,PK__raivrk__FA75E1596BFB752F,CLUSTERED,1,1,crmano
+dbo,raiwrn,PK__raiwrn__724FE2DF72A872BE,CLUSTERED,1,1,"citemno, dbegin"
+dbo,rarecg,PK__rarecg__3D4EC7E37955704D,CLUSTERED,1,1,crcptno
+dbo,rarecg,rarecg_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rarecg,rarecg_xdrcpt,NONCLUSTERED,0,0,dreceive
+dbo,rarecg,rarecg_xrmarcpt,NONCLUSTERED,0,0,"crmano, crcptno"
+dbo,rarecg,rarecg_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno"
+dbo,rarecg,rarecg_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rarecgh,PK__rarecgh__3D4EC7E3271C3AFD,CLUSTERED,1,1,crcptno
+dbo,rarecgh,rarecgh_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rarecgh,rarecgh_xdrcpt,NONCLUSTERED,0,0,dreceive
+dbo,rarecgh,rarecgh_xrmarcpt,NONCLUSTERED,0,0,"crmano, crcptno"
+dbo,rarecgh,rarecgh_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno"
+dbo,rarecgh,rarecgh_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rarktp,PK__rarktp__2CDD98A6296D636B,CLUSTERED,1,1,cuid
+dbo,rarktph,PK__rarktph__2CDD98A63A97EF6D,CLUSTERED,1,1,cuid
+dbo,rarktr,PK__rarktr__2CDD98A64BC27B6F,CLUSTERED,1,1,cuid
+dbo,rarktrh,PK__rarktrh__2CDD98A65ED54FE3,CLUSTERED,1,1,cuid
+dbo,rartcd,PK__rartcd__F98BDFEC54E305AD,CLUSTERED,1,1,crtrncode
+dbo,rartcd,rartcd_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,rartcd,rartcd_xrtrntype,NONCLUSTERED,0,0,nrtrntype
+dbo,rartnt,PK__rartnt__F98BDFEC660D91AF,CLUSTERED,1,1,crtrncode
+dbo,rartrs,PK__rartrs__2CDD98A66BC66B05,CLUSTERED,1,1,cuid
+dbo,rartrs,rartrs_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rartrs,rartrs_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,rartrs,rartrs_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,rartrs,rartrs_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,rartrs,rartrs_xreceive,NONCLUSTERED,0,0,dreceive
+dbo,rartrs,rartrs_xrmarcpt,NONCLUSTERED,0,0,"crmano, crcptno"
+dbo,rartrs,rartrs_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno"
+dbo,rartrs,rartrs_xtyperma,NONCLUSTERED,0,0,"ctype, crmano, crmaline"
+dbo,rartrs,rartrs_xtypertv,NONCLUSTERED,0,0,"ctype, crtvno, crtvline"
+dbo,rartrs,rartrs_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rartrs,rartrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,rartrsh,PK__rartrsh__2CDD98A61E51EAD2,CLUSTERED,1,1,cuid
+dbo,rartrsh,rartrsh_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rartrsh,rartrsh_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,rartrsh,rartrsh_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,rartrsh,rartrsh_xrcptno,NONCLUSTERED,0,0,crcptno
+dbo,rartrsh,rartrsh_xreceive,NONCLUSTERED,0,0,dreceive
+dbo,rartrsh,rartrsh_xrmarcpt,NONCLUSTERED,0,0,"crmano, crcptno"
+dbo,rartrsh,rartrsh_xrtvrcpt,NONCLUSTERED,0,0,"crtvno, crcptno"
+dbo,rartrsh,rartrsh_xtyperma,NONCLUSTERED,0,0,"ctype, crmano, crmaline"
+dbo,rartrsh,rartrsh_xtypertv,NONCLUSTERED,0,0,"ctype, crtvno, crtvline"
+dbo,rartrsh,rartrsh_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rartrsh,rartrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,rartsp,PK__rartsp__2CDD98A650DD6A9F,CLUSTERED,1,1,cuid
+dbo,rartsph,PK__rartsph__2CDD98A6601FAE2F,CLUSTERED,1,1,cuid
+dbo,rashpg,PK__rashpg__CE751CC26F61F1BF,CLUSTERED,1,1,cshipno
+dbo,rashpg,rashpg_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rashpg,rashpg_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,rashpg,rashpg_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno"
+dbo,rashpg,rashpg_xrtvship,NONCLUSTERED,0,0,"crtvno, cshipno"
+dbo,rashpg,rashpg_xship,NONCLUSTERED,0,0,dship
+dbo,rashpg,rashpg_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rashpgh,PK__rashpgh__CE751CC220F94D53,CLUSTERED,1,1,cshipno
+dbo,rashpgh,rashpgh_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rashpgh,rashpgh_xinvno,NONCLUSTERED,0,0,cinvno
+dbo,rashpgh,rashpgh_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno"
+dbo,rashpgh,rashpgh_xrtvship,NONCLUSTERED,0,0,"crtvno, cshipno"
+dbo,rashpgh,rashpgh_xship,NONCLUSTERED,0,0,dship
+dbo,rashpgh,rashpgh_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rasktp,PK__rasktp__2CDD98A671E82457,CLUSTERED,1,1,cuid
+dbo,rasktph,PK__rasktph__2CDD98A60312B059,CLUSTERED,1,1,cuid
+dbo,rasktr,PK__rasktr__2CDD98A6143D3C5B,CLUSTERED,1,1,cuid
+dbo,rasktrh,PK__rasktrh__2CDD98A6275010CF,CLUSTERED,1,1,cuid
+dbo,rasrmk,PK__rasrmk__F3DB60F65290A8E7,CLUSTERED,1,1,csrmkno
+dbo,rasrmk,rasrmk_xdescript,NONCLUSTERED,0,0,cdescript
+dbo,rastrs,PK__rastrs__2CDD98A65A31CAAF,CLUSTERED,1,1,cuid
+dbo,rastrs,rastrs_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rastrs,rastrs_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,rastrs,rastrs_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,rastrs,rastrs_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno"
+dbo,rastrs,rastrs_xrtvship,NONCLUSTERED,0,0,"crtvno, cshipno"
+dbo,rastrs,rastrs_xship,NONCLUSTERED,0,0,dship
+dbo,rastrs,rastrs_xshipno,NONCLUSTERED,0,0,cshipno
+dbo,rastrs,rastrs_xtyperma,NONCLUSTERED,0,0,"ctype, crmano, crmaline"
+dbo,rastrs,rastrs_xtypertv,NONCLUSTERED,0,0,"ctype, crtvno, crtvline"
+dbo,rastrs,rastrs_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rastrs,rastrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,rastrsh,PK__rastrsh__2CDD98A60EA592EE,CLUSTERED,1,1,cuid
+dbo,rastrsh,rastrsh_xcustrma,NONCLUSTERED,0,0,"ccustno, crmano"
+dbo,rastrsh,rastrsh_xitemrma,NONCLUSTERED,0,0,"citemno, crmano"
+dbo,rastrsh,rastrsh_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,rastrsh,rastrsh_xrmaship,NONCLUSTERED,0,0,"crmano, cshipno"
+dbo,rastrsh,rastrsh_xrtvship,NONCLUSTERED,0,0,"crtvno, cshipno"
+dbo,rastrsh,rastrsh_xship,NONCLUSTERED,0,0,dship
+dbo,rastrsh,rastrsh_xshipno,NONCLUSTERED,0,0,cshipno
+dbo,rastrsh,rastrsh_xtyperma,NONCLUSTERED,0,0,"ctype, crmano, crmaline"
+dbo,rastrsh,rastrsh_xtypertv,NONCLUSTERED,0,0,"ctype, crtvno, crtvline"
+dbo,rastrsh,rastrsh_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,rastrsh,rastrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,rastsp,PK__rastsp__2CDD98A643195B2D,CLUSTERED,1,1,cuid
+dbo,rastsp,rastsp_xrashlineitem,NONCLUSTERED,0,0,"cshipno, clineitem"
+dbo,rastsph,PK__rastsph__2CDD98A65073564B,CLUSTERED,1,1,cuid
+dbo,rastsph,rastsph_xrashlineitem,NONCLUSTERED,0,0,"cshipno, clineitem"
+dbo,rasyst,PK__rasyst__CCF3E1CB5DCD5169,CLUSTERED,1,1,crasetup
+dbo,ravord,PK__ravord__F29C43B64F4A27E8,CLUSTERED,1,1,crtvno
+dbo,ravord,ravord_xclpnrtv,NONCLUSTERED,0,0,"cclpnno, crtvno"
+dbo,ravord,ravord_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,ravord,ravord_xorder,NONCLUSTERED,0,0,dorder
+dbo,ravord,ravord_xrefno,NONCLUSTERED,0,0,crefno
+dbo,ravord,ravord_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,ravordh,PK__ravordh__F29C43B63C02494A,CLUSTERED,1,1,crtvno
+dbo,ravordh,ravordh_xclpnrtv,NONCLUSTERED,0,0,"cclpnno, crtvno"
+dbo,ravordh,ravordh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,ravordh,ravordh_xorder,NONCLUSTERED,0,0,dorder
+dbo,ravordh,ravordh_xrefno,NONCLUSTERED,0,0,crefno
+dbo,ravordh,ravordh_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,ravrec,PK__ravrec__2CDD98A628BA6AAC,CLUSTERED,1,1,cuid
+dbo,ravrec,ravrec_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,ravrec,ravrec_xlineitem,NONCLUSTERED,0,0,"crtvno, clineitem"
+dbo,ravrec,ravrec_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,ravrec,ravrec_xrtvline,NONCLUSTERED,0,0,"crtvno, crtvline"
+dbo,ravrec,ravrec_xrtvno,NONCLUSTERED,0,0,crtvno
+dbo,ravrec,ravrec_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,ravrec,ravrec_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,ravrech,PK__ravrech__2CDD98A65C3A0EB2,CLUSTERED,1,1,cuid
+dbo,ravrech,ravrech_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,ravrech,ravrech_xlineitem,NONCLUSTERED,0,0,"crtvno, clineitem"
+dbo,ravrech,ravrech_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,ravrech,ravrech_xrtvline,NONCLUSTERED,0,0,"crtvno, crtvline"
+dbo,ravrech,ravrech_xrtvno,NONCLUSTERED,0,0,crtvno
+dbo,ravrech,ravrech_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,ravrech,ravrech_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,ravrmk,PK__ravrmk__F29C43B60FB9B2B8,CLUSTERED,1,1,crtvno
+dbo,ravrrk,PK__ravrrk__2CDD98A615728C0E,CLUSTERED,1,1,cuid
+dbo,ravtrk,PK__ravtrk__2CDD98A61C1F899D,CLUSTERED,1,1,cuid
+dbo,ravtrs,PK__ravtrs__2CDD98A623C0AB65,CLUSTERED,1,1,cuid
+dbo,ravtrs,ravtrs_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,ravtrs,ravtrs_xpoline,NONCLUSTERED,0,0,"cpono, cpoline"
+dbo,ravtrs,ravtrs_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,ravtrs,ravtrs_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,ravtrs,ravtrs_xrtrncode,NONCLUSTERED,0,0,crtrncode
+dbo,ravtrs,ravtrs_xrtvline,NONCLUSTERED,0,0,"crtvno, crtvline"
+dbo,ravtrs,ravtrs_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,ravtrs,ravtrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,ravtrsh,PK__ravtrsh__2CDD98A65EE17133,CLUSTERED,1,1,cuid
+dbo,ravtrsh,ravtrsh_xitemrtv,NONCLUSTERED,0,0,"citemno, crtvno"
+dbo,ravtrsh,ravtrsh_xpoline,NONCLUSTERED,0,0,"cpono, cpoline"
+dbo,ravtrsh,ravtrsh_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,ravtrsh,ravtrsh_xrmaline,NONCLUSTERED,0,0,"crmano, crmaline"
+dbo,ravtrsh,ravtrsh_xrtrncode,NONCLUSTERED,0,0,crtrncode
+dbo,ravtrsh,ravtrsh_xrtvline,NONCLUSTERED,0,0,"crtvno, crtvline"
+dbo,ravtrsh,ravtrsh_xvendrtv,NONCLUSTERED,0,0,"cvendno, crtvno"
+dbo,ravtrsh,ravtrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,rebatedtlMONTHLY,rebatedtl_xmlm,NONCLUSTERED,0,0,"nsalesamt, nSalesDisc, dmonth, ccustno, csponsor"
+dbo,soacpt,PK__soacpt__B391882F3A62E543,CLUSTERED,1,1,cacptno
+dbo,soacpt,soacpt_xacptdtrs,NONCLUSTERED,0,0,"cacptno, dtrs"
+dbo,soacpt,soacpt_xsono,NONCLUSTERED,0,0,csono
+dbo,soacpth,PK__soacpth__B391882F410FE2D2,CLUSTERED,1,1,cacptno
+dbo,soacpth,soacpth_xacptdtrs,NONCLUSTERED,0,0,"cacptno, dtrs"
+dbo,soacpth,soacpth_xsono,NONCLUSTERED,0,0,csono
+dbo,soacsp,PK__soacsp__2CDD98A747BCE061,NONCLUSTERED,1,1,cuid
+dbo,soacsp,soacsp_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soacsp,soacsp_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soacsp,soacsp_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soacsp,soacsp_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,soacsph,PK__soacsph__2CDD98A758E76C63,NONCLUSTERED,1,1,cuid
+dbo,soacsph,soacsph_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soacsph,soacsph_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soacsph,soacsph_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soacsph,soacsph_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,soactr,PK__soactr__2CDD98A66A11F865,CLUSTERED,1,1,cuid
+dbo,soactr,soactr_xacptdrcv,NONCLUSTERED,0,0,"cacptno, dreceive"
+dbo,soactr,soactr_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soactr,soactr_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soactr,soactr_xshipno,NONCLUSTERED,0,0,"csono, cshipno"
+dbo,soactrh,PK__soactrh__2CDD98A62532BE33,CLUSTERED,1,1,cuid
+dbo,soactrh,soactrh_xacptdrcv,NONCLUSTERED,0,0,"cacptno, dreceive"
+dbo,soactrh,soactrh_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soactrh,soactrh_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soactrh,soactrh_xshipno,NONCLUSTERED,0,0,"csono, cshipno"
+dbo,soaktp,PK__soaktp__2CDD98A660538401,CLUSTERED,1,1,cuid
+dbo,soaktp,soaktp_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soaktp,soaktp_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soaktp,soaktp_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soaktp,soaktp_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,soaktph,PK__soaktph__2CDD98A673665875,CLUSTERED,1,1,cuid
+dbo,soaktph,soaktph_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soaktph,soaktph_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soaktph,soaktph_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soaktph,soaktph_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,soaktr,PK__soaktr__2CDD98A606792CE9,CLUSTERED,1,1,cuid
+dbo,soaktr,soaktr_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soaktr,soaktr_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soaktr,soaktr_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soaktr,soaktr_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,soaktr,soaktrh_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soaktr,soaktrh_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soaktr,soaktrh_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,soaktr,soaktrh_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,soaktrh,PK__soaktrh__2CDD98A61C686E08,CLUSTERED,1,1,cuid
+dbo,soaord,PK__soaord__62605ED81A023701,CLUSTERED,1,1,cinvno
+dbo,soaord,soaord_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,soaord,soaord_xcustno,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,soaord,soaord_xsono,NONCLUSTERED,0,0,csono
+dbo,soarmk,PK__soarmk__62605ED847C901B1,CLUSTERED,1,1,cinvno
+dbo,soatrk,PK__soatrk__2CDD98A64D81DB07,CLUSTERED,1,1,cuid
+dbo,soatrs,PK__soatrs__2CDD98A6533AB45D,CLUSTERED,1,1,cuid
+dbo,soatrs,soatrs_xbillline,NONCLUSTERED,0,0,"cinvno, clineitem"
+dbo,sobkit,PK__sobkit__2CDD98A6749BA828,CLUSTERED,1,1,cuid
+dbo,socamp,_dta_index_socamp_8_345829877__K12_K1_K4_K5,NONCLUSTERED,0,0,"lactive, cCampNo, dFrom, dTo"
+dbo,socamp,idxSoCampdfrom,NONCLUSTERED,0,0,dFrom
+dbo,socamp,IX_socamp_cCampNo,NONCLUSTERED,0,0,cCampNo
+dbo,sockit,PK__sockit__2CDD98A605C6342A,CLUSTERED,1,1,cuid
+dbo,soconitems,IX_soconitems_cConsignmentID,NONCLUSTERED,0,0,"cManifestid, cItemid, cLabelno, cColour, nweight, cstatus, cConsignmentID"
+dbo,soconitems,PK__soconite__39B1857469ABD175,CLUSTERED,1,1,cItemid
+dbo,soconsign,IX_soconsign_cManifestid_cstatus,NONCLUSTERED,0,0,"cConsignmentID, cShipno, cwaybillno, cerror, dcreate, cManifestid, cstatus"
+dbo,soconsign,PK__soconsig__BEB3A00464E71C58,CLUSTERED,1,1,cConsignmentID
+dbo,soctrk,PK__soctrk__2CDD98A616F0C02C,CLUSTERED,1,1,cuid
+dbo,soctrs,PK__soctrs__2CDD98A61D9DBDBB,CLUSTERED,1,1,cuid
+dbo,soctrs,soctrs_xcusitem,NONCLUSTERED,0,0,"ccustno, citemno, csono"
+dbo,soctrs,soctrs_xcustno,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,soctrs,soctrs_xitem,NONCLUSTERED,0,0,"csono, citemno"
+dbo,soctrs,soctrs_xquote,NONCLUSTERED,0,0,dquote
+dbo,sodisc,PK__sodisc__1781F77A1B96450F,CLUSTERED,1,1,cProdLine
+dbo,soivbk,PK__soivbk__FA4A49734B64886B,CLUSTERED,1,1,cbsono
+dbo,soivrk,PK__soivrk__AFAB719C511D61C1,CLUSTERED,1,1,csono
+dbo,soktrs,PK__soktrs__E69904C756D63B17,CLUSTERED,1,1,ckitno
+dbo,soktrs,soktrs_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,somanifest,PK__somanife__643705625F2E4302,CLUSTERED,1,1,cManifestid
+dbo,SOPortal,IX_SOPortal_cStatus_dprinted,NONCLUSTERED,0,0,"cStatus, dprinted"
+dbo,sorcrs,PK__sorcrs__DFFDFD176153C98A,CLUSTERED,1,1,"ccustno, csono"
+dbo,sorisp,PK__sorisp__2CDD98A63257AF27,CLUSTERED,1,1,cuid
+dbo,sorisp,sorisp_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,sorisp,sorisp_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,sorisp,sorisp_xrcvuid,NONCLUSTERED,0,0,crcvuid
+dbo,sorisph,PK__sorisph__2CDD98A640A5CE7E,CLUSTERED,1,1,cuid
+dbo,sorisph,sorisph_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,sorisph,sorisph_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,sorisph,sorisph_xrcvuid,NONCLUSTERED,0,0,crcvuid
+dbo,soritr,PK__soritr__2CDD98A64EF3EDD5,CLUSTERED,1,1,cuid
+dbo,soritr,soritr_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soritr,soritr_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,soritrh,PK__soritrh__2CDD98A65D420D2C,CLUSTERED,1,1,cuid
+dbo,soritrh,soritrh_xacptline,NONCLUSTERED,0,0,"cacptno, clineitem"
+dbo,soritrh,soritrh_xacptno,NONCLUSTERED,0,0,cacptno
+dbo,sorivk,PK__sorivk__DFFDFD1740B1EFCE,CLUSTERED,1,1,"ccustno, csono"
+dbo,sorkit,PK__sorkit__2CDD98A6475EED5D,CLUSTERED,1,1,cuid
+dbo,sorkit,sorkit_xcustsoline,NONCLUSTERED,0,0,"ccustno, csono, clineitem"
+dbo,sorrmk,PK__sorrmk__DFFDFD17597D9D98,CLUSTERED,1,1,"ccustno, csono"
+dbo,sortci,PK__sortci__C94B2A3F602A9B27,CLUSTERED,1,1,"ccustno, csono, clineitem"
+dbo,sortrk,PK__sortrk__2CDD98A669B40561,CLUSTERED,1,1,cuid
+dbo,sortrs,PK__sortrs__2CDD98A671552729,CLUSTERED,1,1,cuid
+dbo,sortrs,sortrs_xcustso,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,sosbci,PK__sosbci__91273BF224D4CB2F,CLUSTERED,1,1,"cbsono, clineitem"
+dbo,soship,IX_soship_ccustno_cshipno,NONCLUSTERED,0,0,"ccustno, cshipno"
+dbo,soship,IX_soship_cshipvia_cSstatus,NONCLUSTERED,0,0,"cshipno, cscompany, csaddr1, csaddr2, cscity, csstate, cszip, cscountry, csphone, cscontact, dship, nweight, cWaybillno, cshipvia, cSstatus"
+dbo,soship,IX_soship_cWaybillno,NONCLUSTERED,0,0,cWaybillno
+dbo,soship,PK__soship__CE751CC22D6A1130,CLUSTERED,1,1,cshipno
+dbo,soship,soship_xpono,NONCLUSTERED,0,0,cpono
+dbo,soship,soship_xship,NONCLUSTERED,0,0,dship
+dbo,soship,soship_xsono,NONCLUSTERED,0,0,csono
+dbo,soshiph,PK__soshiph__CE751CC275E4D21C,CLUSTERED,1,1,cshipno
+dbo,soshiph,soshiph_xpono,NONCLUSTERED,0,0,cpono
+dbo,soshiph,soshiph_xship,NONCLUSTERED,0,0,dship
+dbo,soshiph,soshiph_xsono,NONCLUSTERED,0,0,csono
+dbo,soskit,_dta_index_soskit_8_1014450838__K2_K1_K4_K5_K6_K10_3_7_8_9_11_12,NONCLUSTERED,0,0,"clineitem, cdescript, lprint, lstock, nqty, ncost, csono, cuid, citemno, cspeccode1, cspeccode2, nseq"
+dbo,soskit,_dta_index_soskit_8_1014450838__K3_K2_K1_K4_K5_K6_K10_7_8_9_11_12,NONCLUSTERED,0,0,"cdescript, lprint, lstock, nqty, ncost, clineitem, csono, cuid, citemno, cspeccode1, cspeccode2, nseq"
+dbo,soskit,IX_soskit_citemno,NONCLUSTERED,0,0,"csono, clineitem, nqty, citemno"
+dbo,soskit,PK__soskit__2CDD98A63E5F9308,CLUSTERED,1,1,cuid
+dbo,soskit,soskit_xsolineitem,NONCLUSTERED,0,0,"csono, clineitem"
+dbo,sosktp,PK__sosktp__2CDD98A64F8A1F0A,CLUSTERED,1,1,cuid
+dbo,sosktp,sosktp_xshipline,NONCLUSTERED,0,0,"cshipno, clineitem"
+dbo,sosktph,PK__sosktph__2CDD98A65ECC629A,CLUSTERED,1,1,cuid
+dbo,sosktr,PK__sosktr__2CDD98A66E0EA62A,CLUSTERED,1,1,cuid
+dbo,sosktr,sosktr_xitemline,NONCLUSTERED,0,0,"citemno, clineitem"
+dbo,sosktr,sosktr_xkitno,NONCLUSTERED,0,0,ckitno
+dbo,sosktr,sosktr_xshipline,NONCLUSTERED,0,0,"cshipno, clineitem"
+dbo,sosktrh,PK__sosktrh__2CDD98A602159ED7,CLUSTERED,1,1,cuid
+dbo,sosobk,PK__sosobk__FA4A4973161C9784,CLUSTERED,1,1,cbsono
+dbo,sosorb,PK__sosorb__FA4A49731BD570DA,CLUSTERED,1,1,cbsono
+dbo,sosorbh,PK__sosorbh__FA4A49737763063A,CLUSTERED,1,1,cbsono
+dbo,sosord,_dta_index_sosord_8_1359500072__K29_K57_K1,NONCLUSTERED,0,0,"cpono, lprtlist, csono"
+dbo,sosord,_dta_index_sosord_8_1359500072__K3_K47_K98_K1_97,NONCLUSTERED,0,0,"lsource, ccustno, lquote, lautoinvk, csono"
+dbo,sosord,IX_sosord_ccustno_lquote_lautoinvk_dorder_dexpire,NONCLUSTERED,0,0,"ccustno, lquote, lautoinvk, dorder, dexpire"
+dbo,sosord,IX_sosord_crevision_centerby_lprtlist,NONCLUSTERED,0,0,"csono, ccustno, corderby, cslpnno, cbaddrno, cbcompany, cbaddr1, cbaddr2, cbcity, cbstate, cbzip, cbcountry, cbphone, cbcontact, csaddrno, cscompany, csaddr1, csaddr2, cscity, csstate, cszip, cscountry, csphone, cscontact, cshipvia, cfob, cpono, cfrgtcode, cfrtaxcode, ctaxcode, cpaycode, cbankno, cchkno, ccardno, cexpdate, ccardname, cpayref, ccurrcode, ciono, ccommiss, csource, cbsono, dcreate, dorder, lquote, lhold, lvoid, lnobo, lusecusitm, lfrttax1, lfrttax2, lapplytax, lprcinctax, lprtsord, lprtcod, lprtlbl, lsavecard, ndiscday, ndueday, ntermdisc, ndiscrate, ntaxver, nfrtaxver, ntaxable1, ntaxable2, nsalesamt, ndiscamt, nfrtamt, ntaxamt1, ntaxamt2, ntaxamt3, nfrttax1, nfrttax2, nfrttax3, nadjamt, nadjusted, nfrtamtchg, nftaxable1, nftaxable2, nfsalesamt, nfdiscamt, nffrtamt, nftaxamt1, nftaxamt2, nftaxamt3, nffrttax1, nffrttax2, nffrttax3, nfadjamt, nfadjusted, nffrtamtch, nweight, nxchgrate, lsource, lautoinvk, ctranref, dexpire, dquote, lcrhold, lautoacpt, cbemail, csemail, crevision, centerby, lprtlist"
+dbo,sosord,IX_sosord_dcreate,NONCLUSTERED,0,0,"csono, ccustno, corderby, centerby, cfob, cpono, dorder, lquote, lhold, lvoid, dcreate"
+dbo,sosord,IX_sosord_dcreate_lquote_lhold_cslpnno,NONCLUSTERED,0,0,"csono, ccustno, dorder, nsalesamt, ndiscamt, nfrtamt, ntaxamt1, nadjamt, dcreate, lquote, lhold, cslpnno"
+dbo,sosord,IX_sosord_dorder,NONCLUSTERED,0,0,"csono, ccustno, dorder"
+dbo,sosord,IX_sosord_lprtlist_crevision_dcreate_dorder,NONCLUSTERED,0,0,"csono, ccustno, centerby, cscompany, cbankno, lhold, lvoid, nsalesamt, ndiscamt, ntaxamt1, lprtlist, crevision, dcreate, dorder"
+dbo,sosord,IX_sosord_lquote_dorder,NONCLUSTERED,0,0,"csono, lquote, dorder"
+dbo,sosord,IX_sosord_lvoid_lautoinvk,NONCLUSTERED,0,0,"csono, lvoid, lautoinvk"
+dbo,sosord,IX_sosord_lvoid_lautoinvk_dcreate_dorder_dexpire,NONCLUSTERED,0,0,"csono, ccustno, cbcompany, ctranref, lvoid, lautoinvk, dcreate, dorder, dexpire"
+dbo,sosord,PK__sosord__AFAB719C52F09B9A,CLUSTERED,1,1,csono
+dbo,sosord,sosord_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,sosord,sosord_xcustso,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,sosord,sosord_xorder,NONCLUSTERED,0,0,dorder
+dbo,sosord,sosord_xpono,NONCLUSTERED,0,0,cpono
+dbo,sosord,sosord_xquote,NONCLUSTERED,0,0,dquote
+dbo,sosord,sosord_xquoteso,NONCLUSTERED,0,0,"lquote, csono"
+dbo,sosord,sosord_xslpnso,NONCLUSTERED,0,0,"cslpnno, csono"
+dbo,sosordh,PK__sosordh__AFAB719C3DC0748A,CLUSTERED,1,1,csono
+dbo,sosordh,sosordh_xcreate,NONCLUSTERED,0,0,dcreate
+dbo,sosordh,sosordh_xcustso,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,sosordh,sosordh_xorder,NONCLUSTERED,0,0,dorder
+dbo,sosordh,sosordh_xpono,NONCLUSTERED,0,0,cpono
+dbo,sosordh,sosordh_xquote,NONCLUSTERED,0,0,dquote
+dbo,sosordh,sosordh_xslpnso,NONCLUSTERED,0,0,"cslpnno, csono"
+dbo,sosork,PK__sosork__AFAB719C28904D7A,CLUSTERED,1,1,csono
+dbo,sosppr,_dta_index_sosppr_8_393830048__K1_K2_K3_K6_K19_K20,NONCLUSTERED,0,0,"cCampNO, cItemNo, cDescript, nQtylimit, dfrom, dto"
+dbo,sosppr,_dta_index_sosppr_8_393830048__K2_K1_4_5_6_7_8_9_10_11_12_13_19_20_21_24,NONCLUSTERED,0,0,"cProdLine, cRevnCode, nQtylimit, nSales, nPriceExl, nDiscount, cpageno, cmajorcat, cclass, cgfttype, dfrom, dto, cuid, lInactive, cItemNo, cCampNO"
+dbo,sosppr,_dta_index_sosppr_c_8_393830048__K21_K2,CLUSTERED,0,0,"cuid, cItemNo"
+dbo,sosppr,idxCuidCitem,NONCLUSTERED,0,0,"cItemNo, cuid, dfrom, dto"
+dbo,sosppr,idxSosppr_1,NONCLUSTERED,0,0,"nPriceExl, cuid, lportal, nfrcsqty, cCampNO, cmajorcat"
+dbo,sosppr,idxSosppr_camp,NONCLUSTERED,0,0,"cItemNo, nPriceExl, cmajorcat, cuid, lportal, csponcat, nfrcsqty, cCampNO"
+dbo,sosppr,IX_sosppr_cCampNO,NONCLUSTERED,0,0,"cItemNo, lfree, dfrom, dto, lportal, cCampNO"
+dbo,sosppr,IX_sosppr_cCampNO_lfree_lportal_lInactive_dfrom_dto,NONCLUSTERED,0,0,"cItemNo, cCampNO, lfree, lportal, lInactive, dfrom, dto"
+dbo,sosppr,IX_sosppr_cCampNO_lportal_lInactive_dfrom_dto,NONCLUSTERED,0,0,"cItemNo, cProdLine, nQtylimit, nPriceExl, nDiscount, cmajorcat, cSpontype, nfrcsqty, nQv, nsp, cCampNO, lportal, lInactive, dfrom, dto"
+dbo,sosppr,IX_sosppr_nDiscount_nPriceExl,NONCLUSTERED,0,0,"cItemNo, cDescript, nDiscount, nPriceExl"
+dbo,sosprk,PK__sosprk__CE751CC22E4926D0,CLUSTERED,1,1,cshipno
+dbo,sospsp,PK__sospsp__2CDD98A734020026,NONCLUSTERED,1,1,cuid
+dbo,sospsp,sospsp_xsoshlineitem,NONCLUSTERED,0,0,"cshipno, clineitem"
+dbo,sospsph,PK__sospsph__2CDD98A742501F7D,NONCLUSTERED,1,1,cuid
+dbo,sospsph,sospsph_xsoshlineitem,NONCLUSTERED,0,0,"cshipno, clineitem"
+dbo,sosptk,PK__sosptk__2CDD98A6509E3ED4,CLUSTERED,1,1,cuid
+dbo,sosptr,_dta_index_sosptr_8_1416548280__K2_K1_3_4_5_6_7_8_9_10_11_12_13_14_15_16_17_18_19_20_21_22_23_24_25_26_27_28_29_30_31_32_33_34_,NONCLUSTERED,0,0,"csono, clineitem, citemno, cdescript, cspeccode1, cspeccode2, clineitem1, cinvno, ccustno, cwarehouse, cbin, cmeasure, ccommiss, crevncode, ctaxcode, ctogl, dship, lkititem, lstock, lmodikit, ltaxable1, ltaxable2, lowrmk, lptrmk, nqtydec, ndiscrate, ntaxver, nsalesamt, ndiscamt, ntaxamt1, ntaxamt2, ntaxamt3, nfsalesamt, nfdiscamt, nftaxamt1, nftaxamt2, nftaxamt3, nshipqty, ncancelqty, nitmcnvqty, ntrscnvqty, ncost, nprice, nprcinctx, nfprice, nfprcinctx, nweight, nseq, ccmpprodln, cvernum, nbprice, lcomponent, nextnddprc, cshipno, cuid"
+dbo,sosptr,PK__sosptr__2CDD98A65657182A,CLUSTERED,1,1,cuid
+dbo,sosptr,sosptr_xcustshipno,NONCLUSTERED,0,0,"ccustno, csono, cshipno"
+dbo,sosptr,sosptr_xinvoiceno,NONCLUSTERED,0,0,"cinvno, csono, cshipno"
+dbo,sosptr,sosptr_xshipno,NONCLUSTERED,0,0,"csono, cshipno"
+dbo,sosptrh,PK__sosptrh__2CDD98A60F8F9586,CLUSTERED,1,1,cuid
+dbo,sosptrh,sosptrh_xcustshipno,NONCLUSTERED,0,0,"ccustno, csono, cshipno"
+dbo,sosptrh,sosptrh_xinvoiceno,NONCLUSTERED,0,0,"cinvno, csono, cshipno"
+dbo,sosptrh,sosptrh_xshipno,NONCLUSTERED,0,0,"csono, cshipno"
+dbo,sostci,PK__sostci__C4C6031D48C812E2,CLUSTERED,1,1,"csono, clineitem"
+dbo,sostrb,PK__sostrb__2CDD98A6515D58E3,CLUSTERED,1,1,cuid
+dbo,sostrbh,PK__sostrbh__2CDD98A605D12122,CLUSTERED,1,1,cuid
+dbo,sostrs,_dta_index_sostrs_8_945594607__K2_K1_K5_K6_K7_3_4_8_9_10_11_12_13_14_15_16_17_18_19_20_21_22_23_24_25_26_27_28_29_30_31_32_33_,NONCLUSTERED,0,0,"ccustno, clineitem, cdescript, cwarehouse, cmeasure, ccommiss, crevncode, ctaxcode, drequest, lkititem, lupsell, lstock, lmodikit, ltaxable1, ltaxable2, lowrmk, lptrmk, nqtydec, ndiscrate, ntaxver, nsalesamt, ndiscamt, ntaxamt1, ntaxamt2, ntaxamt3, nfsalesamt, nfdiscamt, nftaxamt1, nftaxamt2, nftaxamt3, nbuiltqty, nordqty, nshipqty, nadvqty, nitmcnvqty, ntrscnvqty, nweight, ncost, nprice, nprcinctx, nfprice, nfprcinctx, nseq, cvernum, ccmpprodln, nbprice, nextnddprc, lfree, cSORefUId, cSORef, csppruid, csono, cuid, citemno, cspeccode1, cspeccode2"
+dbo,sostrs,_dta_index_sostrs_8_945594607__K2_K38,NONCLUSTERED,0,0,"csono, nshipqty"
+dbo,sostrs,IX_sostrs_citemno,NONCLUSTERED,0,0,"csono, nordqty, nshipqty, citemno"
+dbo,sostrs,PK__sostrs__2CDD98A63A44E961,CLUSTERED,1,1,cuid
+dbo,sostrs,sostrs_idx_clineitem,NONCLUSTERED,0,0,"cuid, csono, ccustno, citemno, cspeccode1, cspeccode2, cdescript, cwarehouse, cmeasure, ccommiss, crevncode, ctaxcode, drequest, lkititem, lupsell, lstock, lmodikit, ltaxable1, ltaxable2, lowrmk, lptrmk, nqtydec, ndiscrate, ntaxver, nsalesamt, ndiscamt, ntaxamt1, ntaxamt2, ntaxamt3, nfsalesamt, nfdiscamt, nftaxamt1, nftaxamt2, nftaxamt3, nbuiltqty, nordqty, nshipqty, nadvqty, nitmcnvqty, ntrscnvqty, nweight, ncost, nprice, nprcinctx, nfprice, nfprcinctx, nseq, nstock, cvernum, ccmpprodln, nbprice, nextnddprc, lfree, cgfttype, cinvno, cSORefUId, cSORef, csppruid, ccampuid, lptarpsrmk, lptsoplrmk, lptsopsrmk, lautoacpt, ldropship, ixitmID, lcusxitm, clineitem"
+dbo,sostrs,sostrs_xcustso,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,sostrs,sostrs_xitemso,NONCLUSTERED,0,0,"citemno, csono"
+dbo,sostrs,sostrs_xreqitem,NONCLUSTERED,0,0,"drequest, citemno"
+dbo,sostrs,sostrs_xsoline,NONCLUSTERED,0,0,"csono, clineitem"
+dbo,sostrs,sostrs_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,sostrsh,PK__sostrsh__2CDD98A6737D66BD,CLUSTERED,1,1,cuid
+dbo,sostrsh,sostrsh_xcustso,NONCLUSTERED,0,0,"ccustno, csono"
+dbo,sostrsh,sostrsh_xitemso,NONCLUSTERED,0,0,"citemno, csono"
+dbo,sostrsh,sostrsh_xsoline,NONCLUSTERED,0,0,"csono, clineitem"
+dbo,sostrsh,sostrsh_xwhsitem,NONCLUSTERED,0,0,"cwarehouse, citemno"
+dbo,sotrbk,PK__sotrbk__2CDD98A62CB5E419,CLUSTERED,1,1,cuid
+dbo,sotrmk,_dta_index_sotrmk_8_830118198__K2,NONCLUSTERED,0,0,csono
+dbo,sotrmk,PK__sotrmk__2CDD98A63362E1A8,CLUSTERED,1,1,cuid
+dbo,suburbs,_dta_index_suburbs_8_1337677246__K1_K3_2_4,NONCLUSTERED,0,0,"csuburb, chubcode, cpostcode, cfrgtcode"
+dbo,suburbs,_dta_index_suburbs_8_1337677246__K2_K1,NONCLUSTERED,0,0,"csuburb, cpostcode"
+dbo,suburbs,_dta_index_suburbs_c_8_1337677246__K2_K1,CLUSTERED,0,0,"csuburb, cpostcode"
+dbo,sysdiagrams,PK__sysdiagr__C2B05B6151F122A6,CLUSTERED,1,1,diagram_id
+dbo,sysdiagrams,UK_principal_name,NONCLUSTERED,1,0,"principal_id, name"
+dbo,ws_Setting,PK__Setting__3214EC073BFFE745,CLUSTERED,1,1,Id

@@ -1,0 +1,364 @@
+================================================================================
+ANNIQUE SHOPIFY MIGRATION ANALYSIS
+Complete SQL Database Documentation Package
+================================================================================
+
+Generated: 2026-03-01
+Database: Annique Cosmetics MLM + NopCommerce (NopCommerce)
+Tables Analyzed: 913
+Total Rows: 399.6 million
+Total Documents: 5 (92 KB total)
+
+================================================================================
+DOCUMENT GUIDE
+================================================================================
+
+START HERE:
+  └─ README.md (14 KB, 377 lines)
+     • Overview of all documents
+     • Quick statistics & key findings
+     • Shopify migration roadmap
+     • Estimated project scope
+     • Success criteria
+
+THEN READ:
+
+1. 01_table_modules.md (15 KB, 477 lines) — TABLE CLASSIFICATION
+   ├─ Complete inventory of 913 tables by functional module
+   ├─ Row counts and data volume for each table
+   ├─ Identifies backup/temp/empty tables (cleanup)
+   ├─ Data quality flags and duplicate detection
+   ├─ Module summaries:
+   │  ├─ AR (Accounts Receivable) — 65 tables, 57.1M rows
+   │  ├─ AP (Accounts Payable) — 22 tables, 295K rows
+   │  ├─ GL (General Ledger) — 21 tables, 125.6M rows
+   │  ├─ IC (Inventory Control) — 67 tables, 174.1M rows
+   │  ├─ SO (Sales Order) — 47 tables, 48.0M rows
+   │  ├─ BR (Bank Reconciliation) — 11 tables, 1.1M rows
+   │  ├─ MLM/Rebate System — 18 tables, 30.9M rows
+   │  ├─ NOP/ECOM (NopCommerce) — 8 tables, 1.4M rows
+   │  ├─ Campaign Management — 14 tables, 1.0M rows
+   │  └─ [13 more modules]
+   └─ Migration impact assessment
+
+   USE THIS FOR: Understanding what data you have and what to delete/archive
+
+2. 02_integration_map.md (20 KB, 493 lines) — INTEGRATION TOUCHPOINTS
+   ├─ NopCommerce (NopCommerce) integration
+   │  ├─ 11 active sync procedures (product, order, inventory, image)
+   │  ├─ Integration flow diagrams
+   │  └─ Last modified: Jan 2026 (very recent!)
+   ├─ MLM System integration
+   │  ├─ 5 procedures (rebate calc, downline build, rank advancement)
+   │  ├─ 19.8M row rebate ledger
+   │  └─ Multi-level commission structure
+   ├─ Fulfillment warehouse integration (fw_* tables)
+   ├─ Order processing portal (SOPortal — 646K rows)
+   ├─ Change tracking & synchronization
+   └─ Shopify migration action items
+
+   USE THIS FOR: Understanding how systems are connected and what custom
+                 development is needed in Shopify
+
+3. 03_data_tiers.md (18 KB, 487 lines) — DATA MIGRATION STRATEGY
+   ├─ Tier 0 (Skip): 342 tables, 3.5M rows — backups, empty, test
+   ├─ Tier 1 (DDL Only): 87 tables, 444.5M rows — massive history
+   ├─ Tier 2 (Sample): 229 tables, 3.7M rows — 1-10% samples + 12mo recent
+   ├─ Tier 3 (Full): 255 tables, 49.6K rows — reference/config (keep all)
+   ├─ Sampling methodology with SQL templates
+   ├─ Data migration volume summary
+   ├─ Archive strategy for cold storage
+   ├─ Phase-by-phase execution plan
+   └─ Estimated 97% data reduction (399.6M → 3.8M rows)
+
+   USE THIS FOR: Planning the actual data cleanup and migration process,
+                 understanding what to delete vs. keep vs. archive
+
+4. 04_business_logic.md (20 KB, 664 lines) — CRITICAL PROCESSES
+   ├─ Critical Process 1: MLM Commission Calculation
+   │  └─ sp_ct_Rebates — Multi-level rebate distribution (13KB logic)
+   ├─ Critical Process 2: Downline & Rank Advancement
+   │  └─ sp_ct_downlinebuild — Consultant hierarchy management
+   ├─ Critical Process 3: Order Processing Flow
+   │  └─ sosord → soskit → soship → arinvc → rebate calculation
+   ├─ Critical Process 4: Inventory Synchronization
+   │  └─ Real-time sync to web store (130M row problem identified)
+   ├─ Critical Process 5: Accounts Receivable & Refunds
+   │  └─ Invoice-to-payment-to-GL-to-statement flow
+   ├─ Critical Process 6: General Ledger & Financial Posting
+   │  └─ 118M transaction ledger, batch posting, period closing
+   ├─ Batch processes & automation
+   ├─ Shopify migration action items for each process
+   └─ Stored procedure cross-reference
+
+   USE THIS FOR: Understanding business logic that must be preserved,
+                 identifying which AccountMate processes to keep running,
+                 planning custom Shopify app development
+
+================================================================================
+KEY STATISTICS
+================================================================================
+
+DATABASE SCALE:
+  Total Tables: 913
+  Total Rows: 399.6 million
+  Estimated Size: ~500 GB
+  Modules: 18 functional areas
+  
+CLEANUP OPPORTUNITIES:
+  Backup Tables: 49 (delete immediately)
+  Empty Tables: 293 (structure only, can skip)
+  Test/Debug Tables: 9 (delete)
+  
+DATA REDUCTION:
+  Original: 399.6M rows → 500 GB
+  After Cleanup (Tier 0): 396.1M rows
+  After Archival (Tier 1): 250-300M rows → 350 GB
+  After Sampling (Tier 2): 3.8M rows → 10 GB
+  
+LARGEST TABLES (HISTORY-HEAVY):
+  1. gltrsn (118.3M rows) — GL transactions
+  2. iciwhs_daily (130M rows!) — Daily inventory snapshots
+  3. aritrsh (21.6M rows) — AR transaction history
+  4. icitrsnh (17.5M rows) — IC transaction history
+  
+CRITICAL BUSINESS TABLES:
+  • genreb (19.9M rows) — MLM rebate ledger
+  • mlmcust (3.0M rows) — Consultant master
+  • arinvc (275K rows) — Active invoices
+  • sosord (56K rows) — Sales orders
+  • icitem (10.7K rows) — Product master
+
+================================================================================
+INTEGRATION SUMMARY
+================================================================================
+
+NOPCOMMERCE SYNC (11 PROCEDURES):
+  • sp_NOP_syncItemAll — Full product catalog (2024-09-03)
+  • sp_NOP_syncItemAvailability — Inventory levels (2024-09-03)
+  • sp_NOP_syncItemChanges — Product updates (2024-09-03)
+  • sp_NOP_syncOrders — Import web orders (2026-01-09) ← LATEST
+  • sp_NOP_syncOrderStatus — Fulfillment status (2024-10-28)
+  • sp_NOP_syncSoxitems — Special orders (2023-09-29)
+  • sp_ws_UpdateImageNOP — Product images (2023-03-22)
+  • sp_NOP_DiscountINS — Discount management (2024-06-13)
+  • sp_NOP_OfferINS — Offer management (2024-06-13)
+  • sp_NOP_OfferListINS — Offer listing (2024-06-13)
+  • NOP_UpdateExclusiveItemCode — SKU updates (2025-09-29) ← NEWEST
+
+MLM PROCEDURES (5):
+  • sp_ct_Rebates — Commission calculation (2022-06-02) ← CRITICAL
+  • sp_ct_downlinebuild — Hierarchy management (2016-10-28)
+  • vsp_mlm_getnewdocno — Document numbering (2013-08-20)
+  • vsp_mlm_getnewmlminvc — Invoice numbering (2013-08-20)
+  • vsp_rpt_rbtmlm — Report generation (2013-08-20)
+
+OTHER INTEGRATIONS:
+  • fw_* tables (5) — 3PL fulfillment warehouse (674K-681K rows)
+  • SOPortal (646K rows) — Web ordering portal
+  • be_waybill (334K rows) — Shipment tracking
+  • changes (531K rows) — Change log for sync triggers
+
+================================================================================
+SHOPIFY MIGRATION ROADMAP
+================================================================================
+
+PHASE 1: PRE-MIGRATION (Weeks 1-2)
+  □ Review analysis with stakeholders
+  □ Clarify data retention requirements
+  □ Identify AccountMate processes to keep
+  □ Plan custom Shopify app scope
+
+PHASE 2: DATA CLEANUP (Weeks 3-4)
+  □ Delete Tier 0 tables (342 tables)
+  □ Archive Tier 1 history (250-300M rows)
+  □ Sample Tier 2 data (1-10%)
+  □ Validate data integrity
+
+PHASE 3: CUSTOM DEVELOPMENT (Weeks 5-12)
+  □ Build Shopify MLM app
+  □ Build order sync integration
+  □ Build inventory sync API
+  □ Build fulfillment connector
+  □ Add customer metafields
+
+PHASE 4: DATA MIGRATION (Weeks 8-10)
+  □ Export sampled data
+  □ Build field mappings
+  □ Bulk import to Shopify
+  □ Validate accuracy
+
+PHASE 5: GO-LIVE (Weeks 11-14)
+  □ Parallel run testing
+  □ Order sync validation
+  □ Rebate calculation testing
+  □ Fulfillment cutover
+  □ Customer communication
+
+PHASE 6: POST-MIGRATION (Ongoing)
+  □ Monitor sync operations
+  □ Archive old data
+  □ Audit MLM accuracy
+  □ Performance tuning
+
+ESTIMATED EFFORT: 1000-1200 hours (20-22 weeks)
+ESTIMATED COST: $150K-$180K (technical services only)
+
+================================================================================
+WHAT TO BUILD FOR SHOPIFY
+================================================================================
+
+CUSTOM SHOPIFY APPS REQUIRED:
+
+1. MLM Commission Engine
+   ├─ Webhook: order.paid
+   ├─ Call: AccountMate sp_ct_Rebates API
+   ├─ Store: Rebates in customer metafields
+   └─ Calculate: Monthly bonuses/payouts
+
+2. Inventory Sync Service
+   ├─ Sync: AccountMate ↔ Shopify (4-hour intervals)
+   ├─ Handle: Reserve, allocate, fulfill
+   └─ Reduce: iciwhs_daily from 130M → 12M rows
+
+3. Order Importer
+   ├─ Webhook: order.created
+   ├─ Create: AccountMate sales order
+   ├─ Apply: Consultant pricing/discounts
+   └─ Trigger: Rebate calculation
+
+4. Customer Master Sync
+   ├─ Sync: Shopify → AccountMate customers
+   ├─ Store: MLM hierarchy (sponsor, level, rank)
+   └─ Apply: Pricing tiers, restrictions
+
+5. Fulfillment Integration
+   ├─ Map: Shopify fulfillment to 3PL or internal
+   ├─ Sync: Tracking numbers
+   └─ Update: Order status both systems
+
+ACCOUNTMATE PROCEDURES TO KEEP:
+  ✓ sp_ct_Rebates (CRITICAL)
+  ✓ sp_ct_downlinebuild (CRITICAL)
+  ✓ GL posting routines (automatic)
+  ✓ AR aging/statements
+
+ACCOUNTMATE PROCEDURES TO DISABLE:
+  ✗ All sp_NOP_sync* (replace with Shopify API)
+  ✗ Bank transfer automation (use Shopify Payments)
+
+================================================================================
+SUCCESS CRITERIA
+================================================================================
+
+✓ Data imported to Shopify (AR/SO/IC/MLM records)
+✓ Orders sync automatically (Shopify → AccountMate)
+✓ Inventory updates within 4 hours
+✓ MLM rebates calculated without manual work
+✓ Customer portal migrated to Shopify checkout
+✓ Fulfillment continues through 3PL
+✓ Financial records remain in AccountMate
+✓ Zero data loss during cutover
+✓ All staff trained on Shopify processes
+✓ Performance meets or exceeds NopCommerce
+
+================================================================================
+HOW TO USE THESE DOCUMENTS
+================================================================================
+
+FOR BUSINESS STAKEHOLDERS:
+  1. Read: This INDEX
+  2. Read: README.md ("Quick Statistics" section)
+  3. Read: 01_table_modules.md (understand data scope)
+  4. Review: 04_business_logic.md (confirm key processes)
+
+FOR TECHNICAL ARCHITECTS:
+  1. Read: README.md (full overview)
+  2. Deep dive: 02_integration_map.md (current architecture)
+  3. Plan: 04_business_logic.md (preservation strategy)
+  4. Design: 03_data_tiers.md (data approach)
+
+FOR DATABASE/MIGRATION TEAM:
+  1. Start: 03_data_tiers.md (data strategy)
+  2. Execute: Follow phase-by-phase plan
+  3. Validate: Use 01_table_modules.md as checklist
+  4. Archive: Setup cold storage per strategy
+
+FOR SHOPIFY IMPLEMENTATION TEAM:
+  1. Start: 04_business_logic.md (critical processes)
+  2. Review: 02_integration_map.md (current integrations)
+  3. Design: Custom app requirements from logic
+  4. Test: Use sample data from 03_data_tiers.md
+
+================================================================================
+KEY RECOMMENDATIONS
+================================================================================
+
+DO THIS FIRST:
+  ✓ Delete 342 backup/empty/test tables (3.5M rows)
+  ✓ Understand data retention requirements (3-5 years)
+  ✓ Plan custom Shopify app scope (MLM, orders, inventory)
+  ✓ Verify 3PL warehouse contract (fw_* integration)
+
+DO NOT DO THIS:
+  ✗ Migrate iciwhs_daily (130M rows not needed)
+  ✗ Keep backup tables (_bu7Feb13, etc.)
+  ✗ Run old NOP sync in parallel
+  ✗ Over-migrate historical data
+
+PRESERVE FOR BUSINESS CONTINUITY:
+  ✓ MLM commission logic (in AccountMate)
+  ✓ GL posting & reporting (in AccountMate)
+  ✓ Customer/invoice history (3-5 years)
+  ✓ Inventory balances & 12-month history
+  ✓ Sales order history (3 years for analytics)
+
+================================================================================
+DOCUMENT METADATA
+================================================================================
+
+Total Pages: 2,498 lines across 5 documents
+Total File Size: 92 KB
+Analysis Tool: Claude Code Agent
+Analysis Technique: Automated SQL schema inspection + stored procedure analysis
+Database Engine: Microsoft SQL Server 2012+
+Data Model: AccountMate ERP (Keyline, Australia)
+ERP Version: Unknown (inferred from date ranges: 2009-2026)
+Report Date: 2026-03-01
+
+CONFIDENCE LEVELS:
+  Table Classification: HIGH (structured naming patterns)
+  Integration Detection: HIGH (explicit procedure/trigger names)
+  Business Logic: MEDIUM (inferred from procedure names + context)
+  Data Quality Issues: HIGH (confirmed via row counts)
+  Storage Estimates: MEDIUM (based on average row sizes)
+
+================================================================================
+QUESTIONS OR NEXT STEPS
+================================================================================
+
+For clarifications on specific topics, refer to relevant sections:
+
+  Table structure questions?
+    → See 01_table_modules.md
+
+  Integration/API questions?
+    → See 02_integration_map.md
+
+  Data migration/archival questions?
+    → See 03_data_tiers.md
+
+  Business process/logic questions?
+    → See 04_business_logic.md
+
+  Project scope/timeline questions?
+    → See README.md ("Estimated Project Scope")
+
+Need to update this analysis?
+  • Rerun SQL exports (tables, columns, keys, procs, views, triggers)
+  • Provide updated CSV files
+  • Analysis can be regenerated with same methodology
+
+================================================================================
+END OF INDEX
+================================================================================
