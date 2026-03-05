@@ -1,0 +1,16 @@
+{
+  "Group": "Nop-Station",
+  "FriendlyName": "Nop-Station Usermaven Analytics",
+  "SystemName": "NopStation.Plugin.Widgets.Usermaven",
+  "Version": "4.60.1.0",
+  "SupportedVersions": [
+    "4.60"
+  ],
+  "Author": "Nop-Station Team",
+  "DisplayOrder": 1,
+  "FileName": "NopStation.Plugin.Widgets.Usermaven.dll",
+  "Description": "This plugin allows you to connect with usermaven analytics.",
+  "DependsOnSystemNames": [
+    "NopStation.Core"
+  ]
+}

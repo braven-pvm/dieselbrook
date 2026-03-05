@@ -1,0 +1,290 @@
+﻿<Language Name="EN" IsDefault="true" IsRightToLeft="false">
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.MainTitle.nopAccelerate">
+    <Value>nopAccelerate</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Title.ProductRibbons">
+    <Value>Product Ribbons</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Title.ProductRibbons.Name">
+    <Value>Product Ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbon.ProductRibbonsPlusVersion">
+    <Value>Product Ribbon</Value>
+  </LocaleResource>
+  
+  <!-- Start Configuration -->
+  
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Panel.Configuration">
+    <Value>Plugin Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Configure.Name">
+    <Value>Product Ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.Enabled.Hint">
+    <Value>Check to enable plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.CSSProductBoxSelector">
+    <Value>Product Box Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.CSSProductBoxSelector.Hint">
+    <Value>CSS selector for the product box. The product box is used for listing products on pages like category page, manufacturer page, home page, etc.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.CSSProductPagePicturesParentContainerSelector">
+    <Value>ProductPage Pictures Parent Container Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.CSSProductPagePicturesParentContainerSelector.Hint">
+    <Value>CSS The selector for the parent container of the product picture located on the product page. It is used by the integration of the plugin for displaying the  product picture ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.SpecificationAttributeId">
+    <Value>Specification Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.SpecificationAttributeId.Hint">
+    <Value>Select Specification Attribute which is associated with Product Stock Status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusRImage">
+    <Value>Stock Status 'R'</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusRImage.Hint">
+    <Value>Selected Image will display for product Stock Status 'R'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusGImage">
+    <Value>Stock Status 'G'</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusGImage.Hint">
+    <Value>Selected Image will display for product Stock Status 'G'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusBImage">
+    <Value>Stock Status 'B'</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusBImage.Hint">
+    <Value>Selected Image will display for product Stock Status 'B'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusOImage">
+    <Value>Stock Status 'O'</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.StockStatusOImage.Hint">
+    <Value>Selected Image will display for product Stock Status 'O'.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Setting.Saved">
+    <Value>Setting has been saved successfully.</Value>
+  </LocaleResource>
+  
+  <!-- End Configuration -->
+  
+  <!-- Start Sitemap -->
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Sitemap.MainTitle">
+    <Value>Product Ribbons</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Sitemap.Configure">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Sitemap.RibbonList">
+    <Value>Manage Product Ribbons</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Sitemap.HelpDocument">
+    <Value>Help Document</Value>
+  </LocaleResource>
+  <!-- END Sitemap -->
+
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.RibbonName.Required">
+    <Value>Please enter Ribbon name</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Admin.RibbonList.PageTitle">
+    <Value>Product Ribbon - List</Value>
+  </LocaleResource>
+
+
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Id">
+    <Value>Product Ribbon Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Hint">
+    <Value>Product Ribbon Id</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.RibbonName">
+    <Value>Ribbon Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.RibbonName.Hint">
+    <Value>The name of the product ribbon.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.StartDateUtc">
+    <Value>Start Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.StartDateUtc.Hint">
+    <Value>Set the date from which this product ribbon will be displayed (UTC time).</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.EndDateUtc">
+    <Value>End Date </Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.EndDateUtc.Hint">
+    <Value>Set the date till which this product ribbon will be displayed (UTC time).</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.DisplayOrder.Hint">
+    <Value>NOTE: A lower number is a higher priority! Set the priority of the product ribbon. If two or more product ribbons match then display both in Product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.ApplyToAllProduct">
+    <Value>Apply to All Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.ApplyToAllProduct.Hint">
+    <Value>Check/Unchecked to enable/disable apply ribbon to all products or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.MarkAsNew">
+    <Value>Mark As New</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.MarkAsNew.Hint">
+    <Value>Check/Unchecked to enable/disable  then ribbon will apply on mark as new product(apply on new product)</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.IsMoreRibbonDisplayAfterThis">
+    <Value>Do not Display More ribbon after this</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.IsMoreRibbonDisplayAfterThis.Hint">
+    <Value>If checked no more ribbons will be added to a product after this ribbon is added. Do not check if there will be multiple ribbons list on product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Enabled">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Enabled.Hint">
+    <Value>Check/Unchecked to enable/disable this product ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Enabled.Search">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Enabled.Search.Hint">
+    <Value>Check to View only Enable Product Ribbon.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Notification.add">
+    <Value>The record has been saved successfully.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Notification.update">
+    <Value>The record has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Notification.Deleted">
+    <Value>The record has been deleted successfully.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.AddNewRibbonImage">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.AddNewRibbon">
+    <Value>Add new Ribbon</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.BackToList">
+    <Value>Back to the list</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.tab.RibbonSettings">
+    <Value>General Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.tab.AddRibbonPicture">
+    <Value>Product Picture Ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.tab.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.EditRibbon">
+    <Value>Edit Ribbon</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.EndDateUtc.GreaterThenStartDate">
+    <Value> End date must be greater then start date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.EndDateUtc.Required">
+    <Value>Please enter End Date Utc</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.StoreIds">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.StoreIds.Hint">
+    <Value>Option to limit this Deal to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.RibbonText">
+    <Value>Ribbon Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.RibbonText.Hint">
+    <Value>
+      Specify the text of the ribbon. This text will appear over the product image. <br/>
+      Leave empty if you use a ribbon picture that contains text. <br/>
+      You can use the Available Product Tokens here i.e "${max-discount-percentage} OFF" or "-${max-discount-percentage}"
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.Position.Hint">
+    <Value>
+      The default location where the ribbon will appear relative to the picture of the product.<br/>
+      You can customize further with the styles below if needed.
+    </Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.PictureId">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.PictureId.Hint">
+    <Value> Insert ribbon picture. Do not insert the picture twice!!! </Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.TextStyleCss">
+    <Value>Text Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.TextStyleCss.Hint">
+    <Value>
+      Here you can specify css styles that will be applied only to the ribbon text (label) element.<br/>
+      The ribbon text is an label html element that is nested inside the ribbon element.
+    </Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.ImageStyleCss">
+    <Value>Image Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.ImageStyleCss.Hint">
+    <Value>
+      Here you can specify css styles that will be applied only to the ribbon image (img) element.<br/>
+      The ribbon image html element is nested inside the ribbon element.
+    </Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.ContainerStyleCss">
+    <Value>Container Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.Fields.ContainerStyleCss.Hint">
+    <Value>
+      Here you can specify css styles that will be applied only to the ribbon html element. <br/>
+      The ribbon html element is the main html element for the ribbon that wraps the ribbon image and the ribbon text elements.<br/>
+      It has a css class name - 'product-ribbon'. Example styles: top: -5px; left:-5px;
+    </Value>
+  </LocaleResource>
+
+  <!-- Start Product Popup -->
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.tab.Products.SaveBeforeEdit">
+    <Value>You need to save the Deal before you can add products for this Deal page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.AddNewProduct">
+    <Value>Add new product</Value>
+  </LocaleResource>
+
+  <!-- End  Product Popup -->
+
+  <LocaleResource Name="XcellenceIT.Plugin.ProductRibbons.SpecialEnd.SpecialPrice">
+    <Value>Special Price </Value>
+  </LocaleResource>
+</Language>

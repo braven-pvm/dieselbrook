@@ -1,0 +1,197 @@
+﻿@model ReportModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name "></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomCSS" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomCSS" class="style-text" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomJS" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="CustomJS" class="style-text" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="TemplateBlock" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="TemplateBlock" class="style-text" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomText" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CustomText" />
+        </div>
+    </div>
+
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedCustomerRoleIds" />
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                    <script>
+                        $(document).ready(function () {
+                            var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                            rolesIdsInput.setOptions({
+                                autoClose: false,
+                                filter: "contains"
+                            });
+
+                        @if (Model.AvailableCustomerRoles.Count == 0)
+                        {
+                            <text>
+                                        rolesIdsInput.setOptions({
+                                            enable: false,
+                                            placeholder: 'No customer roles available'
+                                        });
+                                    rolesIdsInput._placeholder();
+                                    rolesIdsInput._enable();
+                            </text>
+                        }
+                        });
+                    </script>
+                </div>
+                <div class="col-md-8">
+                    @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" asp-required="true" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsMenuOption" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsMenuOption" />
+        </div>
+    </div>
+    <nop-nested-setting asp-for="IsMenuOption">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TabOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TabOrder" />
+            </div>
+        </div>
+    </nop-nested-setting>
+
+    @*   task 629 New Features on Annique Reports *@
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IncludeReportCommonJs" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IncludeReportCommonJs" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IncludeReportParameters" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IncludeReportParameters" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SeName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SeName" />
+            <span asp-validation-for="SeName"></span>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#@Html.IdFor(model => model.SeName)').on('input change', function () {
+                var parameters = {
+                    entityId: '@Model.Id',
+                    entityName: 'Report',
+                    seName: $(this).val()
+                };
+                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
+            });
+        });
+    </script>
+    @if (Model.Id > 0)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Url" />
+            </div>
+            <div class="col-md-9">
+                <a href="@Model.Url">@Model.Url</a>
+            </div>
+        </div>
+    }
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="SelectedHiddenFields" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="SelectedHiddenFields" asp-items="@Model.AvailableHiddenFields" asp-multiple="true" />
+        </div>
+    </div>
+
+    @*   task 629 New Features on Annique Reports *@
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="PubliclyHostedPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PubliclyHostedPage" />
+        </div>
+    </div>
+</div>

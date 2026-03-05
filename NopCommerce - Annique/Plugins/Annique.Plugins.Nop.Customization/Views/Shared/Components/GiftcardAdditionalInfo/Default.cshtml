@@ -1,0 +1,59 @@
+﻿@model Annique.Plugins.Nop.Customization.Models.GiftCardAllocation.GiftCardAdditionalInfoModel
+
+<input asp-for="GiftCardId" type="hidden" />
+
+@if (Model.GiftCardId > 0)
+{
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Username" />
+        </div>
+        <div class="col-md-9">
+            <div class="input-group">
+                <nop-editor asp-for="Username" />
+                <div class="input-group-append">
+                    <button type="button" id="allocateGiftCard" class="btn btn-info">@T("Admin.GiftCards.Fields.AllocateGiftCard.Button")</button>
+                    <script>
+                        $(document).ready(function () {
+                            $('#allocateGiftCard').click(function () {
+                                var usernameVal = $("#@Html.IdFor(model => model.Username)").val();
+                                var giftCardIdVal = $("#@Html.IdFor(model => model.GiftCardId)").val();
+
+                                var postData = {
+                                    giftCardId: giftCardIdVal,
+                                    username: usernameVal
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    url: "@(Url.Action("SaveOrUpdateGiftCardAdditionalInfo", "GiftCardsAllocation"))",
+                                    cache: false,
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        $('#@Html.IdFor(model => model.Username)').val(data.Username);
+                                        if (data.error) {
+                                            if (typeof data.message === 'string') {
+                                                $('#giftCardAdditionalInfoFailed-info').text(data.message);
+                                                $("#giftCardAdditionalInfoFailed").click();
+                                            } else {
+                                                $('#giftCardAdditionalInfoFailed-info').text(data.message.join("\n"));
+                                                $("#giftCardAdditionalInfoFailed").click();
+                                            }
+                                        }
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#giftCardAdditionalInfoFailed-info').text(errorThrown);
+                                        $("#giftCardAdditionalInfoFailed").click();
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<nop-alert asp-alert-id="giftCardAdditionalInfoFailed" asp-alert-message="@T("Admin.GiftCards.Fields.GiftCardAdditionalInfo.Alert.Failed")" />

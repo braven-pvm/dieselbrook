@@ -1,0 +1,23 @@
+﻿@model UserInfoHeaderLinksModel
+@{
+    <link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+}
+<div class="mobile-userlink">
+    @Model.CustomerFullName
+</div>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        if ($("body").hasClass("logged-in")) {
+            // If body has 'logged-in' class, remove 'guest-logged-in' class if it exists
+            if ($("body").hasClass("guest-logged-in")) {
+                $("body").removeClass("guest-logged-in");
+            }
+        } else {
+            // If body does not have 'logged-in' class, add 'guest-logged-in' class if it does not exist
+            if (!$("body").hasClass("guest-logged-in")) {
+                $("body").addClass("guest-logged-in");
+            }
+        }
+    });
+</script>

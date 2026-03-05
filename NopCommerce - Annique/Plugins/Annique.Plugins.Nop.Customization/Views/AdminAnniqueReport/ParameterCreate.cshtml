@@ -1,0 +1,41 @@
+﻿@model ReportParameterModel
+@{
+    Layout = "_AdminPopupLayout";
+}
+
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.AnniqueReports.Parameters.Add").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.Report");
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try { window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click(); }
+        catch (e) { }
+        window.close();
+    </script>
+}
+
+<input asp-for="@Model.ReportId" type="hidden" />
+<form asp-controller="AdminAnniqueReport" asp-action="ParameterCreate" method="post"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]"
+      id="parameter-form">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.AnniqueReports.Parameters.Field.Add")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate.Parameter.cshtml", Model)
+</form>

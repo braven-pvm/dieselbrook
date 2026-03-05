@@ -1,0 +1,92 @@
+﻿@model ProductDetailsModel
+
+@using Nop.Core;
+
+@inject IWebHelper webHelper
+
+@{
+    var shareUrl = webHelper.GetStoreLocation() + Model.SeName;
+
+    var username = await anniqueCustomizationConfigurationService.GetUsernameAsync();
+    if (!string.IsNullOrEmpty(username))
+    {
+        shareUrl += "?ref=" + username;
+    }
+}
+<div class="product-share">
+    <label>@T("SevenSpikes.Themes.Avenue.ProductShareLabel")</label>
+    <ul class=".product-share-list">
+
+        <li class="share-item facebook">
+            <a class="share-link" href="javascript:openShareWindow('https://www.facebook.com/sharer.php?u=@shareUrl')"></a>
+        </li>
+
+        <li class="share-item twitter">
+            <a class="share-link " href="javascript:openShareWindow('https://twitter.com/share?url=@shareUrl')"></a>
+        </li>
+
+        <li class="share-item pinterest">
+            <a class="share-link" href="javascript:void((function(){var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','https://assets.pinterest.com/js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e)})());"></a>
+        </li>
+
+        <li class="share-item rss">
+            <a class="share-link" href="#"></a>
+        </li>
+
+        @if (!string.IsNullOrEmpty(username))
+        {
+            <!-- New Copy Link button -->
+            <li class="share-item copy-link">
+                <a class="share-link" href="javascript:void(0);" onclick="copyToClipboard('@shareUrl')" title="Copy link to clipboard"></a>
+            </li>
+        }
+
+    </ul>
+
+    <script type="text/javascript" asp-location="Footer">
+        function openShareWindow(url) {
+            var winWidth = 520;
+            var winHeight = 400;
+            var winTop = (screen.height / 2) - (winHeight / 2);
+            var winLeft = (screen.width / 2) - (winWidth / 2);
+
+            window.open(url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+        }
+
+        function copyToClipboard(text) {
+
+            // Use the Clipboard API if available
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function () {
+                    // Success: Notify the user that the link has been copied
+                    displayBarNotification('@T("Annique.Plugin.ProductShare.LinkCopy.Clipboard.Message")', 'success', 3500);
+                }).catch(function (err) {
+
+                    // If any error occurs, notify the user about the failure
+                    displayBarNotification('@T("Annique.Plugin.ProductShare.LinkCopy.Clipboard.FailureMessage")', 'error', 3500);
+                });
+            } else {
+                // Fallback for older browsers
+                var tempInput = document.createElement('input');
+                tempInput.style.position = 'absolute';
+                tempInput.style.left = '-1000px';
+                tempInput.style.top = '-1000px';
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+
+                    // Success notification
+                    displayBarNotification('@T("Annique.Plugin.ProductShare.LinkCopy.Clipboard.Message")', 'success', 3500);
+                } catch (err) {
+
+                    // Fallback error notification
+                    displayBarNotification('@T("Annique.Plugin.ProductShare.LinkCopy.Clipboard.FailureMessage")', 'error', 3500);
+                }
+                document.body.removeChild(tempInput);
+            }
+        }
+
+    </script>
+</div>

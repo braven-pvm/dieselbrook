@@ -1,0 +1,109 @@
+﻿@model OtpModel
+
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/bootstrap.bundle.min.js" asp-location="Footer"></script>
+@{
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/AnniqueCustomization.js");
+}
+@if (!Model.IsVerified)
+{
+    <script asp-location="Footer">
+        $(window).load(function () {
+            jQuery('#otp-popup').modal('show');
+        });
+
+        //function to send OTP
+        function sendOTP(sendVia) {
+            //prepare post data 
+            var postData = {
+                sendVia: sendVia
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("SendOtp", "UserProfileInfo"))",
+                datatype: "json",
+                data: postData,
+                success: function (data) {
+                    if (data.success) {
+                        //display success message
+                        displayBarNotificationInPopup('@T("Annique.Plugin.Otp.Success.Message")' + sendVia, 'success', 3500);
+
+                        // Hide the "Send OTP via SMS" and "Send OTP via Email" buttons
+                        $("#sendSmsButton").hide();
+                        $("#sendEmailButton").hide();
+                    }
+                    else {
+                        if (data.message != null) {
+                            //display error message from API reponse
+                            displayBarNotificationInPopup(data.message, 'error', 0);
+                        }
+                    }
+                },
+                error: function (error) {
+                    if (error.message != null) {
+                        displayBarNotificationInPopup(error.message, 'error', 0);
+                    }
+                }
+            });
+        }
+
+        // Function to verify OTP
+        function verifyOTP() {
+            var enteredOTP = $("#otp").val();
+
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("VerifyOTP", "UserProfileInfo"))",
+                data: {
+                    enteredOTP: enteredOTP
+                },
+                success: function (data) {
+                    if (data.success === true) {
+                        // show successful OTP verification message
+                        displayBarNotificationInPopup('@T("Annique.Plugin.Otp.Valid.Message")', 'success', 3500);
+
+                        // Close the otp pop-up modal
+                        $("#otp-popup").modal("hide");
+
+                        //customer info page
+                        location.reload();
+                    } else {
+                        // Show OTP verification failure message
+                        displayBarNotificationInPopup('@T("Annique.Plugin.Otp.Invalid.Message")', 'error', 0);
+                    }
+                },
+                error: function (error) {
+                    // Handle error in OTP verification
+                    displayBarNotificationInPopup("An error occurred while verifying the OTP.", 'error', 0);
+                }
+            });
+        }
+    </script>
+}
+<div class="modal fade bd-example-modal-lg1 otp-popup" id="otp-popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="exampleModalLabel">@T("Annique.Plugin.Otp.FormTitle")</h2>
+            </div>
+            <div class="modal-body">
+                <form id="otp-form" class="otp-form-wrap">
+                    <div class="form-group">
+                        <input type="text" id="otp" name="otp" placeholder="Enter your OTP" />
+                    </div>
+                    <button type="button" id="submitOTP" onclick="verifyOTP()">@T("Annique.Plugin.Otp.Submit.Button")</button>
+                </form>
+                @if (Model.ShowSendOtpButtons)
+                { 
+                    <div class="button-group">
+                        <button type="button" id="sendSmsButton" onclick="sendOTP('sms')">@T("Annique.Plugin.Otp.SendViaSms.Button")</button>
+                        <button type="button" id="sendEmailButton" onclick="sendOTP('email')">@T("Annique.Plugin.Otp.SendViaEmail.Button")</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,15 @@
+﻿Release Date: June 26, 2019
+Product Ribbons Version: 6.0.0
+
+Features:
+1. Promote your products effectively with the new product ribbons plug-in.
+2. Show images and text with various ribbon on products on your store.
+3. Admin can set Date time period for each product ribbon using plug-in configuration section.
+4. This plug-in allows to manage one more product ribbons for each product.
+5. User can enable/disable display ribbon and plugin functionality the using plug-in configuration section.
+6. Admin can manage product from admin side to display ribbon.
+7. Ribbon support with multi-language.
+8. Multi Stored support.
+9. support 4.60.
+
+--------------------------------------------------------------------------------------------

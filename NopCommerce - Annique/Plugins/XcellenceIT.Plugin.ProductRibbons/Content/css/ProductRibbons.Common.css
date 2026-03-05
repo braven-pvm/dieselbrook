@@ -1,0 +1,97 @@
+.product-ribbon-wrapper .universal-ribbon-position {
+        font-size: 0;
+        line-height: 0;
+        position: absolute;
+        z-index: 9;
+        -webkit-transition: all .15s ease-in-out;
+        -moz-transition: all .15s ease-in-out;
+        -o-transition: all .15s ease-in-out;
+        transition: all .15s ease-in-out;
+    }
+
+img + label.ribbon-image-text {
+    position: absolute;
+}
+
+.product-ribbon-wrapper .universal-ribbon-position .universal-ribbon-content label,
+.product-ribbon-wrapper .universal-ribbon-position .universal-ribbon-content img {
+    cursor: pointer;
+}
+
+.product-ribbon-wrapper .universal-ribbon-position .universal-ribbon-content label {
+    font-size: 14px;
+    line-height: normal;
+}
+
+.product-ribbon-wrapper .universal-ribbon-position .universal-ribbon {
+    display: inline-block;
+}
+
+.product-ribbon-wrapper .topleft {
+    top: 0;
+    left: 0;
+}
+
+.product-ribbon-wrapper .topmiddle {
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.product-ribbon-wrapper .topright {
+    top: 0;
+    right: 0;
+}
+
+.product-ribbon-wrapper .bottomleft {
+    bottom: 0;
+    left: 0;
+}
+
+.product-ribbon-wrapper .rightmiddle {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    text-align: right;
+}
+
+    .product-ribbon-wrapper .rightmiddle:before,
+    .product-ribbon-wrapper .leftmiddle:before,
+    .product-ribbon-wrapper .center::before {
+        content: "";
+        display: inline-block;
+        height: 100%;
+        width: 0;
+        vertical-align: middle;
+    }
+
+.product-ribbon-wrapper .bottomright {
+    right: 0;
+    bottom: 0;
+}
+
+.product-ribbon-wrapper .bottommiddle {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.product-ribbon-wrapper .leftmiddle {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    text-align: left;
+}
+
+.product-ribbon-wrapper .center {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+}
+.strikeThrough {
+    text-decoration: line-through;
+}

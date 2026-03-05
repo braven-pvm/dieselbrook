@@ -1,0 +1,141 @@
+﻿@model CheckoutShippingAddressModel
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/bootstrap.bundle.min.js" asp-location="Footer"></script>
+<div class="checkout-data">
+    <input name="pickup-points-id" id="pickup-points-id" type="hidden" />
+    <input name="PickupInStore" type="hidden" />
+    @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
+    {
+        <div class="shipping-addresses" id="shipping-addresses-form">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop, additionalData = Model })
+            @if (Model.ExistingAddresses.Count > 0)
+            {
+                <div class="section select-shipping-address">
+                    <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+                    @if (Model.InvalidExistingAddresses.Count > 0)
+                    {
+                        <label class="min-amount-warning">
+                            @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                        </label>
+                    }
+                    <div>
+                        <select name="shipping_address_id" id="shipping-address-select" class="address-select"
+                        title="" onchange="SaveAsPickUpStore()">
+                            @foreach (var address in Model.ExistingAddresses)
+                            {
+                                var addressLine = "";
+                                addressLine += address.FirstName;
+                                addressLine += " " + address.LastName;
+                                if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
+                                {
+                                    addressLine += ", " + address.Address1;
+                                }
+                                if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
+                                {
+                                    addressLine += ", " + address.City;
+                                }
+                                if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                                {
+                                    addressLine += ", " + address.County;
+                                }
+                                if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
+                                {
+                                    addressLine += ", " + address.StateProvinceName;
+                                }
+                                if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
+                                {
+                                    addressLine += " " + address.ZipPostalCode;
+                                }
+                                if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
+                                {
+                                    addressLine += ", " + address.CountryName;
+                                }
+                                if (!string.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                                {
+                                    addressLine += ", " + address.FormattedCustomAddressAttributes;
+                                }
+                                <option value="@(address.Id)">@(addressLine)</option>
+                            }
+                            <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                        </select>
+                        @foreach (var address in Model.ExistingAddresses)
+                        {
+                            if (!string.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                            {
+                                <input type="hidden" value="@address.FormattedCustomAddressAttributes" id="PostalCode_@address.Id" />
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle, additionalData = Model })
+            <div class="section new-shipping-address" id="shipping-new-address-form">
+                <div class="enter-address">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                    @{
+                        var dataDictAddress = new ViewDataDictionary(ViewData);
+                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                        @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
+                    }
+                </div>
+            </div>
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressBottom, additionalData = Model })
+
+            <!-- Modal -->
+            <div class="modal fade bd-example-modal-lg1" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="exampleModalLabel">@T("Annique.Plugin.PostNetStoreDeliveryPopUp.Title")</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="pep-form">
+                                @{
+                                    @await Component.InvokeAsync("PostNetStoreDelivery")
+                                }
+                            </form>
+                            <div class="button-group">
+                                <button type="button" class="button-1 btn btn-secondary" id="FilterPickUpStore">@T("Annique.Plugin.PostNetStoreDelivery.BrowsePickUpStores.Button")</button>
+                                <button type="button" class="button-1 btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="button-1 btn btn-secondary save-pickupstore" id="confirmPickUpStore" onclick="OPCSavePickUpStore()">@T("Annique.Plugin.PostNetStoreDelivery.Confirm.Button")</button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="table-wrapper" id="tableDiv">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Button trigger modal -->
+            <!--Task 622 Option to enable Pickup for only certain Roles-->
+            @await Component.InvokeAsync("PickupStoreButton")
+        </div>
+    }
+    <script asp-location="Footer">
+        function SaveAsPickUpStore() {
+            var shippingAddressId = $('#shipping-address-select').val();
+
+            if (shippingAddressId == "") {
+                var billingAddressId = $('#billing-address-select').val();
+                Shipping.newAddress(shippingAddressId, billingAddressId);
+            }
+            else {
+                var pickUpStoreAttributeValues = $("#PostalCode_" + shippingAddressId).val();
+                if (pickUpStoreAttributeValues != "undefined") {
+                    var pickUpStoreAttributeValue = pickUpStoreAttributeValues.split(":");
+                    var pickUpStoreId = pickUpStoreAttributeValue[1];
+                    var storeId = pickUpStoreId.substring(1);
+                    $("input[name='PickupInStore']").val("true");
+                    $("#pickup-points-id").val(storeId + "___Pickup.PickupInStore");
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            SaveAsPickUpStore();
+        });
+    </script>
+</div>

@@ -1,0 +1,112 @@
+﻿@model ProductRibbonModel
+
+<form asp-controller="ProductRibbonAdmin" asp-action="Create" method="post" id="Productribbon-form">
+    <div class="card-body">
+        <div>
+            @(await Html.LocalizedEditorAsync<ProductRibbonModel, RibbonProductLocalizedModel>("localized",
+                    @<div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.ProductPictureRibbon.RibbonText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.Locales[item].RibbonText" />
+
+                                <div class="bg-gray-light" style="margin:5px 0 0 0 !important;padding-left: 28px;">
+                                    <ul style="padding: 0; margin: 0; list-style: none;">
+                                        <li><strong>Available Product Tokens</strong></li>
+                                        <li>${old-price-new-price-difference-value}</li>
+                                        <li>${old-price-new-price-difference-percentage}</li>
+                                        <li>${product-quantity}</li>
+                                        <li>${max-discount-value}</li>
+                                        <li>${max-discount-percentage}</li>
+										<li>${product-Out-Of-Stock}</li>
+                                        <li>${product-end-available-date}</li>
+                                        <li>${product-special-price}</li>
+                                        <li>${product-stock-status}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                        </div>
+                    </div>                                                              ,
+                    @<div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.ProductPictureRibbon.RibbonText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.ProductPictureRibbon.RibbonText" />
+                                <div class="bg-gray-light" style="margin:5px 0 0 0 !important;padding-left: 28px;">
+                                    <ul style="padding: 0; margin: 0; list-style: none;">
+                                        <li><strong>Available Product Tokens</strong></li>
+                                        <li>${old-price-new-price-difference-value}</li>
+                                        <li>${old-price-new-price-difference-percentage}</li>
+                                        <li>${product-quantity}</li>
+                                        <li>${max-discount-value}</li>
+                                        <li>${max-discount-percentage}</li>
+										<li>${product-Out-Of-Stock}</li>
+                                        <li>${product-end-available-date}</li>
+                                        <li>${product-special-price}</li>
+                                        <li>${product-stock-status}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            ))
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.ProductPictureRibbon.Enabled" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.ProductPictureRibbon.Enabled" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.ProductPictureRibbon.Position" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="@Model.ProductPictureRibbon.Position" asp-items="Html.GetEnumSelectList<XcellenceIT.Plugin.ProductRibbons.Utilities.DisplayAvailablePositionsEnum>()" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.ProductPictureRibbon.PictureId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.ProductPictureRibbon.PictureId" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.ProductPictureRibbon.TextStyleCss" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="@Model.ProductPictureRibbon.TextStyleCss" class="style-text" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.ProductPictureRibbon.ImageStyleCss" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="@Model.ProductPictureRibbon.ImageStyleCss" class="style-text" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.ProductPictureRibbon.ContainerStyleCss" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="@Model.ProductPictureRibbon.ContainerStyleCss" class="style-text" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

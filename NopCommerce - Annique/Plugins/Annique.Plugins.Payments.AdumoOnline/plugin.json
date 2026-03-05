@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Annique",
+  "FriendlyName": "Pay using Adumo Online",
+  "SystemName": "Annique.AdumoOnline",
+  "Version": "1.0.0",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Nop Annique",
+  "DisplayOrder": 1,
+  "FileName": "Annique.Plugins.Payments.AdumoOnline.dll",
+  "Description": "This plugin allows you to pay with Adumo online virtual payment page."
+}

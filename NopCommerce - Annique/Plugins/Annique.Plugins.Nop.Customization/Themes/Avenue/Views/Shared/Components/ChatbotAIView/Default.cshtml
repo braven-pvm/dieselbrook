@@ -1,0 +1,20 @@
+﻿@{
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/AnniqueCustomization.js");
+}
+
+<script asp-location="Footer">
+     $(document).ready(function() {
+        // Create the chatbot button element
+        var chatbotButton = '<div class="nav-button chatbot-button">' +
+                            '<div class="trigger" title="How can I help you today?" id="chatbot-header" onclick="toggleChatbot()">'+
+                            '<img src="/Plugins/Annique.Customization/Content/img/assistant.svg" alt="Test Chat Icon" />' +
+                            '</div>' +
+                            '</div>';
+
+     // Insert the chatbot button after the search button
+     $(".nav-button.search-button").last().after(chatbotButton);
+    });
+
+</script>
+
+@await Html.PartialAsync("_Chatbot")

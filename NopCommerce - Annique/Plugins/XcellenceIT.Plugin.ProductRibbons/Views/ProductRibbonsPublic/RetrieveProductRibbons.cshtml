@@ -1,0 +1,18 @@
+﻿@model ProductRibbonsPublicModel
+
+@if (Model.publicRibbonModel.Count > 0)
+{
+    foreach (var productRibbon in Model.publicRibbonModel)
+    {
+        if (productRibbon.Enabled)
+        {
+            <a href="@Url.RouteUrl("Product", new {SeName=productRibbon.ProductSeName })" class="universal-ribbon-position @productRibbon.Position" data-productribbonid="@productRibbon.RibbonId" data-productid="@productRibbon.ProductId">
+                <div class="universal-ribbon">
+                    <div class="universal-ribbon-content" style="@productRibbon.ContainerStyleCss">
+                        @await Html.PartialAsync("~/Plugins/XcellenceIT.ProductRibbons/Views/ProductRibbonsPublic/_BasePageRibbonHtml.cshtml", productRibbon)
+                    </div>
+                </div>
+            </a>
+        }
+    }
+}

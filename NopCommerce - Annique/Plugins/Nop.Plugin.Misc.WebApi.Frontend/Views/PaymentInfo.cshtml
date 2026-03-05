@@ -1,0 +1,27 @@
+﻿@model Nop.Web.Models.Checkout.CheckoutPaymentInfoModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Root.Head";
+}
+
+<div class="page checkout-page payment-info-page">
+    <div class="page-title">
+        <h1>@T("Checkout.PaymentInfo")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoTop, additionalData = Model })
+        <div class="section payment-info">
+            <form asp-route="PaymentInfoWebViewPaymentInfo" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="info">
+                    @await Component.InvokeAsync(Model.PaymentViewComponent)
+                </div>
+                <div class="buttons">
+                    <button type="submit" name="nextstep" class="button-1 payment-info-next-step-button">@T("Checkout.NextButton")</button>
+                </div>
+            </form>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPaymentInfoBottom, additionalData = Model })
+    </div>
+</div>

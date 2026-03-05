@@ -1,0 +1,404 @@
+﻿@model AwardListModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.AwardList").Text);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-eventlist-page");
+
+    <link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+}
+
+<div>
+    <div class="page-title">
+        <h1>
+            @T("PageTitle.AwardList")
+        </h1>
+    </div>
+    <div class="select-award-wrapper">
+        <div class="select-award-inner">
+            <div class="award-selectdatebox-outer">
+                <div class="award-selectdatebox-wrapper">
+                    <span>Select your Award Basket</span>
+                    <select name="SelectedAwardId" id="award-dropdown" onchange="loadAwardProductQuantities()">
+                        @foreach (var award in Model.Awards)
+                        {
+                            <option value="@award.Id" data-max-value="@award.MaxValue" data-expiry-date="@award.ExpiryDate">
+                                @award.Description
+                            </option>
+                        }
+                    </select>
+                    <input type="hidden" id="selectedAwardId" value="@Model.SelectedAwardId" />
+                </div>
+
+            </div>
+            <div class="awardInfo-outer">
+                <div class="awardInfo-wrapper">
+                    <div>@T("Award.RedeemNote")</div>
+                    <div>@T("Award.ExpiryDate"):<span id="expiryDate"></span></div>
+                    <div>@T("Award.Amount"):<span id="amount"></span></div>
+                    <div>@T("Award.AvailableAmount"):<span id="availableAmount"></span></div>
+                    <div>@T("Award.ShowSelected"):<input class="form-check-input" type="checkbox" style="opacity:10;" id="showSelectedProducts"></div>
+                </div>
+
+            </div>
+            <div class="update-cartbtn-outer">
+                <div class="update-cartbtn">
+                    <span class="update-label">Update Cart</span>
+                    <button type="button" id="update-cart-button"></button>
+                    <span id="exceedAmount-message" class="exceedAmount-message" style="display:none"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="award-productlist-wrapper">
+        <div class="item-grid">
+            @if (Model.Products.Count > 0)
+            {
+                <div class="product-list">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @await Html.PartialAsync("_AwardProductList", product)
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+<script asp-location="Footer">
+    //Function to show/hide selected products
+    function updateProductListVisibility() {
+        // Get the checkbox element by its ID
+        var showSelectedCheckbox = $('#showSelectedProducts');
+
+        // Check if the checkbox is checked
+        var showSelectedOnly = showSelectedCheckbox.prop('checked');
+
+        // Get all product items in the list
+        var productItems = $('.award-product-item');
+
+        // Loop through each product item
+        productItems.each(function () {
+            // Get the quantity input element for the current product item
+            var quantityInput = $(this).find('.quantity-input');
+
+            // Get the quantity value, ensuring it is not less than 0
+            var quantity = parseInt(quantityInput.val());
+
+            // Show or hide the product item based on the checkbox state and quantity value
+            if (showSelectedOnly && quantity > 0) {
+                // If checkbox is checked and product has quantity, show the product item
+                $(this).parent().show();
+            } else if (!showSelectedOnly) {
+                // If checkbox is unchecked, show all product items
+                $(this).parent().show();
+            } else {
+                // If checkbox is checked but product has no quantity, hide the product item
+                $(this).parent().hide();
+            }
+        });
+    }
+
+    // Function to show "availableAmount" span first time when page load
+    function AvailableAmount() {
+        // Create an object to store initial amount and available amount for each award
+        var awardData = {};
+
+        // Get the select element by its ID
+        var awardDropdown = $('#award-dropdown');
+
+        // Get the span element by its ID
+        var amountSpan = $('#amount');
+
+        // Get the span element by its ID
+        var availableAmountSpan = $('#availableAmount');
+
+        // Get the selected option from the dropdown
+        var selectedOption = awardDropdown.find(':selected');
+
+        // Get the MaxValue and Id attributes of the selected option
+        var maxValue = parseFloat(selectedOption.attr('data-max-value'));
+
+        // Update the text of the span with the MaxValue
+        amountSpan.text(maxValue);
+
+        // Get the span element by its ID
+        var expireSpan = $('#expiryDate');
+        expireSpan.text(selectedOption.attr('data-expiry-date'));
+
+        var awardId = parseInt(selectedOption.val());
+
+        //in hidden field add selected award id
+        $('#selectedAwardId').val(awardId);
+
+        // Check if maxValue is a valid number
+        if (isNaN(maxValue)) {
+            availableAmountSpan.text("N/A");
+            return;
+        }
+
+        // Calculate the total price of selected products for the current award
+        var totalPrice = 0;
+
+        // Loop through each product item
+        $('.award-product-item').each(function () {
+            var quantityInput = $(this).find('.quantity-input');
+            var productPrice = parseFloat($(this).find('.actual-price').text().replace('$', ''));
+
+            // Get the quantity value, ensuring it is not less than 0
+            var quantity = parseInt(quantityInput.val()) || 0;
+            quantity = Math.max(0, quantity);
+
+            // Calculate the product total price
+            var productTotalPrice = quantity * productPrice;
+            totalPrice += productTotalPrice;
+        });
+
+        // Get the initial amount for the current award from the awardData object
+        var initialAmount = awardData[awardId] ? awardData[awardId].initialAmount : maxValue;
+
+        // Calculate the remaining value after subtracting the total product prices from the initial amount
+        var remainingValue = initialAmount - totalPrice;
+
+        // Store the initial amount and available amount for the current award in the awardData object
+        awardData[awardId] = {
+            initialAmount: initialAmount,
+            availableAmount: Math.max(0, remainingValue) // Ensure availableAmount is not less than 0
+        };
+
+        // Format the numerical values with currency symbol and decimal separators
+        var formattedMaxValue = maxValue.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+        var formattedAvailableAmount = awardData[awardId].availableAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+
+        // Update the text of the span with the formatted amounts
+        amountSpan.text(formattedMaxValue);
+        availableAmountSpan.text(formattedAvailableAmount);
+    }
+
+    // Function to update the "availableAmount" span
+    function updateAvailableAmount(changedQuantityInput) {
+        // Create an object to store initial amount and available amount for each award
+        var awardData = {};
+
+        // Get the select element by its ID
+        var awardDropdown = $('#award-dropdown');
+
+        // Get the span element by its ID
+        var amountSpan = $('#amount');
+
+        // Get the span element by its ID
+        var availableAmountSpan = $('#availableAmount');
+
+        // Get the selected option from the dropdown
+        var selectedOption = awardDropdown.find(':selected');
+
+        // Get the MaxValue and Id attributes of the selected option
+        var maxValue = parseFloat(selectedOption.attr('data-max-value'));
+
+        // Update the text of the span with the MaxValue
+        amountSpan.text(maxValue);
+
+        // Get the span element by its ID
+        var expireSpan = $('#expiryDate');
+        expireSpan.text(selectedOption.attr('data-expiry-date'));
+
+        var awardId = parseInt(selectedOption.val());
+
+        //in hidden field add selected award id
+        $('#selectedAwardId').val(awardId);
+
+        // Check if maxValue is a valid number
+        if (isNaN(maxValue)) {
+            availableAmountSpan.text("N/A");
+            return;
+        }
+
+        // Calculate the total price of selected products for the current award
+        var totalPrice = 0;
+
+        // Loop through each product item
+        $('.award-product-item').each(function () {
+            var quantityInput = $(this).find('.quantity-input');
+            var productPrice = parseFloat($(this).find('.actual-price').text().replace('$', ''));
+
+            // Get the quantity value, ensuring it is not less than 0
+            var quantity = parseInt(quantityInput.val()) || 0;
+            quantity = Math.max(0, quantity);
+
+            // Calculate the product total price
+            var productTotalPrice = quantity * productPrice;
+            totalPrice += productTotalPrice;
+        });
+
+        // Get the initial amount for the current award from the awardData object
+        var initialAmount = awardData[awardId] ? awardData[awardId].initialAmount : maxValue;
+
+        // Calculate the remaining value after subtracting the total product prices from the initial amount
+        var remainingValue = initialAmount - totalPrice;
+
+        // Store the initial amount and available amount for the current award in the awardData object
+        awardData[awardId] = {
+            initialAmount: initialAmount,
+            availableAmount: Math.max(0, remainingValue) // Ensure availableAmount is not less than 0
+        };
+
+        // Disable the "Update Cart" button if the available amount is exceeded
+        var updateCartButton = $('#update-cart-button');
+
+        var initialQuantity = parseInt($(changedQuantityInput).data('initial-quantity'));
+        if (initialQuantity != $(changedQuantityInput).val()) {
+            $('#update-cart-button').addClass("active-cart");
+        }
+        else {
+            $('#update-cart-button').removeClass("active-cart");
+        }
+
+        if (remainingValue < 0.00) {
+            updateCartButton.prop('disabled', true);
+
+            var remainingPrice = Math.abs(remainingValue);
+            $("#exceedAmount-message").text("You have exceeded the value of your award with " + remainingPrice.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' }) + ". Please update your selections.");
+            $("#exceedAmount-message").show();
+            // Reset the value of the last updated quantity input
+            var qtyValue = $(changedQuantityInput).val();
+            $(changedQuantityInput).val(qtyValue - 1);
+        } else {
+            updateCartButton.prop('disabled', false);
+            $("#exceedAmount-message").hide();
+        }
+
+        // Format the numerical values with currency symbol and decimal separators
+        var formattedMaxValue = maxValue.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+        var formattedAvailableAmount = awardData[awardId].availableAmount.toLocaleString('en-ZA', { style: 'currency', currency: 'ZAR' });
+
+        // Update the text of the span with the formatted amounts
+        amountSpan.text(formattedMaxValue);
+        availableAmountSpan.text(formattedAvailableAmount);
+    }
+
+    //function to load product quantities ssociated with each award
+    function loadAwardProductQuantities() {
+        // get updated quantities for the selected award
+        var selectedAwardId = $('#award-dropdown').val();
+        $.ajax({
+            url: '@Url.Action("GetAwardProductQuantities", "Awards")',
+            type: 'GET',
+            data: { awardId: selectedAwardId },
+            success: function (data) {
+
+                // Update quantities for each product associated with the selected award
+                if (data || data.length > 0) {
+                    $('.award-product-item').each(function () {
+                        var productId = $(this).data('productid');
+
+                        // Find the corresponding product in the data variable
+                        var productData = data.find(item => item.ProductId === productId);
+                        var quantity = productData ? productData.Quantity : 0;
+
+                        // Set the updated quantity in the UI
+                        var productItem = $(this);
+                        productItem.find('.quantity-input').val(quantity);
+                        updateAvailableAmount(productItem.find('.quantity-input'));
+                        productItem.find('.quantity-input').data('initial-quantity', quantity);
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+    // Function to post the selected award and its associated products with quantities to the controller
+    function updateCart() {
+        var isUpdateButton = $('#update-cart-button').hasClass("active-cart");
+        if (!isUpdateButton) {
+            return;
+        }
+
+        // Get the select element by its ID
+        var awardDropdown = $('#award-dropdown');
+
+        // Get the selected option from the dropdown
+        var selectedOption = awardDropdown.find(':selected');
+        var awardId = parseInt(selectedOption.val());
+
+        // Use the map function to create an array of products with quantities greater than 0
+        var products = $('.award-product-item').map(function () {
+            var productId = parseInt($(this).data('productid'));
+            var quantity = parseInt($(this).find('.quantity-input').val()) || 0;
+
+            // Only include products with quantity greater than 0
+            if (quantity > 0) {
+                return { ProductId: productId, Quantity: quantity };
+            }
+        }).get(); // Convert the jQuery map result to a regular array
+
+        // Prepare the data to be sent in the AJAX request
+        var postData = {
+            products: products,
+            selectedAwardId: awardId,
+        };
+
+        displayAjaxLoading(true);
+
+        // AJAX request to add award product into the cart
+        $.ajax({
+            url: "@Url.Action("AwardProductAddToCart", "Awards")",
+            type: "POST",
+            data: postData,
+            success: function (result) {
+                // Display success message
+                displayBarNotification(result.message, 'success', 3500);
+
+                // Update count qty in the mini shopping cart
+                if (result.updatetopcartsectionhtml) {
+                    $(AjaxCart.topcartselector).html(result.updatetopcartsectionhtml);
+                }
+
+                // Update mini shopping cart data
+                if (result.updateflyoutcartsectionhtml) {
+                    $(AjaxCart.flyoutcartselector).replaceWith(result.updateflyoutcartsectionhtml);
+                }
+
+                // Load award product quantities after updating the cart
+                loadAwardProductQuantities();
+                displayAjaxLoading(false);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+                displayAjaxLoading(false);
+            }
+        });
+    }
+
+    // Document ready block
+    $(document).ready(function () {
+
+        //calculate available amount
+        AvailableAmount();
+
+        // Attach a change event listener to the quantity inputs to update "availableAmount" on quantity changes
+        $(document).on('change', '.quantity-input', function () {
+            // Get the changed quantity input element
+            var changedQuantityInput = $(this);
+
+            // Call updateAvailableAmount with the changed quantity input element
+            updateAvailableAmount(changedQuantityInput);
+        });
+
+        // Attach a click event listener to the "Update Cart" button to trigger the updateCart function
+        $('#update-cart-button').on('click', updateCart);
+
+        // Attach a click event listener to the checkbox to show/hide selected products
+        $('#showSelectedProducts').on('click', function () {
+            updateProductListVisibility();
+        });
+
+    });
+</script>

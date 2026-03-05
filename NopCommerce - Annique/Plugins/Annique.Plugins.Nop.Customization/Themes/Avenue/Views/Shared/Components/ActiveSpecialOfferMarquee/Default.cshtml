@@ -1,0 +1,13 @@
+﻿@model List<string>
+
+@if (Model.Any())
+{
+	<div class="active-offers-marquee">
+		<marquee>
+			@foreach (var discountName in Model)
+			{
+				<span>@discountName &nbsp;&nbsp;&nbsp;&nbsp;</span>
+			}
+		</marquee>
+	</div>
+}

@@ -1,0 +1,41 @@
+﻿@model ProductRibbonModel
+
+@{
+    var customer = await workContext.GetCurrentCustomerAsync();
+    const string hideRibbonSettingsBlockAttributeName = "ProductRibbons.HideRibbonSettingsBlock";
+    var hideRibbonSettingsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideRibbonSettingsBlockAttributeName);
+
+    const string hideAddRibbonPictureBlockAttributeName = "ProductRibbons.HideAddRibbonPictureBlock";
+    var hideAddRibbonPictureBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAddRibbonPictureBlockAttributeName, defaultValue: true);
+
+    const string hideProductsBlockAttributeName = "ProductRibbonPage.HideProductsRibbonBlock";
+    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductsBlockAttributeName, defaultValue: true);
+
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="productribbon-cards">
+                <nop-card asp-name="productribbon-info" asp-icon="fa fa-cart-plus" asp-title="@T("XcellenceIT.Plugin.ProductRibbons.tab.RibbonSettings")" asp-hide-block-attribute-name="@hideRibbonSettingsBlockAttributeName" asp-hide="@hideRibbonSettingsBlock" asp-advanced="false">
+                    @await Html.PartialAsync("~/Plugins/XcellenceIT.ProductRibbons/Views/Admin/ProductRibbonAdmin/_CreateOrUpdate.RibbonSettings.cshtml", Model)
+                </nop-card>
+                <nop-card asp-name="productribbon-productPictureRibbon" asp-icon="fa fa-cart-plus" asp-title="@T("XcellenceIT.Plugin.ProductRibbons.tab.AddRibbonPicture")" asp-hide-block-attribute-name="@hideAddRibbonPictureBlockAttributeName" asp-hide="@hideAddRibbonPictureBlock" asp-advanced="false">
+                    @await Html.PartialAsync("~/Plugins/XcellenceIT.ProductRibbons/Views/Admin/ProductRibbonAdmin/_CreateOrUpdate.ProductPageRibbon.cshtml", Model)
+                </nop-card>
+
+                @if (Model.Id > 0 && Model.MarkAsNew == false && Model.ApplyToAllProduct == false)
+                {
+                <nop-card asp-name="productribbon-products" asp-icon="fa fa-cart-plus" asp-title="@T("XcellenceIT.Plugin.ProductRibbons.tab.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">
+                        @await Html.PartialAsync("~/Plugins/XcellenceIT.ProductRibbons/Views/Admin/ProductRibbonAdmin/_CreateOrUpdate.AddProduct.cshtml", Model)
+                </nop-card>
+                }
+
+            </nop-cards>
+        </div>
+        @await Component.InvokeAsync("ProductRibbonsSearchVersion")
+    </div>
+</section>

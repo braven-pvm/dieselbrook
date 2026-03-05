@@ -1,0 +1,171 @@
+﻿@*
+    // *************************************************************************
+    // *                                                                       *
+    // * Product Ribbons  Plugin for nopCommerce                               *
+    // * Copyright (c) Xcellence-IT. All Rights Reserved.                      *
+    // *                                                                       *
+    // *************************************************************************
+    // *                                                                       *
+    // * Email: info@nopaccelerate.com                                         *
+    // * Website: http://www.nopaccelerate.com                                 *
+    // *                                                                       *
+    // *************************************************************************
+    // *                                                                       *
+    // * This  software is furnished  under a license  and  may  be  used  and *
+    // * modified  only in  accordance with the terms of such license and with *
+    // * the  inclusion of the above  copyright notice.  This software or  any *
+    // * other copies thereof may not be provided or  otherwise made available *
+    // * to any  other  person.   No title to and ownership of the software is *
+    // * hereby transferred.                                                   *
+    // *                                                                       *
+    // * You may not reverse  engineer, decompile, defeat  license  encryption *
+    // * mechanisms  or  disassemble this software product or software product *
+    // * license.  Xcellence-IT may terminate this license if you don't comply *
+    // * with  any  of  the  terms and conditions set forth in  our  end  user *
+    // * license agreement (EULA).  In such event,  licensee  agrees to return *
+    // * licensor  or destroy  all copies of software  upon termination of the *
+    // * license.                                                              *
+    // *                                                                       *
+    // * Please see the  License file for the full End User License Agreement. *
+    // * The  complete license agreement is also available on  our  website at *
+    // * http://www.nopaccelerate.com/enterprise-license                       *
+    // *                                                                       *
+    // *************************************************************************
+*@
+@model ConfigurationModel
+
+@{
+    NopHtml.SetActiveMenuItemSystemName("XcellenceIT.Plugin.ProductRibbons");
+    Layout = "_AdminLayout";
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("XcellenceIT.Plugin.ProductRibbons.Configure.Name")
+    </h1>
+</div>
+
+@{
+    @Html.AntiForgeryToken()
+
+    @if (!Model.IsLicenseActive)
+    {
+        <div class="col-sm-12 col-md-8 col-lg-8" style="padding-top: 110px;float:none;margin: 0 auto;">
+            <div id="registerForm">
+                <div class="content-header clearfix" style="padding:0">
+                    <h1 class="pull-left">
+                        @T("XcellenceIT.Plugin.ProductRibbons.Title.ProductRibbons")
+                    </h1>
+                </div>
+                <div>
+                    @Html.Raw(@Model.RegistrationForm)
+                </div>
+            </div>
+        </div>  
+    }
+    else
+    {
+        <form asp-controller="ProductRibbonsConfiguration" asp-action="Configure" method="post">
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="form-horizontal">
+                        <div class="ui-helper-clearfix">
+                            @Html.Raw(@Model.LicenseInformation)
+                        </div>
+                        <div>
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
+                        </div>
+                        <div class="cards-group">
+                            <div class="card card-default">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-input="Enabled" />
+                                            <nop-label asp-for="Enabled" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="Enabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="CSSProductBoxSelectorForProductRibbons_OverrideForStore" asp-input="CSSProductBoxSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="CSSProductBoxSelector" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="CSSProductBoxSelector" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="CSSProductPagePicturesParentContainerSelectorForProductRibbons_OverrideForStore" asp-input="CSSProductPagePicturesParentContainerSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="CSSProductPagePicturesParentContainerSelector" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="CSSProductPagePicturesParentContainerSelector" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="SpecificationAttributeId_OverrideForStore" asp-input="SpecificationAttributeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="SpecificationAttributeId" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-select asp-for="SpecificationAttributeId" asp-items="@Model.AvailableSpecificationAttributes" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="StockStatusRImage_OverrideForStore" asp-input="StockStatusRImage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="StockStatusRImage" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="StockStatusRImage" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="StockStatusGImage_OverrideForStore" asp-input="StockStatusGImage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="StockStatusGImage" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="StockStatusGImage" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="StockStatusBImage_OverrideForStore" asp-input="StockStatusBImage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="StockStatusBImage" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="StockStatusBImage" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-override-store-checkbox asp-for="StockStatusOImage_OverrideForStore" asp-input="CSSProductPagePicturesParentContainerSelector" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                            <nop-label asp-for="StockStatusOImage" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="StockStatusOImage" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            &nbsp;
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="submit" name="save" class="btn bg-blue" value="@T(" Admin.Common.Save")" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+        </form>
+    }
+
+    @await Component.InvokeAsync("ProductRibbonsSearchVersion")
+}

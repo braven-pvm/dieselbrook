@@ -1,0 +1,47 @@
+﻿@model BookingDetailsModel.BookingItemsModel
+
+<input asp-for="Id" type="hidden" />
+<input asp-for="EventId" type="hidden" />
+<div class="edit-booking">
+    <div class="fieldset">
+        <div class="form-fields">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <label asp-for="Consultant" style="font-size:14px;">@T("AnniqueEvents.EventBooking.Consultant")</label>
+                    </div>
+                    <div class="col-12 col-sm-12">
+                        <input asp-for="Consultant" id="Consultant" />
+                        <span class="customError" style="display:none" id="ConsultantError"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <label asp-for="Name" style="font-size:14px;">@T("AnniqueEvents.EventBooking.Name")</label>
+                    </div>
+                    <div class="col-12 col-sm-12">
+                        <input asp-for="Name" id="Name" />
+                        <span class="customError" style="display:none" id="NameError">@T("AnniqueEvents.EventBooking.Name.Required")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script asp-location="Footer">
+    $("#booking-add-form").find("#Name").on('input', function () {
+        $("#booking-add-form").find("#NameError").hide();
+    });
+    $("#booking-add-form").find("#Consultant").on('input', function () {
+        $("#booking-add-form").find("#ConsultantError").hide();
+    });
+    $("#booking-edit-form-" + @Model.Id).find("#Name").on('input', function () {
+        $("#booking-edit-form-" + @Model.Id).find("#NameError").hide();
+    });
+    $("#booking-edit-form-" + @Model.Id).find("#Consultant").on('input', function () {
+        $("#booking-edit-form-" + @Model.Id).find("#ConsultantError").hide();
+    });
+</script>

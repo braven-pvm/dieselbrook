@@ -1,0 +1,26 @@
+﻿@model GiftCardInfoListModel
+
+@if (Model.GiftCardModels.Any())
+{
+        <ul class="giftcard-wrapper">
+        @foreach (var giftCardModel in Model.GiftCardModels)
+        {
+            <li class="voucher-code" onclick="UpdateGiftcardCouponInput('@(giftCardModel.CouponCode)')">
+                <span> @T("Public.GiftCards.GiftCardAdditionalInfo.Access.GiftcardCode"):</span><span>@giftCardModel.CouponCode</span>
+            </li>
+            <li> <span>@T("Public.GiftCards.GiftCardAdditionalInfo.Access.RemainingAmount"):</span><span>@giftCardModel.Amount</span> </li>
+            <li class="giftcard-msg">@giftCardModel.Message</li>
+        }
+        </ul>
+        <script asp-location="Footer">
+        $(window).load(function () {
+            $("#shopping-cart-form").find("#applygiftcards-dropdown-title").addClass('giftcard-dropdown-title');
+        });
+        
+        function UpdateGiftcardCouponInput(couponCode)
+        {
+            var giftCardCouponInput = $("#shopping-cart-form").find("#giftcardcouponcode");
+            giftCardCouponInput.val(couponCode);
+        }
+        </script>
+}

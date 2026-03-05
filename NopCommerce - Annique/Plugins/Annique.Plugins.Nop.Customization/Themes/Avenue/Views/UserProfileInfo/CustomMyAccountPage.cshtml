@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-customer-info-page");
+}
+
+@section AccountNavigation
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId =  CustomMyAccountNavigationEnum.MyAccount })
+}
+<div class="page account-page customer-info-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "my_account" })
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "MyAccount" })
+    </div>
+</div>
+<script asp-location ="Footer">
+    $(document).ready(function () {
+        var accountLayout = $("body").hasClass("customer-pages-body");
+        if (!accountLayout) {
+            $("body").addClass("customer-pages-body");
+        }
+    });
+</script>

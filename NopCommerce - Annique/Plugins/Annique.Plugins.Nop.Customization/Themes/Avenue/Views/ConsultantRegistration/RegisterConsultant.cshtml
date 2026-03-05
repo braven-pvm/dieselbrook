@@ -1,0 +1,324 @@
+﻿@model ConsultantRegistrationModel
+
+@{
+    Layout = "_ColumnsOne";
+    //page class
+    NopHtml.AppendPageCssClassParts("html-consultant-registration-page");
+
+    @if (!string.IsNullOrEmpty(Model.Css))
+    {
+        string updatedCustomCSS;
+        string[] cssFileUrls = consultantNewRegistrationService.ExtractFileUrlsFromFirstLine(Model.Css, ".css", out updatedCustomCSS);
+        foreach (string cssUrl in cssFileUrls)
+        {
+            <link type="text/css" rel="stylesheet" href="@($"{cssUrl}?v={DateTime.Now.Ticks}")" />
+        }
+        Model.Css = updatedCustomCSS;
+    }
+
+    @if (!string.IsNullOrEmpty(Model.TopSection))
+    {
+        string updatedTopSection;
+        string[] topSectionFileUrls = anniqueReportService.ProcessTokensAndGetTempFileUrls(Model.TopSection, ".html", relativeBasePath: "~/assets/html", out updatedTopSection);
+
+        foreach (string topSectionFileUrl in topSectionFileUrls)
+        {
+            <script type="text/javascript" asp-location="Footer">
+                $.ajax({
+                url: "@($"{topSectionFileUrl}?v={DateTime.Now.Ticks}")",
+                dataType: "html",
+                success: function (data) {
+                // Append the processed HTML to the div
+                $(".consultant-top-section").show();
+                $(".consultant-top-section").append(data);
+                },
+                async: false
+                });
+            </script>
+        }
+        Model.TopSection = updatedTopSection;
+    }
+
+    @if (!string.IsNullOrEmpty(Model.LeftSection))
+    {
+        string updatedLeftSection;
+        string[] leftSectionFileUrls = anniqueReportService.ProcessTokensAndGetTempFileUrls(Model.LeftSection, ".html", relativeBasePath: "~/assets/html", out updatedLeftSection);
+
+        foreach (string leftSectionFileUrl in leftSectionFileUrls)
+        {
+            <script type="text/javascript" asp-location="Footer">
+                $.ajax({
+                url: "@($"{leftSectionFileUrl}?v={DateTime.Now.Ticks}")",
+                dataType: "html",
+                success: function (data) {
+                // Append the processed HTML to the div
+                 $(".consultant-left-section").show();
+                $(".consultant-left-section").append(data);
+                },
+                async: false
+                });
+            </script>
+        }
+        Model.LeftSection = updatedLeftSection;
+    }
+
+    @if (!string.IsNullOrEmpty(Model.BottomSection))
+    {
+        string updatedBottomSection;
+        string[] bottomSectionFileUrls = anniqueReportService.ProcessTokensAndGetTempFileUrls(Model.BottomSection, ".html", relativeBasePath: "~/assets/html", out updatedBottomSection);
+
+        foreach (string bottomSectionFileUrl in bottomSectionFileUrls)
+        {
+            <script type="text/javascript" asp-location="Footer">
+                $.ajax({
+                url: "@($"{bottomSectionFileUrl}?v={DateTime.Now.Ticks}")",
+                dataType: "html",
+                success: function (data) {
+                // Append the processed HTML to the div
+                 $(".consultant-bottom-section").show();
+                $(".consultant-bottom-section").append(data);
+                },
+                async: false
+                });
+            </script>
+        }
+        Model.BottomSection = updatedBottomSection;
+    }
+
+
+    @if (!string.IsNullOrEmpty(Model.Js))
+    {
+        string updatedCustomJS;
+        string[] jsFileUrls = consultantNewRegistrationService.ExtractFileUrlsFromFirstLine(Model.Js, ".js", out updatedCustomJS);
+        @if (jsFileUrls.Any())
+        {
+            foreach (string jsUrl in jsFileUrls)
+            {
+                <script asp-location="Footer" type="text/javascript" src="@($"{jsUrl}?v={DateTime.Now.Ticks}")">
+                </script>
+            }
+        }
+        else
+        {
+            <script type="text/javascript">@Html.Raw(Model.Js)</script>
+        }
+    }
+
+}
+
+<link type="text/css" rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/bootstrap.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+@if (!string.IsNullOrEmpty(Model.Css))
+{
+    @Html.Raw(Model.Css)
+}
+@if (!string.IsNullOrEmpty(Model.TopSection))
+{
+    <script type="text/javascript" asp-location="Footer">
+        $(".consultant-top-section").show();
+    </script>
+}
+@if (!string.IsNullOrEmpty(Model.LeftSection))
+{
+    <script type="text/javascript" asp-location="Footer">
+        $(".consultant-left-section").show();
+    </script>
+}
+@if (!string.IsNullOrEmpty(Model.BottomSection))
+{
+    <script type="text/javascript" asp-location="Footer">
+        $(".consultant-bottom-section").show();
+    </script>
+}
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/bootstrap.bundle.min.js" asp-location="Footer"></script>
+<div class="page registration-page consultant-registration-form">
+    <div class="page-title">
+    </div>
+
+    <div class="consultant-top-section" style="display:none">
+        @Html.Raw(Model.TopSection)
+    </div>
+
+    <div class="row">
+        <div class="consultant-left-section col-12 col-md-6" style="display:none">
+            @Html.Raw(Model.LeftSection)
+        </div>
+
+        <div class="consultant-form-wrapper col-12 col-md-6">
+            @if (!string.IsNullOrEmpty(Model.AffiliateName))
+            {
+                <div class="affiliate-welcome-message alert">
+                    <strong>@string.Format(T("Consultant.Registration.Affiliate.Welcome.Message").Text, @Model.AffiliateName)</strong>
+                </div>
+            }
+
+            <form asp-route="Consultant.Register.Form" method="post" class="form-horizontal" id="consultant-form">
+                <h2>@T("Consultant.RegistrationForm.Title")</h2>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                <input type="hidden" asp-for="@Model.Browser" />
+                <input type="hidden" asp-for="@Model.Csponser" />
+                <div class="form-group">
+                    <input asp-for="FirstName" class="form-control" placeholder=" " />
+                    <label asp-for="FirstName"></label>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="LastName" class="form-control" placeholder=" " />
+                    <label asp-for="LastName"></label>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Email" class="form-control" placeholder=" " />
+                    <label asp-for="Email"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="ConfirmEmail" class="form-control" placeholder=" " />
+                    <label asp-for="ConfirmEmail"></label>
+                    <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Cell" class="form-control" placeholder=" " />
+                    <label asp-for="Cell"></label>
+                    <span asp-validation-for="Cell" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Whatsapp" class="form-control" placeholder=" " />
+                    <label asp-for="Whatsapp"></label>
+                    <span asp-validation-for="Whatsapp" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedLanguage" class="control-label"></label>
+                    <select asp-for="SelectedLanguage" asp-items="Model.Languages" class="form-control">
+                        <option value="">-- Your Language --</option>
+                    </select>
+                    <span asp-validation-for="SelectedLanguage" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Postcode" class="form-control" placeholder=" " />
+                    <label asp-for="Postcode"></label>
+                    <span asp-validation-for="Postcode" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedCallTime" class="control-label"></label>
+                    <select asp-for="SelectedCallTime" asp-items="Model.CallTimes" class="form-control">
+                        <option value="">-- What is best time to call you --</option>
+                    </select>
+                    <span asp-validation-for="SelectedCallTime" class="text-danger"></span>
+                </div>
+
+                @if (Model.DisplayCaptcha)
+                {
+                    <nop-captcha />
+                }
+                <div class="form-btn-wrapper">
+                    <button type="submit" class="consultant-register-button">@T("Consultant.RegistrationForm.SubmitButton.Text")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="consultant-bottom-section" style="display:none">
+        @Html.Raw(Model.BottomSection)
+    </div>
+
+</div>
+
+<!-- Modal Template (Single Modal for Success or Warning) -->
+<div class="modal fade" id="genericModal" tabindex="-1" role="dialog" aria-labelledby="genericModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modalCloseBtn"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        var showSuccessPopup = '@Model.ConsultantPostResgistrationModel.ShowWelcomePopup' === 'True';
+        var showCustomerExistPopup = '@Model.ConsultantPostResgistrationModel.ShowCustomerExistPopup' === 'True';
+        var redirectUrl = '@Model.ConsultantPostResgistrationModel.RedirectUrl';
+
+        // Localized strings from resource file
+        var continueBtnText = '@T("Consultant.RegistrationForm.Popup.ContinueButton.Text")';
+        var closeBtnText = '@T("Consultant.RegistrationForm.Popup.Close.Text")';
+
+        // Helper function to show the modal with dynamic content and classes
+        function showModal(message, type, isStrict) {
+            const modal = $('#genericModal');
+            const messageElement = $('#modalMessage');
+            const closeButton = $('#modalCloseBtn');
+
+            // Set the message
+            messageElement.html(message);
+
+            // Change modal color based on message type
+            if (type === 'success') {
+                closeButton.text(continueBtnText);
+            } else if (type === 'warning') {
+                closeButton.text(closeBtnText);
+            }
+
+            // Configure modal behavior
+            const modalOptions = isStrict
+                ? { backdrop: 'static', keyboard: false }  // prevent closing
+                : {};  // default behavior
+
+            modal.modal(modalOptions);
+
+            // Show the modal
+            modal.modal('show');
+
+            // Redirect when the modal button is clicked
+            closeButton.on('click', function () {
+                window.location.href = redirectUrl;
+            });
+        }
+
+        // Show Success Popup (Welcome Message)
+        if (showSuccessPopup) {
+            const message = `@Html.Raw(Model.ConsultantPostResgistrationModel.WelcomeMessage)`;
+
+              showModal(message, 'success', true);  // << strict mode enabled
+        }
+
+        // Show Existing Customer Popup (Warning Message)
+        if (showCustomerExistPopup) {
+            const message = `@Html.Raw(Model.ConsultantPostResgistrationModel.ExistingCustomerMessage)`;
+
+            showModal(message, 'warning', false);  // << allow normal closing
+        }
+
+       // Handle form submission button state
+        $('#consultant-form').on('submit', function () {
+         var form = $(this);
+            var submitBtn = $('.consultant-register-button');
+
+            // Check if form is valid
+            if (!form.valid()) {
+                // Prevent submit if invalid
+                e.preventDefault();
+                return;
+            }
+
+            // Change button text and disable it
+            submitBtn.text('Submitting...');
+            submitBtn.prop('disabled', true);
+        });
+    });
+</script>
+

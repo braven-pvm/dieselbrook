@@ -1,0 +1,85 @@
+﻿@model ChatFeedbackModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Annique.Plugin.Nop.Customization.ChatFeedback").Text;
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.ChatFeedback");
+
+    Layout = "_AdminLayout";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Annique.Plugin.Nop.Customization.ChatFeedback")
+    </h1>
+    <small>
+        <i class="fas fa-arrow-circle-left"></i>
+        <a asp-action="FeedbackList">@T("Annique.Plugin.Nop.Customization.Chatfeedback.BackToList")</a>
+    </small>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OriginalMessage" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.OriginalMessage</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AiResponse" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row"> @Html.Raw(Model.AiResponse)</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Status" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Status</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Username" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Username</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IpAddress" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.IpAddress</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedOnUtc" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedOnUtc.ToString("F")</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

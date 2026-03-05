@@ -1,0 +1,151 @@
+﻿@model ConsultantRegistrationOverviewModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Annique.Plugin.Nop.Customization.ConsultantRegistrationDetails").Text;
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.ConsultantRegistrationList");
+
+    Layout = "_AdminLayout";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Annique.Plugin.Nop.Customization.ConsultantRegistrationDetails")
+    </h1>
+    <small>
+        <i class="fas fa-arrow-circle-left"></i>
+        <a asp-action="RegistrationList">@T("Annique.Plugin.Nop.Customization.ConsultantRegistrationList.BackToList")</a>
+    </small>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Sponsor" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row"> @Model.Sponsor</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="FirstName" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.FirstName</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="LastName" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row"> @Model.LastName</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Email" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row"> @Model.Email</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Cell" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row"> @Model.Cell</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Whatsapp" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row"> @Model.Whatsapp</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SelectedLanguage" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.SelectedLanguage</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Postcode" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Postcode</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Country" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Country</div>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SelectedCallTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.SelectedCallTime</div>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Status" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Status</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IPAddress" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.IPAddress</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Browser" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Browser</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedOnUtc" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedOnUtc.ToString("F")</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,37 @@
+﻿@model CustomShippingRuleModel
+
+@{
+    Layout = "_AdminLayout";
+}
+@{
+    ViewBag.PageTitle = T("Admin.Configuration.CustomShippingRule.EditCustomShippingRuleDetails").Text;
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.CustomShippingRule");
+}
+
+<form asp-controller="AdminCustomShippingRule" asp-action="Edit" method="post" id="shipping-rule-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.CustomShippingRule.EditCustomShippingRuleDetails")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Configuration.CustomShippingRule.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+             <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="report-delete" class="btn bg-red">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="rule-delete" />

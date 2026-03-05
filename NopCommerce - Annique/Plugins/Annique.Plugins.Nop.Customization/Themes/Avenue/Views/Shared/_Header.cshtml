@@ -1,0 +1,222 @@
+﻿@{
+    <link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+    var storeId = (await storeContext.GetCurrentStoreAsync()).Id;
+    var wishlistEnabled = await permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist);
+    var shoppingCartEnabled = await permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart);
+
+    var shoppingCartItems = await shoppingCartService.GetShoppingCartAsync(await workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, storeId);
+    var shoppingCartItemsCount = shoppingCartItems.Sum(item => item.Quantity);
+
+    var wishlistItems = await shoppingCartService.GetShoppingCartAsync(await workContext.GetCurrentCustomerAsync(), ShoppingCartType.Wishlist, storeId);
+    var wishlistItemsCount = wishlistItems.Sum(item => item.Quantity);
+
+    var (_, cartTotalValue) = await anniqueCustomizationConfigurationService.GetShoppingCartTotalsBeforeDiscountAsync(shoppingCartItems);
+    ViewBag.WishlistEnabled = wishlistEnabled;
+    ViewBag.WishlistItems = wishlistItemsCount;
+    ViewBag.ShoppingCartEnabled = shoppingCartEnabled;
+    ViewBag.ShoppingCartItems = shoppingCartItemsCount;
+    ViewBag.CartTotalValue = cartTotalValue;
+}
+
+<div class="header">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderBefore })
+    @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
+    <div class="header-upper">
+        <div class="profile-links responsive-nav-content">
+            <div class="responsive-nav-head">
+                <span class="text">@T("SevenSpikes.Themes.Avenue.Profile")</span>
+                <span class="button close-links"></span>
+            </div>
+            <div class="responsive-nav-body">
+                @await Component.InvokeAsync(typeof(AdminHeaderLinksViewComponent))
+                @await Component.InvokeAsync(typeof(HeaderLinksViewComponent))
+                <div class="header-selects">
+                    @await Component.InvokeAsync(typeof(TaxTypeSelectorViewComponent))
+                    @await Component.InvokeAsync(typeof(CurrencySelectorViewComponent))
+                    @await Component.InvokeAsync(typeof(LanguageSelectorViewComponent))
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderSelectors })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-lower">
+        <div class="header-lower-inner">
+            <div class="header-logo-wrapper table-cell">
+                <div class="nav-button menu-button">
+                    <span class="trigger" title="@T("SevenSpikes.Themes.Common.MenuTitle")"></span>
+                </div>
+                <div class="header-logo">
+                    @await Component.InvokeAsync(typeof(LogoViewComponent))
+                </div>
+            </div>
+            <div class="header-menu table-cell responsive-nav-content">
+                <div class="responsive-nav-head">
+                    <span class="text">@T("SevenSpikes.Themes.Common.MenuTitle")</span>
+                    <span class="button close-menu"></span>
+                </div>
+                @{
+                    var menu = await Component.InvokeAsync("Widget", new { widgetZone = "theme_header_menu" });
+                }
+                @if (String.IsNullOrEmpty(await menu.RenderHtmlContentAsync()))
+                {
+                    @await Component.InvokeAsync(typeof(TopMenuViewComponent))
+                }
+                else
+                {
+                    @menu
+                }
+            </div>
+            <div class="responsive-nav-wrapper table-cell">
+                <div class="nav-button search-button">
+                    <span class="trigger" title="@T("Search")"></span>
+                </div>
+
+                @await Component.InvokeAsync(typeof(ChatbotAIViewComponent))
+
+                <div class="nav-button personal-button">
+                    <span class="trigger" title="@T("SevenSpikes.Themes.Avenue.Profile")"></span>
+                </div>
+                @if (ViewBag.WishlistEnabled != null && ViewBag.WishlistEnabled)
+                {
+                    <div class="nav-button wishlist-button">
+                        <a class="trigger" title="@T("Wishlist")" href="@Url.RouteUrl("Wishlist")"><span class="counter wishlist-qty">@T("Wishlist.HeaderQuantity", ViewBag.WishlistItems)</span></a>
+                    </div>
+                }
+                @if (ViewBag.ShoppingCartEnabled != null && ViewBag.ShoppingCartEnabled)
+                {
+                    <div class="nav-button cart-button">
+                        <a class="trigger" title="@T("ShoppingCart")" href="@Url.RouteUrl("ShoppingCart")"><span class="counter cart-qty">@T("ShoppingCart.HeaderQuantity", ViewBag.ShoppingCartItems)</span></a>
+                    </div>
+                }
+                <div class="cart-grandvalue">
+                    <span id="cartTotalValue">@ViewBag.CartTotalValue</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="search-box store-search-box responsive-nav-content">
+        @await Component.InvokeAsync(typeof(SearchBoxViewComponent))
+    </div>
+    <div class="flyout-cart responsive-nav-content">
+        <div class="responsive-nav-head">
+            <span class="text">@T("ShoppingCart")</span>
+            <span class="button close-cart"></span>
+        </div>
+        <div class="responsive-nav-body">
+            @await Component.InvokeAsync(typeof(FlyoutShoppingCartViewComponent))
+        </div>
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderAfter })
+</div>
+
+@await Component.InvokeAsync(typeof(AwardHeaderLinkViewComponent))
+@await Component.InvokeAsync(typeof(UserLoginTimeoutViewComponent))
+<script asp-location="Footer">
+    // Function to update cartTotalValue
+    function updateCartTotalValue() {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetCartTotalValue", "CustomShoppingCart")',
+            dataType: 'json',
+            success: function (data) {
+                // Update the cartTotalValue with the new value from the server
+                cartTotalValue = data.cartTotalValue;
+
+                // Update the cartTotalValue displayed on the page
+                $('#cartTotalValue').text(cartTotalValue);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+    $(document).on('removeItemFlyoutCart', function () {
+        updateCartTotalValue();
+        getCatalogProductDetails();
+    });
+    // Function to get catalog product details
+    function getCatalogProductDetails() {
+        var productIds = [];
+
+        // Add the product IDs for each product on the page.
+        $(".product-item").each(function () {
+            var productId = $(this).data("productid");
+            if (productId) {
+                productIds.push(productId);
+            }
+        });
+
+        if (productIds.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetCatalogProductDetails", "CustomShoppingCart")',
+                data: { productIds: productIds },
+                traditional: true,
+                dataType: "json",
+                success: function (data) {
+                    if (!$.isEmptyObject(data))
+                    {
+                        // Loop through the returned data and update the quantities and price for each product.
+                        for (var i = 0; i < data.length; i++) {
+                            var productId = data[i].ProductId;
+                            var quantity = data[i].Quantity;
+                            var price = data[i].Price;
+
+                            var itemDiv = $('.product-item[data-productid="' + productId + '"]');
+                            var priceSpan = itemDiv.find(".actual-price");
+                            priceSpan.text(price);
+
+                            var wrapDiv = $(`[data-product-id="${productId}"]`);
+                            var quantitySpan = wrapDiv.find(".cart-item-quantity");
+
+                            if (quantity > 0) {
+                                quantitySpan.text(quantity);
+                                quantitySpan.show(); // Show the quantity span.
+                            } else {
+                                quantitySpan.text(''); // Clear the quantity text.
+                                quantitySpan.hide(); // Hide the quantity span.
+                            }
+                        }
+                    }
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+
+    }
+
+    function updateProductCartItemQuantity(productId) {
+        // get the current cart item quantity for the product.
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetProductCartItemQuantity", "CustomShoppingCart")',
+            data: { productId: productId },
+            success: function (data) {
+                // Update the quantity in the "wrap" div for the associated product.
+                var wrapDiv = $(`[data-product-id="${productId}"]`);
+                var quantitySpan = wrapDiv.find(".cart-item-quantity");
+
+                if (data > 0) {
+                    quantitySpan.text(data);
+                    quantitySpan.show(); // Show the quantity span.
+                } else {
+                    quantitySpan.text(''); // Clear the quantity text.
+                    quantitySpan.hide(); // Hide the quantity span.
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    // on page load to load Quantity and prices
+    $(document).ready(function () {
+        getCatalogProductDetails();
+    });
+    //on category page change
+    $(CatalogProducts).on('loaded', function () {
+        getCatalogProductDetails();
+    });
+</script>

@@ -1,0 +1,286 @@
+﻿@model CheckoutShippingAddressModel
+
+@using Nop.Core
+
+@inject IWebHelper webHelper
+
+@{
+    Layout = "_ColumnsOne";
+
+    var storeLocation = webHelper.GetStoreLocation();
+
+    var customer = await workContext.GetCurrentCustomerAsync();
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-checkout-page");
+    NopHtml.AppendPageCssClassParts("html-shipping-address-page");
+}
+<script src="~/Plugins/Annique.Customization/Content/js/shippingaddress.js" asp-location="Footer"></script>
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/bootstrap.bundle.min.js" asp-location="Footer"></script>
+<div class="page checkout-page shipping-address-page">
+    @await Component.InvokeAsync(typeof(CheckoutProgressViewComponent), new { step = CheckoutProgressStep.Address })
+    <div class="page-title">
+        <h1>@T("Checkout.ShippingAddress")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
+        {
+            <div class="event-wrapper">
+                <div class="your-booking-wrappper">
+                    <div class="event-booking-title">
+                        <h3>@T("Checkout.SelectShippingAddress")</h3>
+                    </div>
+                    <div class="search-address-wrapper">
+                        <input type="text" id="address-search-input" class="search-box" placeholder="@T("Checkout.ShippingAddress.SearchAddressPlaceholder")" />
+                        <button type="button" class="button-1 search-button" id="address-search-button">@T("Checkout.ShippingAddress.SearchButton.Text")</button>
+                    </div>
+                    <div class="booking-btn-wrapper">
+                        <div class="add-event-btn">
+                            <button type="button" class="button-1 enter-address-button">@T("SevenSpikes.Themes.Avenue.Checkout.AddNewAddress")</button>
+                        </div>
+                        <div class="add-event-btn">
+                            @await Component.InvokeAsync("PickupStoreButton")
+                        </div>
+                    </div>
+                </div>
+                <div class="shipping-addresses" id="shipping-addresses-form">
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressTop, additionalData = Model })
+
+                    <div class="section select-shipping-address">
+                        @if (Model.InvalidExistingAddresses.Count > 0)
+                        {
+                            <div class="min-amount-warning">
+                                <span>@string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)</span>
+                            </div>
+                        }
+
+                        <!-- Table for displaying shipping addresses -->
+                        <table class="data-table event-cart-table shipping-address-table">
+                            <thead>
+                                <tr class="cart-table-row">
+                                    <th class="footable-element index-cell">
+                                        <span class="item-count">#</span>
+                                    </th>
+                                    <th class="consultant-cell">
+                                        @T("Checkout.ShippingAddress.Address.Line")
+                                    </th>
+                                    <th class="action-cell">
+                                        @T("Action")
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            @if (Model.ExistingAddresses.Count > 0)
+                            {
+                                <tbody>
+                                    @{
+                                        var counter = 0;
+                                    }
+                                    @foreach (var address in Model.ExistingAddresses)
+                                    {
+                                        counter++;
+                                        var addressLine = "";
+                                        addressLine += address.FirstName;
+                                        addressLine += " " + address.LastName;
+                                        addressLine += ", " + address.PhoneNumber;
+                                        if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
+                                        {
+                                            addressLine += ", " + address.Address1;
+                                        }
+                                        if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
+                                        {
+                                            addressLine += ", " + address.City;
+                                        }
+                                        if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                                        {
+                                            addressLine += ", " + address.County;
+                                        }
+                                        if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
+                                        {
+                                            addressLine += ", " + address.StateProvinceName;
+                                        }
+                                        if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
+                                        {
+                                            addressLine += " " + address.ZipPostalCode;
+                                        }
+                                        if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
+                                        {
+                                            addressLine += ", " + address.CountryName;
+                                        }
+                                        if (!string.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                                        {
+                                            addressLine += ", " + address.FormattedCustomAddressAttributes;
+                                        }
+                                        <tr class="cart-item-row">
+                                            <td class="footable-element index">
+                                                <span class="item-count">@counter</span>
+                                            </td>
+                                            <td class="name">
+                                                <div class="address-name">
+                                                    @addressLine
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="action-btn-wrapper">
+                                                    <!-- Ship to this address -->
+                                                    <button type="button" class="button-1 select-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = address.Id })')">@T("Checkout.ShipToThisAddress")</button>
+
+                                                    <!-- Edit Address -->
+                                                    @if (string.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                                                    {
+                                                        <button type="button" class="event-edit-btn" onclick="CheckoutShipping.editAddress('@(storeLocation)checkout/GetAddressById/', @(address.Id), '@T("Checkout.EditAddress")'); return false;"></button>
+                                                    }
+
+                                                    <!-- Show delete button only if address is not default billing or shipping address -->
+                                                    @if (customer.BillingAddressId != address.Id &&
+                                                   customer.ShippingAddressId != 0 && customer.ShippingAddressId != address.Id)
+                                                    {
+                                                        <button type="button" class="event-trash-btn" onclick="CheckoutShipping.deleteEditAddress('@(storeLocation)checkout/DeleteEditShippingAddress/', @(address.Id)); return false;"></button>
+                                                    }
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6">@T("Checkout.NoAddresses")</td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle, additionalData = Model })
+
+                    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom, additionalData = Model })
+                </div>
+            </div>
+        }
+
+        <!-- Pep address Modal -->
+        <div class="modal fade bd-example-modal-lg1 pickup-popup" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content common-eventpopup-wrap">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="exampleModalLabel">@T("Annique.Plugin.PostNetStoreDeliveryPopUp.Title")</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="pep-form">
+                            @{
+                                @await Component.InvokeAsync("PostNetStoreDelivery")
+                            }
+                        </form>
+                        <div class="button-group">
+                            <button type="button" class="button-1 btn btn-secondary" id="FilterPickUpStore">@T("Annique.Plugin.PostNetStoreDelivery.BrowsePickUpStores.Button")</button>
+                            <button type="button" class="button-1 btn btn-secondary save-pickupstore" id="confirmPickUpStore" onclick="SavePickUpStore()">@T("Annique.Plugin.PostNetStoreDelivery.Confirm.Button")</button>
+                            <button type="button" class="button-1 btn btn-secondary" id="clearPostalCode" onclick="ClearPostalCode()">@T("Annique.Plugin.PostNetStoreDelivery.Clear.Button")</button>
+                            <button type="button" class="button-1 btn btn-secondary" data-bs-dismiss="modal">@T("Annique.Plugin.PostNetStoreDelivery.Close.Button")</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="table-wrapper" id="tableDiv">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping address Modal -->
+        <div class="modal fade bd-example-modal-lg1 shipping-popup" id="shippingAddressModal" tabindex="-1" aria-labelledby="shippingAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content common-eventpopup-wrap">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="shippingAddressModalLabel">@T("SevenSpikes.Themes.Avenue.Checkout.AddNewAddress")</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="shipping-address-form">
+                            <div id="modal-address-form">
+                                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                                @{
+                                    var dataDictAddress = new ViewDataDictionary(ViewData);
+                                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                                    @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
+                                }
+                            </div>
+                            <div class="buttons mt-3">
+                                <button type="submit" name="nextstep" class="button-1 new-address-next-step-button">
+                                    @T("Checkout.NextButton")
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section order-summary">
+            <div class="title">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            @await Component.InvokeAsync(typeof(OrderSummaryViewComponent))
+        </div>
+    </div>
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        //form submit using ajax so we can handle form postback errors and can redisplay popup will errors
+        $('#shipping-address-form').on('submit', function (e) {
+            e.preventDefault();
+
+             var form = $(this);
+
+            // Trigger jQuery validation
+            if (!form.valid()) {
+                return false; // Prevent AJAX call if client-side validation fails
+            }
+
+            $.ajax({
+                url: '/SaveEditShippingAddress',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.isSuccess) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        $('#modal-address-form').html(response.htmlData);
+                    }
+                }
+            });
+        });
+    });
+
+    function moveActionButtons() {
+        $('.cart-item-row').each(function () {
+            var $row = $(this);
+            var $actionBtn = $row.find('.action-btn-wrapper');
+            var $nameCell = $row.find('.name');
+            var $originalTd = $row.find('td').last(); // original location
+
+            if (window.innerWidth <= 767) {
+                // Move inside .name div if not already moved
+                if ($actionBtn.parent()[0] !== $nameCell[0]) {
+                    $actionBtn.appendTo($nameCell);
+                }
+            } else {
+                // Move back to original td if not already there
+                if ($actionBtn.parent()[0] !== $originalTd[0]) {
+                    $actionBtn.appendTo($originalTd);
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        moveActionButtons(); // Initial call
+        $(window).on('resize', moveActionButtons); // On resize
+    });
+</script>

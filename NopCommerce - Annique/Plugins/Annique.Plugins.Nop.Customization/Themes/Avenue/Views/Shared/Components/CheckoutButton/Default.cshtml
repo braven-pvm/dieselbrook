@@ -1,0 +1,24 @@
+﻿@model bool
+
+
+@if (Model)
+{
+    <button type="button" class="button-1 checkout-button guest-checkout">
+        <input type="checkbox" id="terms-checkbox" class="custom-checkbox" />
+        <label for="terms-checkbox">
+            <span>@T("Checkout.TermsOfService.IAccept") <a class="read" href="javascript:void(0);" id="read-terms">@T("Checkout.TermsOfService.Read")</a></span>
+        </label>
+        @T("Checkout.Button")
+    </button>
+}
+else
+{
+    <button type="button" class="button-1 checkout-button custom-checkout-btn">
+        <input type="checkbox" id="terms-checkbox" class="custom-checkbox" />
+        <label for="terms-checkbox">
+            <span>@T("Checkout.TermsOfService.IAccept")<a class="read" href="javascript:void(0);" id="read-terms">@T("Checkout.TermsOfService.Read")</a></span>
+        </label>
+        @T("Checkout.Button")
+    </button>
+}
+

@@ -1,0 +1,53 @@
+﻿@model EventListModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.EventList").Text);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-eventlist-page");
+
+    <link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+}
+<div class="event-list-page">
+    <div class="page-title">
+        <h1>
+            @T("PageTitle.EventList")
+        </h1>
+    </div>
+    <div class="item-grid">
+        @foreach (var item in Model.Events)
+        {
+            <div class="item-box">
+                <div class="event-list-box">
+                    <h2 class="title">
+                        <a title="@item.PictureModel.Title">
+                            @item.Name
+                        </a>
+                    </h2>
+                    <div class="picture">
+                        <a title="@item.PictureModel.Title">
+                            <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                        </a>
+                    </div>
+                    <div class="details">
+                        <p>@item.Description</p>
+                        <div class="offer-duration">@item.Date</div>
+                        <div class="event-time-location"><span>@item.LocationAddress1</span><span>@T("AnniqueEvents.Event.Time") @item.Time</span></div>
+                        <div class="offer-close">@item.LocationAddress2</div>
+                        @if (item.BookingOpen)
+                        {
+                            <div class="event-link-btn">
+                                <a class="link event-link" href="@(Url.RouteUrl("BookingDetails", new {eventId = item.Id}))">
+                                    @T("AnniqueEvents.Event.Button.BookNow",item.Price)
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

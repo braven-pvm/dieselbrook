@@ -1,0 +1,116 @@
+﻿<style>
+    /* Floating chatbot container */
+    #chatbot-box {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 900px;
+        max-width: 90vw;
+        border: 1px solid #ccc;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        z-index: 9999;
+        display: none;
+        flex-direction: column;
+    }
+
+    #chatbot-sub-header {
+        font-size: 16px;
+        padding: 15px;
+        text-align: center;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+    /* Visible state */
+    #chatbot-box.active {
+        display: flex;
+    }
+
+    /* Header/button area */
+    #chatbot-header {
+        padding: 10px;
+        cursor: pointer;
+        font-size: 29px; /* Make the icon larger */
+        color: black; /* Set color */
+        width: 60px; /* Increase button size */
+        height: 60px; /* Increase button size */
+    }
+
+        #chatbot-header img {
+            width: 80%; /* Scale the image to 80% of the button's size */
+            height: auto; /* Keep aspect ratio */
+        }
+
+    /* Body of chatbot */
+    #chatbot-body {
+        display: flex;
+        flex-direction: column;
+        height: 500px;
+    }
+
+    /* Messages container */
+    #chatbot-messages {
+        padding: 10px;
+        height: 330px;
+        overflow-y: auto;
+        font-size: 14px;
+        flex-grow: 1;
+        background: white;
+        /* FIX: Prevent horizontal scroll and wrap long text */
+        overflow-x: hidden;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: justify;
+    }
+
+    /* Input area */
+    #chatbot-input-area {
+        display: flex;
+        border-top: 1px solid #ddd;
+    }
+
+    /* Text input */
+    #chatbot-input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        outline: none;
+    }
+
+    /* Send button */
+    #chatbot-send {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    /* Optional: Style for individual chat messages */
+    .chat-message {
+        margin-bottom: 8px;
+        word-wrap: break-word;
+        white-space: normal;
+        max-width: 100%;
+    }
+</style>
+
+@{
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/chatbot.js");
+}
+
+<!-- Floating chatbot box -->
+<div id="chatbot-box">
+    <div id="chatbot-sub-header" onclick="toggleChatbot()">How can I help you today?</div>
+    <div id="chatbot-body">
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-input-area">
+            <input id="chatbot-input" type="text" placeholder="Ask me about a product..." />
+            <button id="chatbot-send" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+</div>
+

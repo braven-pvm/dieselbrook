@@ -1,0 +1,32 @@
+﻿@model CheckoutLoginModal
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@T("Annique.Plugin.CheckoutPopUp.LoginForm.Title")</h5>
+        <div id="loginError" class="text-danger" style="display:none"></div>
+        <form id="loginForm">
+            @Html.AntiForgeryToken()
+            <div class="inputs">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="username" autofocus="autofocus" placeholder="Email or Consultant Number" />
+                <nop-required />
+                <span asp-validation-for="Username"></span>
+            </div>
+            <div class="inputs">
+                <label asp-for="Password"></label>
+                <div class="password-wrapper">
+                    <input asp-for="Password" class="password" placeholder="Password" />
+                    <span class="password-eye"></span>
+                    <nop-required />
+                </div>
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="login-button-wrapper">
+                <button type="button" id="loginButton" class="button-1 checkout-button">@T("Annique.Plugin.CheckoutPopUp.LoginForm.Submit.Button.Title")</button>
+            </div>
+            <div class="forget-password-wrapper">
+                <a asp-route="PasswordRecovery" class="forgot-password">@T("Account.Login.ForgotPassword")</a>
+            </div>
+        </form>
+    </div>
+</div>

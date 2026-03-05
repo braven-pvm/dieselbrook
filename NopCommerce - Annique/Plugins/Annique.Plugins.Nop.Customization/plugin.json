@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Annique",
+  "FriendlyName": "Annique.Customization",
+  "SystemName": "Annique.Customization",
+  "Version": "1.0.0.664",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Nop Annique",
+  "DisplayOrder": 1,
+  "FileName": "Annique.Plugins.Nop.Customization.dll",
+  "Description": "This plugin allows you to customize and add new functionality to the site."
+}

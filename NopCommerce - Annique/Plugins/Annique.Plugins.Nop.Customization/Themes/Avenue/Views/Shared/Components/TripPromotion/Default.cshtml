@@ -1,0 +1,27 @@
+﻿@model TripPromotionModel
+
+@if (!string.IsNullOrEmpty(Model.PromotionMessage))
+{
+    <div class="checkout-alert-msg" id="promotion-message">
+        @Model.PromotionMessage
+    </div>
+
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            // Check if the promotion message exists
+            var promotionMessage = $('#promotion-message').html();
+
+            // Only proceed if there's content in the promotion message
+            if (promotionMessage) {
+                // Check if the message has already been added to the cart footer
+                if ($('.checkout-buttons').find('.checkout-alert-msg').length === 0) {
+                    // Inject the promotion message into the desired location (cart-footer)
+                    $('.checkout-buttons').prepend('<div class="checkout-alert-msg">' + promotionMessage + '</div>');  // Ensure it's wrapped properly
+                }
+
+                // Remove the original hidden div after moving the content to cart-footer
+                $('#promotion-message').remove();
+            }
+        });
+    </script>
+}

@@ -1,0 +1,61 @@
+﻿@model CheckoutRegisterModel
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@T("Annique.Plugin.CheckoutPopUp.RegisterForm.Title")</h5>
+        <div id="RegisterError" class="text-danger" style="display:none"></div>
+        <form id="signUp-form">
+            @Html.AntiForgeryToken()
+            <div class="inputs">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" placeholder="Enter your name" />
+                <nop-required />
+                <span asp-validation-for="Name"></span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" placeholder="Enter your email" />
+                <nop-required />
+                <span asp-validation-for="Email"></span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="ConfirmEmail"></label>
+                <input asp-for="ConfirmEmail" placeholder="Confirm your email" />
+                <nop-required />
+                <span asp-validation-for="ConfirmEmail"></span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" placeholder="Enter your phone number" />
+                <nop-required />
+                <span asp-validation-for="Phone"></span>
+            </div>
+
+
+            <div class="inputs">
+                <label asp-for="Password"></label>
+                <div class="password-wrapper">
+                    <input asp-for="Password" type="password" placeholder="Password" />
+                    <span class="password-eye"></span>
+                    <nop-required />
+                </div>
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="inputs">
+                <label asp-for="ConfirmPassword"></label>
+                <div class="password-wrapper">
+                    <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" />
+                    <span class="password-eye"></span>
+                    <nop-required />
+                </div>
+                <span asp-validation-for="ConfirmPassword"></span>
+            </div>
+            <div class="register-button-wrapper">
+                <button type="button" class="button-1 checkout-button" id="signUpButton">@T("Annique.Plugin.CheckoutPopUp.RegisterForm.Submit.Button.Title")</button>
+            </div>
+        </form>
+    </div>
+</div>

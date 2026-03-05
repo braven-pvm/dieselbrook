@@ -1,0 +1,39 @@
+﻿@model PaymentInfoModel
+@{
+    Layout = "_ColumnsOne";
+    <link rel="stylesheet" href="~/Plugins/Annique.AdumoOnline/Content/AdumoOnline.css" />
+}
+
+<form name="Post" action="@Model.FormPostUrl" method="post" id="adumo">
+    <input type="hidden" id="MerchantID" name="MerchantID" value="@Model.Cuid">
+    <input type="hidden" id="ApplicationID" name="ApplicationID" value="@Model.Auid">
+    <input type="hidden" id="MerchantReference" name="MerchantReference" value="@Model.Mref">
+    <input type="hidden" id="Amount" name="Amount" value="@Model.Amount">
+    <input type="hidden" name="txtCurrencyCode" value="@Model.Currency">
+    <input type="hidden" id="RedirectSuccessfulURL" name="RedirectSuccessfulURL"
+           value="@Model.SuccessCallBackUrl">
+    <input type="hidden" id="RedirectFailedURL" name="RedirectFailedURL"
+           value="@Model.FailCallBackUrl">
+    <input type="hidden" id="Token" name="Token" value="@Model.Token">
+</form>
+<script asp-location="Footer">
+
+    //function to dsiplay loading indicator with message
+    function displayCustomAjaxLoading(display) {
+        if (display) {
+            $('.ajax-loading-block-window').append("<h3 class='loader-msg'>Please wait, it's loading...</h3>").show();
+        }
+        else {
+            $('.ajax-loading-block-window').hide('slow');
+        }
+    }
+
+    $(document).ready(function () {
+
+        // Call displayCustomAjaxLoading to show the loading indicator with custom message
+        displayCustomAjaxLoading(true);
+
+        // Submit the form directly using jQuery
+        $("#adumo").submit();
+    });
+</script>

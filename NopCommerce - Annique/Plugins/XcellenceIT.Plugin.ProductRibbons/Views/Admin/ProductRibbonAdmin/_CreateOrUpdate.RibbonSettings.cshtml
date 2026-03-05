@@ -1,0 +1,100 @@
+﻿@model ProductRibbonModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="RibbonName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RibbonName" asp-required="true" />
+            <span asp-validation-for="RibbonName"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StartDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="StartDateUtc" />
+            <span asp-validation-for="StartDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="EndDateUtc" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EndDateUtc" />
+            <span asp-validation-for="EndDateUtc"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Enabled" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ApplyToAllProduct" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ApplyToAllProduct" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="MarkAsNew" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MarkAsNew" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsMoreRibbonDisplayAfterThis" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsMoreRibbonDisplayAfterThis" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="StoreIds" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="StoreList" asp-items="Model.AvailableStores" asp-multiple="true" />
+            <script type="text/javascript">
+                        $(document).ready(function() {
+                            var storesIdsInput = $('#@Html.IdFor(model => model.StoreList)').data("kendoMultiSelect");
+                            storesIdsInput.setOptions({
+                                autoClose: false,
+                                filter: "contains"
+                            });
+
+                            @if (Model.AvailableStores.Count == 0)
+                        {
+                        <text>
+                            storesIdsInput.setOptions({
+                                enable: false,
+                                placeholder: 'No store available'
+                            });
+                            storesIdsInput._placeholder();
+                            storesIdsInput._enable();
+                            </text>
+                        }
+                        });
+            </script>
+        </div>
+    </div>
+</div>

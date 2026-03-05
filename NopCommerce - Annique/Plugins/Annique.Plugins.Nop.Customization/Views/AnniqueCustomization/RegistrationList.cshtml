@@ -1,0 +1,60 @@
+﻿@model ConsultantRegistrationSearchModel
+
+@{
+    Layout = "_AdminLayout";
+}
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Annique.Plugin.Nop.Customization.ConsultantRegistrationList").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.ConsultantRegistrationList");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Annique.Plugin.Nop.Customization.ConsultantRegistrationList")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="card-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "ConsultantRegistrationList-grid",
+                            UrlRead = new DataUrl("RegistrationList", "AnniqueCustomization", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ConsultantRegistrationOverviewModel.Fullname))
+                                {
+                                    Title = T("Plugins.ConsultantRegistration.Fields.Fullname").Text
+                                },
+                                new ColumnProperty(nameof(ConsultantRegistrationOverviewModel.Sponsor))
+                                {
+                                    Title = T("Plugins.ConsultantRegistration.Fields.Sponsor").Text,
+                                },
+                                new ColumnProperty(nameof(ConsultantRegistrationOverviewModel.Status))
+                                {
+                                    Title = T("Plugins.ConsultantRegistration.Fields.Status").Text
+                                },
+                                new ColumnProperty(nameof(ReportModel.Id))
+                                {
+                                    Title = T("Admin.Common.View").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/AnniqueCustomization/ViewNewRegistration/"))
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

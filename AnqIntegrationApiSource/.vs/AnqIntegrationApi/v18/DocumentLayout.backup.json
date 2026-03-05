@@ -1,0 +1,222 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Development\\VS\\AnqIntegrationApi\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\controllers\\uploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:controllers\\uploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\models\\nop\\anqdiscountappliedtocustomer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:models\\nop\\anqdiscountappliedtocustomer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\services\\workers\\brevowhatsappeventsworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:services\\workers\\brevowhatsappeventsworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\controllers\\brevocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:controllers\\brevocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\controllers\\synccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:controllers\\synccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20690CF3-C05C-4A6C-98F1-B2D4480B1AC5}|..\\BrevoApiHelpers\\BrevoApiHelpers.csproj|c:\\development\\vs\\brevoapihelpers\\services\\contactservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\services\\messaging\\messagingdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:services\\messaging\\messagingdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\services\\messaging\\imessagingdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:services\\messaging\\imessagingdispatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20690CF3-C05C-4A6C-98F1-B2D4480B1AC5}|..\\BrevoApiHelpers\\BrevoApiHelpers.csproj|c:\\development\\vs\\brevoapihelpers\\interfaces\\icontactservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\services\\workers\\whatsappoptinemailworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:services\\workers\\whatsappoptinemailworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\controllers\\whatsappoptincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:controllers\\whatsappoptincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|c:\\development\\vs\\anqintegrationapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C39E34B-8081-45C9-B9E3-91198B795834}|AnqIntegrationApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AnqDiscountAppliedToCustomer.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Models\\Nop\\AnqDiscountAppliedToCustomer.cs",
+              "RelativeDocumentMoniker": "Models\\Nop\\AnqDiscountAppliedToCustomer.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Models\\Nop\\AnqDiscountAppliedToCustomer.cs",
+              "RelativeToolTip": "Models\\Nop\\AnqDiscountAppliedToCustomer.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA8wBYAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-03T09:37:44.654Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UploadController.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\UploadController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UploadController.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\UploadController.cs",
+              "RelativeToolTip": "Controllers\\UploadController.cs",
+              "ViewState": "AgIAACkBAAAAAAAAAAAmwA4BAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-03T08:06:18.672Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MessagingDispatcher.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Messaging\\MessagingDispatcher.cs",
+              "RelativeDocumentMoniker": "Services\\Messaging\\MessagingDispatcher.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Messaging\\MessagingDispatcher.cs",
+              "RelativeToolTip": "Services\\Messaging\\MessagingDispatcher.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T11:44:20.995Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ContactService.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\BrevoApiHelpers\\Services\\ContactService.cs",
+              "RelativeDocumentMoniker": "..\\BrevoApiHelpers\\Services\\ContactService.cs",
+              "ToolTip": "C:\\Development\\VS\\BrevoApiHelpers\\Services\\ContactService.cs",
+              "RelativeToolTip": "..\\BrevoApiHelpers\\Services\\ContactService.cs",
+              "ViewState": "AgIAAI4AAAAAAAAAAAAowJkAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:53:56.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SyncController.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\SyncController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SyncController.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\SyncController.cs",
+              "RelativeToolTip": "Controllers\\SyncController.cs",
+              "ViewState": "AgIAAAYBAAAAAAAAAAAswJIBAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T11:21:04.258Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BrevoController.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\BrevoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BrevoController.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\BrevoController.cs",
+              "RelativeToolTip": "Controllers\\BrevoController.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAowBQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:27:28.997Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BrevoWhatsappEventsWorker.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Workers\\BrevoWhatsappEventsWorker.cs",
+              "RelativeDocumentMoniker": "Services\\Workers\\BrevoWhatsappEventsWorker.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Workers\\BrevoWhatsappEventsWorker.cs",
+              "RelativeToolTip": "Services\\Workers\\BrevoWhatsappEventsWorker.cs",
+              "ViewState": "AgIAAGICAAAAAAAAAAAswIACAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:27:32.098Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IMessagingDispatcher.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Messaging\\IMessagingDispatcher.cs",
+              "RelativeDocumentMoniker": "Services\\Messaging\\IMessagingDispatcher.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Messaging\\IMessagingDispatcher.cs",
+              "RelativeToolTip": "Services\\Messaging\\IMessagingDispatcher.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T11:42:52.678Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IContactService.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\BrevoApiHelpers\\Interfaces\\IContactService.cs",
+              "RelativeDocumentMoniker": "..\\BrevoApiHelpers\\Interfaces\\IContactService.cs",
+              "ToolTip": "C:\\Development\\VS\\BrevoApiHelpers\\Interfaces\\IContactService.cs",
+              "RelativeToolTip": "..\\BrevoApiHelpers\\Interfaces\\IContactService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:53:05.691Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "WhatsAppOptinEmailWorker.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Workers\\WhatsAppOptinEmailWorker.cs",
+              "RelativeDocumentMoniker": "Services\\Workers\\WhatsAppOptinEmailWorker.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Services\\Workers\\WhatsAppOptinEmailWorker.cs",
+              "RelativeToolTip": "Services\\Workers\\WhatsAppOptinEmailWorker.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAywGMAAABcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:50:34.094Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "WhatsappOptInController.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\WhatsappOptInController.cs",
+              "RelativeDocumentMoniker": "Controllers\\WhatsappOptInController.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Controllers\\WhatsappOptInController.cs",
+              "RelativeToolTip": "Controllers\\WhatsappOptInController.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAowDEAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:50:25.319Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Development\\VS\\AnqIntegrationApi\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Development\\VS\\AnqIntegrationApi\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAywNkAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T12:50:22.681Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

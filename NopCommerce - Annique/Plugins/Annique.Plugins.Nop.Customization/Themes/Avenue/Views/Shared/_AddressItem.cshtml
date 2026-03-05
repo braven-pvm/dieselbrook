@@ -1,0 +1,140 @@
+﻿@model AddressViewModel
+@{
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var defaultBillingAddressId = (customer.BillingAddressId == null) ? 0 : customer.BillingAddressId;
+    var defaultShippingAddressId = (customer.ShippingAddressId == null) ? 0 : customer.ShippingAddressId;
+    bool isBilling = Model.Address.Id == defaultBillingAddressId && Model.AddressType == AnniqueCustomizationDefaults.DefaultBillingAddressType;
+    bool isShipping = Model.Address.Id == defaultShippingAddressId && Model.AddressType == AnniqueCustomizationDefaults.DefaultShippingAddressType;
+    bool hasCustomAttributes = !string.IsNullOrEmpty(Model.Address.FormattedCustomAddressAttributes);
+
+}
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<div class="section address-item">
+    <div class="title">
+        <strong>@Model.Address.FirstName @Model.Address.LastName</strong>
+    </div>
+    <div class="buttons">
+        @if (!hasCustomAttributes)
+        {
+            <button type="button" class="button-2 edit-address-button"
+                    onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = Model.Address.Id })'"
+                    value="@T("Common.Edit")">
+                <span>@T("Common.Edit")</span>
+            </button>
+        }
+
+        @if (isBilling)
+        {
+            <button class="defaultAddressLable">
+                <span>@T("Default.BillingAddress.lable")</span>
+            </button>
+        }
+        else if (isShipping)
+        {
+            <button class="defaultAddressLable">
+                <span>@T("Default.ShippingAddress.lable")</span>
+            </button>
+        }
+        else
+        {
+            <button type="button" class="button-2 delete-address-button"
+                    onclick="deletecustomeraddress(@Model.Address.Id)"
+                    value="@T("Common.Delete")">
+                <span>@T("Common.Delete")</span>
+            </button>
+        }
+
+    </div>
+    <ul class="info">
+        <li class="name">
+            @Model.Address.FirstName @Model.Address.LastName
+        </li>
+        <li class="email">
+            <label>@T("Address.Fields.Email"):</label>
+            <span>@Model.Address.Email</span>
+        </li>
+        @if (Model.Address.PhoneEnabled)
+        {
+            <li class="phone">
+                <label>@T("Address.Fields.PhoneNumber"):</label>
+                <span>@Model.Address.PhoneNumber</span>
+            </li>
+        }
+        @if (Model.Address.FaxEnabled)
+        {
+            <li class="fax">
+                <label>@T("Address.Fields.FaxNumber"):</label>
+                <span>@Model.Address.FaxNumber</span>
+            </li>
+        }
+        @if (Model.Address.CompanyEnabled && !string.IsNullOrEmpty(Model.Address.Company))
+        {
+            <li class="company">@Model.Address.Company</li>
+        }
+        @if (Model.Address.StreetAddressEnabled)
+        {
+            <li class="address1">
+                @Model.Address.Address1
+            </li>
+        }
+        @if (Model.Address.StreetAddress2Enabled && !string.IsNullOrEmpty(Model.Address.Address2))
+        {
+            <li class="address2">
+                @Model.Address.Address2
+            </li>
+        }
+        @if (Model.Address.CityEnabled && !string.IsNullOrEmpty(Model.Address.City) ||
+        Model.Address.CountyEnabled && !string.IsNullOrEmpty(Model.Address.County) ||
+        Model.Address.StateProvinceEnabled && !string.IsNullOrEmpty(Model.Address.StateProvinceName) ||
+        Model.Address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.Address.ZipPostalCode))
+        {
+            var addressLine = string.Empty;
+            if (Model.Address.CityEnabled && !string.IsNullOrEmpty(Model.Address.City))
+            {
+                addressLine += Model.Address.City;
+                if (Model.Address.CountyEnabled && !string.IsNullOrEmpty(Model.Address.County) ||
+                Model.Address.StateProvinceEnabled && !string.IsNullOrEmpty(Model.Address.StateProvinceName) ||
+                Model.Address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.Address.ZipPostalCode))
+                {
+                    addressLine += ", ";
+                }
+            }
+            if (Model.Address.CountyEnabled && !string.IsNullOrEmpty(Model.Address.County))
+            {
+                addressLine += Model.Address.County;
+                if (Model.Address.StateProvinceEnabled && !string.IsNullOrEmpty(Model.Address.StateProvinceName) ||
+                Model.Address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.Address.ZipPostalCode))
+                {
+                    addressLine += ", ";
+                }
+            }
+            if (Model.Address.StateProvinceEnabled && !string.IsNullOrEmpty(Model.Address.StateProvinceName))
+            {
+                addressLine += Model.Address.StateProvinceName;
+                if (Model.Address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.Address.ZipPostalCode))
+                {
+                    addressLine += ", ";
+                }
+            }
+            if (Model.Address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(Model.Address.ZipPostalCode))
+            {
+                addressLine += Model.Address.ZipPostalCode;
+            }
+            <li class="city-state-zip">
+                @addressLine
+            </li>
+        }
+        @if (Model.Address.CountryEnabled && !string.IsNullOrEmpty(Model.Address.CountryName))
+        {
+            <li class="country">
+                @Model.Address.CountryName
+            </li>
+        }
+        @if (!string.IsNullOrEmpty(Model.Address.FormattedCustomAddressAttributes))
+        {
+            <li class="custom-attributes-view">
+                @Html.Raw(Model.Address.FormattedCustomAddressAttributes)
+            </li>
+        }
+    </ul>
+</div>

@@ -1,0 +1,80 @@
+﻿@model DiscountInfoListModel
+
+@if (Model.HasAutoAppliedDiscount)
+{
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            // Hide coupon box if auto-applied voucher exists
+            $("#discountcouponcode").closest(".coupon-box").hide();
+        });
+    </script>
+}
+
+@if (Model.AvailableDiscounts.Any() || Model.AppliedDiscountNames.Any())
+{
+    <ul class="giftcard-wrapper">
+        @if (Model.AvailableDiscounts.Any())
+        {
+            <li class="voucher-code">
+                <span>@T("Available.DiscountList.Header"):</span>
+            </li>
+            @if (!Model.AppliedDiscountNames.Any())
+            {
+                @foreach (var discount in Model.AvailableDiscounts)
+                {
+                    <li class="giftcard-msg">
+                        <label>
+                            @if (discount.ShowRadioButton)
+                            {
+                                <label>
+                                    <input type="radio" name="availableDiscount" value="@discount.CouponCode" class="available-discount-radio" style="margin-right: 20px;opacity: 15;" />
+                                    @discount.Name
+                                </label>
+                            }
+                            else
+                            {
+                                <span>
+                                    @discount.Name
+                                    <span title="This voucher will be applied automatically when conditions are met.">
+                                        (Auto-applied)
+                                    </span>
+                                </span>
+                            } 
+                        </label>
+                    </li>
+                }
+            }
+            else
+            {
+                @foreach (var discount in Model.AvailableDiscounts)
+                {
+                    <li class="giftcard-msg">@discount.Name</li>
+                }
+            }
+        }
+        @if (Model.AppliedDiscountNames.Any())
+        {
+            <li class="voucher-code">
+                <span>@T("DiscountList.Header"):</span>
+            </li>
+            @foreach (var discount in Model.AppliedDiscountNames)
+            {
+                <li class="giftcard-msg">@discount</li>
+            }
+        }
+    </ul>
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            // Show the discount section when the page loads
+            $("#shopping-cart-form").find("#applygiftcards-dropdown-title").addClass('giftcard-dropdown-title open');
+            $("#shopping-cart-form").find("#applygiftcards-dropdown").addClass('active').css('display', 'block');
+
+            // Handle radio button change
+            $(".available-discount-radio").on('change', function () {
+                var selectedCouponCode = $(this).val();
+                $("#discountcouponcode").val(selectedCouponCode);
+            });
+        });
+    </script>
+}
+

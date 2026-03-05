@@ -1,0 +1,18 @@
+﻿@model Annique.Plugins.Nop.Customization.Models.AffiliateInfo.AffiliateInfoModel
+
+@if(!String.IsNullOrEmpty(Model.AffiliateName))
+{
+    <div class="fieldset">
+        <div class="title">
+            <strong>@T("Account.AffiliateDetails")</strong>
+        </div>
+        <div class="form-fields">
+            <div class="inputs news-letter">
+                <div class="wrapper">
+                    <label asp-for="AffiliateName" asp-postfix=":"></label>
+                    <label>@Model.AffiliateName</label>
+                </div>
+            </div>
+        </div>
+    </div>
+}

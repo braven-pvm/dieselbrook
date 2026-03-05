@@ -1,0 +1,64 @@
+﻿@model ConfigurationModel
+
+@using Nop.Plugin.Misc.WebApi.Backend.Models;
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="WebApiBackend" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <p>
+                    Please find the documentation <a href="https://docs.nopcommerce.com/developer/web-api/index.html" target="_blank">here.</a>
+                </p>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DeveloperMode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DeveloperMode" />
+                        <span asp-validation-for="DeveloperMode"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SecretKey" />
+                    </div>
+                    <div class="col-md-7">
+                        <nop-editor asp-for="SecretKey" />
+                        <span asp-validation-for="SecretKey"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" id="generate-secret-key" class="btn btn-primary" value="@T("Plugins.WebApi.Backend.SecretKey.Generate")" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#generate-secret-key').click(function () {
+            var postData = {};
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("Generate", "WebApiBackend"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    $('#@Html.IdFor(model => model.SecretKey)').val(data);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,104 @@
+﻿@model CustomerAddressListModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-address-list-page");
+
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var defaultBillingAddressId = (customer.BillingAddressId == null) ? 0 : customer.BillingAddressId;
+    var defaultShippingAddressId = (customer.ShippingAddressId == null) ? 0 : customer.ShippingAddressId;
+}
+@section AccountNavigation
+    {
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+<div class="page account-page address-list-page">
+    <div class="page-title">
+        <h1>@T("Account.CustomerAddresses")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Addresses.Count > 0)
+        {
+            <div class="address-list">
+                @{
+                    var defaultBillingAddress = Model.Addresses.FirstOrDefault(address => address.Id == defaultBillingAddressId);
+                    var defaultShippingAddress = Model.Addresses.FirstOrDefault(address => address.Id == defaultShippingAddressId);
+                    var otherAddresses = Model.Addresses.Where(address => address.Id != defaultBillingAddressId && address.Id != defaultShippingAddressId);
+
+                    //if billing address not nulll display billing address
+                    if (defaultBillingAddress != null)
+                    {
+                        var addressViewModel = new AddressViewModel
+                        {
+                            Address = defaultBillingAddress,
+                            AddressType = AnniqueCustomizationDefaults.DefaultBillingAddressType
+                        };
+                        @Html.Partial("_AddressItem", addressViewModel)
+                    }
+                    //if shipping address not nulll display shipping address
+                    if (defaultShippingAddress != null)
+                    {
+                        var addressViewModel = new AddressViewModel
+                        {
+                            Address = defaultShippingAddress,
+                            AddressType = AnniqueCustomizationDefaults.DefaultShippingAddressType
+                        };
+                        @Html.Partial("_AddressItem", addressViewModel)
+                    }
+
+                    //Sort and display other addresses
+                    var sortedAddresses = otherAddresses
+                    .OrderBy(address => address.LastName, StringComparer.Ordinal) // Sort by LastName and treat null values as greater
+                    .ThenBy(address => address.FirstName, StringComparer.Ordinal); // Then sort by FirstName and treat null values as greater
+
+                    foreach (var address in sortedAddresses)
+                    {
+                        var addressViewModel = new AddressViewModel
+                        {
+                            Address = address,
+                            AddressType = string.Empty
+                        };
+                        @Html.Partial("_AddressItem", addressViewModel)
+                    }
+                }
+            </div>
+            <script asp-location="Footer">
+                function deletecustomeraddress(addressId) {
+                    if (confirm('@T("Common.AreYouSure")')) {
+                        var postData = {
+                            addressId: addressId
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Url.Action("AddressDelete", "Customer")",
+                            data: postData,
+                            dataType: "json",
+                            success: function (data, textStatus, jqXHR) {
+                                location.href = data.redirect;
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert('Failed to delete');
+                            }
+                        });
+                    }
+                }
+            </script>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerAddresses.NoAddresses")
+            </div>
+        }
+        <div class="section add-button">
+            <button type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">@T("Common.AddNew")</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+﻿@model Annique.Plugins.Nop.Customization.Models.CheckoutGifts.SpecialProductListModel
+
+<h6 id="allowedSelectionsMessage" class="allowed-selection-msg"></h6>
+<div class="checkout-popup-wrapper">
+    <form id="specialProduct-form">
+        <div class="award-products-wrapper">
+            <input type="hidden" name="offerId" value="@Model.OfferId" />
+            @foreach (var product in Model.ProductList)
+            {
+                <div class="product-upper-row">
+                    <div class="productImg-wrapper">
+                        <input type="checkbox" class="special-offer-checkbox" data-product-id="@product.ProductId" style="opacity: 1;cursor: pointer;" />
+                        <input type="hidden" name="productId" value="@product.ProductId" />
+                        <div class="product-picture">
+                            <a>
+                                <img alt="@product.PictureModel.AlternateText" src="@product.PictureModel.ImageUrl" title="@product.PictureModel.Title" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="productdetail-wrapper">
+                        <div class="product-name">
+                            <span class="sku-number">@product.Name</span>
+                        </div>
+                        <div class="sku product-price">
+                            <span class="price old-price">@product.OldPrice</span>
+                            <span class="current-price">@product.Price</span>
+                        </div>
+                        <div class="product-Qty">
+                            <span class="sku-number">
+                                <select name="productQty" class="product-qty-dropdown">
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="special-productbtn-wrap">
+                <button type="button" class="button-1 giftpopup-btn" onclick="AddSelectedProductsToCart()"><span></span>@T("SpecialOfferPopUp.AddToCart.Button")</button>
+            </div>
+        </div>
+    </form>
+</div>

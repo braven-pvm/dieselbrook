@@ -1,0 +1,17 @@
+﻿@model ReportParameterValueModel
+
+@{
+    const string hideInfoBlockName = "ParameterValue.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="@Model.ReportParameterId" type="hidden" />
+<div class="content">
+    <div class="form-horizontal">
+        <nop-cards id="Parameter-Value-panels">
+            <nop-card asp-name="ParameterValue-info" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.AnniqueReports.ParameterValues.Info")" asp-hide-block-attribute-name="@hideInfoBlockName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.ParameterValue.Info.cshtml", Model)</nop-card>
+        </nop-cards>
+    </div>
+</div>

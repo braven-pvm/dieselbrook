@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language Name="English">
+  <!--#region Menu -->
+  <LocaleResource Name="Annique.Plugins.Payments.AdumoOnline.Menu.MainTitle">
+    <Value>Adumo Online</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugins.Payments.AdumoOnline.Configure">
+    <Value>Adumo Online</Value>
+  </LocaleResource>
+  <!--#end menu-->
+
+  <!--#region Configuration-->
+  <LocaleResource Name="Annique.Plugins.Payments.AdumoOnline.Configure.Tab">
+    <Value>Configure</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.AdumoOnline.Fields.IsEnablePlugin">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.IsEnablePlugin.Hint">
+    <Value>Enable/Disable Plugin</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.AdumoOnline.Fields.FormPostUrl">
+    <Value>Form Post Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.FormPostUrl.Hint">
+    <Value>The form post URL is the Adumo Online URL used to submit the form post to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.FormPostUrl.Required">
+    <Value>Form Post Url is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.AdumoOnline.Fields.MerchantId">
+    <Value>Merchant Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.MerchantId.Hint">
+    <Value>Enter cuid (Merchant UID) provied by Adumo online.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.MerchantId.Required">
+    <Value>Merchant Id is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.AdumoOnline.Fields.ApplicationId">
+    <Value>Application Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.ApplicationId.Hint">
+    <Value>Enter auid (Application UID)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.ApplicationId.Required">
+    <Value>Application Id is required.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Annique.AdumoOnline.Fields.Secret">
+    <Value>Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.Secret.Hint">
+    <Value>Provide JWT Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.Secret.Required">
+    <Value>Secret is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.AdumoOnline.Fields.AdditionalFee">
+    <Value>Additional Fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.AdditionalFee.Hint">
+    <Value>Enter additional fee to charge your customers</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.AdumoOnline.Fields.AdditionalFeePercentage">
+    <Value>Additional Fee .Use Percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.AdumoOnline.Fields.AdditionalFeePercentage.Hint">
+    <Value>Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.</Value>
+  </LocaleResource>
+
+  <!--#end configuration-->
+
+  <LocaleResource Name="Annique.Plugins.Payments.AdumoOnline.PaymentMethodDescription">
+    <Value>You will be redirected to Adumo online site to complete the payment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugins.Payments.AdumoOnline.RedirectionTip">
+    <Value>You will be redirected to Adumo online site to complete the order.</Value>
+  </LocaleResource>
+</Language>

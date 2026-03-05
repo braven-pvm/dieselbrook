@@ -1,0 +1,23 @@
+﻿@model ReportModel
+
+@{
+    const string hideInfoBlockAttributeName = "InfoPage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+
+    const string hideParameterInfo = "Report.HideParameterInfoBlock";
+    var HideParameterInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideParameterInfo, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+    <div class="form-horizontal">
+        <nop-cards id="report-panels">
+            <nop-card asp-name="report-info" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Report")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Report.Info.cshtml", Model)</nop-card>
+            <nop-card asp-name="report-parameter-list" asp-icon="fa fa-th-list" asp-title="@T("Admin.Configuration.AnniqueReports.Parameters")" asp-hide-block-attribute-name="@hideParameterInfo" asp-hide="@HideParameterInfoBlock" asp-advanced="true">@await Html.PartialAsync("ParameterList.cshtml", Model)</nop-card>
+         </nop-cards>
+    </div>
+    </div>
+</section>

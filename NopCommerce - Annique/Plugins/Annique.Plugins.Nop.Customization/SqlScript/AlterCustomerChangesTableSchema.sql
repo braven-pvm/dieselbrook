@@ -1,0 +1,8 @@
+﻿ALTER TABLE dbo.ANQ_CustomerChanges ALTER COLUMN cCustno NVARCHAR(100) NULL;
+
+ALTER TABLE dbo.ANQ_UserProfileAdditionalInfo ALTER COLUMN Title NVARCHAR(10) NULL;
+ALTER TABLE dbo.ANQ_UserProfileAdditionalInfo ALTER COLUMN Nationality NVARCHAR(50) NULL;
+ALTER TABLE dbo.ANQ_UserProfileAdditionalInfo ALTER COLUMN IdNumber NVARCHAR(20) NULL;
+ALTER TABLE dbo.ANQ_UserProfileAdditionalInfo ALTER COLUMN Language NVARCHAR(20) NULL;
+ALTER TABLE dbo.ANQ_UserProfileAdditionalInfo ALTER COLUMN Ethnicity NVARCHAR(20) NULL;
+

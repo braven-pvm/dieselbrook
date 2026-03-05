@@ -1,0 +1,39 @@
+﻿@model CustomerReportListModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-order-list-page");
+}
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomMyAccountNavigationEnum.Reports })
+}
+<div class="page account-page order-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.Reports")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Reports.Count > 0)
+        {
+            <div class="order-list">
+                @foreach (var report in Model.Reports)
+                {
+                    <div class="section order-item">
+                        <div class="title">
+                            <strong>@report.Name</strong>
+                        </div>
+                        <div class="buttons">
+                            @*   task 629 New Features on Annique Reports *@
+                           <button type="button" class="button-2" onclick="setLocation('@Url.RouteUrl("Report", new { SeName = report.SeName })')">@T("Account.CustomerReport.ReportDetails")</button>
+                            @*   task 629 New Features on Annique Reports *@
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

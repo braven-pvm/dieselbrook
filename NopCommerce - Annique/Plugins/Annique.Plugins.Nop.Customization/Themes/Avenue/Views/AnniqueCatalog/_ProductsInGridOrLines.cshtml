@@ -1,0 +1,50 @@
+﻿@model CatalogProductsModel
+
+
+@if (!string.IsNullOrEmpty(Model.WarningMessage))
+{
+    <div class="warning">
+        @Model.WarningMessage
+    </div>
+}
+@{
+    //task 613 full text search customize this code to add searchOption into url
+    var pager = Html.Pager(Model)
+        .BooleanParameterName("advs")
+        .BooleanParameterName("isc")
+        .BooleanParameterName("sid")
+        .RenderEmptyParameters(true);
+
+    var searchOption = ViewData["SearchOption"]?.ToString();
+    if (!string.IsNullOrEmpty(searchOption) && !searchOption.Equals("None", StringComparison.OrdinalIgnoreCase))
+    {
+        pager = pager.QueryParam("searchOption");
+    }
+}
+
+@if (Model.Products.Count > 0)
+{
+    <div class="@(Model.ViewMode == "list" ? "product-list" : "product-grid")">
+        <div class="item-grid">
+            @foreach (var product in Model.Products)
+            {
+                <div class="item-box">
+                    @await Html.PartialAsync("_ProductBox", product)
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (!await pager.IsEmpty())
+    {
+        <div class="pager">
+            @pager
+        </div>
+    }
+}
+else if (!string.IsNullOrEmpty(Model.NoResultMessage))
+{
+    <div class="no-result">
+        @Model.NoResultMessage
+    </div>
+}

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Xcellence-IT",
+  "FriendlyName": "Universal Product Ribbon Plugin",
+  "SystemName": "XcellenceIT.Plugin.ProductRibbons",
+  "Version": "6.1.10",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Xcellence-IT",
+  "DisplayOrder": 1,
+  "FileName": "XcellenceIT.Plugin.ProductRibbons.dll",
+  "Description": "The Product Ribbons allow store owners to add ribbons with text and images to the various products in their nopCommerce store."
+}

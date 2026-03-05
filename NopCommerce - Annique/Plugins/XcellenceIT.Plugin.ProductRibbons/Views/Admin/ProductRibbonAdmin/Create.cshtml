@@ -1,0 +1,65 @@
+﻿@*
+    // *************************************************************************
+    // *                                                                       *
+    // * Product Ribbons  Plugin for nopCommerce                               *
+    // * Copyright (c) Xcellence-IT. All Rights Reserved.                      *
+    // *                                                                       *
+    // *************************************************************************
+    // *                                                                       *
+    // * Email: info@nopaccelerate.com                                         *
+    // * Website: http://www.nopaccelerate.com                                 *
+    // *                                                                       *
+    // *************************************************************************
+    // *                                                                       *
+    // * This  software is furnished  under a license  and  may  be  used  and *
+    // * modified  only in  accordance with the terms of such license and with *
+    // * the  inclusion of the above  copyright notice.  This software or  any *
+    // * other copies thereof may not be provided or  otherwise made available *
+    // * to any  other  person.   No title to and ownership of the software is *
+    // * hereby transferred.                                                   *
+    // *                                                                       *
+    // * You may not reverse  engineer, decompile, defeat  license  encryption *
+    // * mechanisms  or  disassemble this software product or software product *
+    // * license.  Xcellence-IT may terminate this license if you don't comply *
+    // * with  any  of  the  terms and conditions set forth in  our  end  user *
+    // * license agreement (EULA).  In such event,  licensee  agrees to return *
+    // * licensor  or destroy  all copies of software  upon termination of the *
+    // * license.                                                              *
+    // *                                                                       *
+    // * Please see the  License file for the full End User License Agreement. *
+    // * The  complete license agreement is also available on  our  website at *
+    // * http://www.nopaccelerate.com/enterprise-license                       *
+    // *                                                                       *
+    // *************************************************************************
+*@
+
+@model ProductRibbonModel
+@{
+    Layout = "_AdminLayout";
+
+    NopHtml.SetActiveMenuItemSystemName("Plugin.ProductRibbons.List");
+}
+
+<form asp-controller="ProductRibbonAdmin" asp-action="Create" method="post" id="Productribbon-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("XcellenceIT.Plugin.ProductRibbons.AddNewRibbon")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("XcellenceIT.Plugin.ProductRibbons.BackToList")</a>
+            </small>
+        </h1>
+
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/XcellenceIT.ProductRibbons/Views/Admin/ProductRibbonAdmin/CreateOrUpdate.cshtml", Model)
+</form>

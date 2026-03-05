@@ -1,0 +1,18 @@
+﻿@model PublicRibbonModel
+
+@if (!string.IsNullOrEmpty(Model.PictureUrl))
+{
+    <img id="ribbon-picture-@Model.RibbonId-@Model.ProductId-@Model.PictureId" style="@Model.ImageStyleCss" src="@Model.PictureUrl" />
+}
+
+@if (!string.IsNullOrEmpty(Model.RibbonText))
+{
+    if (string.IsNullOrEmpty(Model.PictureUrl))
+    {
+        <label class="ribbon-text" style="@Model.TextStyleCss">@Html.Raw(Model.RibbonText)</label>
+    }
+    else
+    {
+        <label class="ribbon-image-text" style="@Model.TextStyleCss">@Html.Raw(Model.RibbonText)</label>
+    }
+}

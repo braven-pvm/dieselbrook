@@ -1,0 +1,16 @@
+﻿@{
+    var pageUrl = httpContextAccessor.HttpContext.Request.Path.ToString();
+}
+
+@if (pageUrl.Contains("/shippingaddress"))
+{
+    <div class="add-new">
+        <button type="button" class="button-1 btn pep-store-button btn-secondary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg1">@T("Annique.Plugin.PostNetStoreDelivery.AddPepPostnetReciepent.Button")</button>
+    </div>
+}
+else
+{
+    <div class="add-button">
+        <button type="button" class="button-1 btn btn-secondary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg1">@T("Annique.Plugin.PostNetStoreDelivery.AddPepPostnetReciepent.Button")</button>
+    </div>
+}

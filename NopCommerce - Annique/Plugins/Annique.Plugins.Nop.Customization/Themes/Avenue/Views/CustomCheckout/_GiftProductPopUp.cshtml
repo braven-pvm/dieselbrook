@@ -1,0 +1,557 @@
+﻿@model GiftModel
+@{
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/AnniqueCustomization.js");
+}
+
+<div class="checkout-popup-wrapper">
+    <form id="giftProduct-form">
+        <div class="award-products-wrapper">
+            @foreach (var item in Model.GiftItems)
+            {
+                if (item.IsDonationProduct)
+                {
+                    <div class="product-upper-row donation-product-wrap">
+                        <div class="productImg-wrapper">
+                            <div class="product-picture">
+                                <a>
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" height="50px" width="50px" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="productdetail-wrapper">
+                            <div class="product-name">
+                                <span class="sku-number">@item.Name</span>
+                            </div>
+                            <div class="product-description">
+                                <p>@Html.Raw(item.Description)</p>
+                            </div>
+                            <div class="product-Qty">
+                                <span class="sku-number">
+
+                                    <button type="button" id="donation-button-1" class="button-1 giftpopup-btn" onclick="AddToCartGiftProduct(@(item.ProductId),true,1)"><span></span>@Model.DonationButtonPrice1</button>
+                                    <button type="button" id="donation-button-2" class="button-1 giftpopup-btn" onclick="AddToCartGiftProduct(@(item.ProductId),true,2)"><span></span>@Model.DonationButtonPrice2</button>
+                                    <button type="button" id="donation-button-3" class="button-1 giftpopup-btn" onclick="AddToCartGiftProduct(@(item.ProductId),true,5)"><span></span>@Model.DonationButtonPrice3</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    if (item.IsAlreadyInCart)
+                    {
+                        <div class="product-upper-row">
+                            <div class="productImg-wrapper">
+                                <div class="product-picture">
+                                    <a>
+                                        <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" height="50px" width="50px" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="productdetail-wrapper">
+                                <div class="product-name">
+                                    <span class="sku-number">@item.Name</span>
+                                </div>
+                                <div class="gift-info">
+                                    @T("CheckoutGifts.GiftPopUp.Product.AlreadyInCart.Message")
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="product-upper-row">
+                            <div class="productImg-wrapper">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <div class="product-picture">
+                                    <a>
+                                        <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="productdetail-wrapper">
+                                <div class="product-name">
+                                    <span class="sku-number">@item.Name</span>
+                                </div>
+                                <div class="sku product-price">
+                                    @if (!string.IsNullOrEmpty(item.OldPrice))
+                                    {
+                                        <span class="price old-price">@item.OldPrice</span>
+                                    }
+                                    <span class="current-price">@item.Price</span>
+                                </div>
+                                <div class="gift-info">
+                                    <span>@T("CheckoutGifts.GiftPopUp.GiftProductInfo", item.AvailableQuanitity, item.GiftQtyLimit)</span>
+                                </div>
+                                <div class="product-Qty">
+                                    <span class="sku-number">
+                                        <select class="qty-drop" name="Qty_@item.ProductId">
+                                            @foreach (var value in item.AvailableQuantities)
+                                            {
+                                                <option value="@value.Value">
+                                                    @value.Text
+                                                </option>
+                                            }
+                                        </select>
+                                        <button type="button" class="button-1 giftpopup-btn" onclick="AddToCartGiftProduct(@(item.ProductId))"><span></span>@T("CheckoutGifts.GiftPopUp.AddToCart.Button.Text")</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            }
+
+            @if (Model.ExclusiveItems.Any())
+            {
+                @foreach (var exclusiveItem in Model.ExclusiveItems)
+                {
+                    if (exclusiveItem.IsAlreadyInCart)
+                    {
+                        <div class="product-upper-row">
+                            <div class="productImg-wrapper">
+                                <div class="product-picture">
+                                    <a>
+                                        <img alt="@exclusiveItem.PictureModel.AlternateText" src="@exclusiveItem.PictureModel.ImageUrl" title="@exclusiveItem.PictureModel.Title" height="50px" width="50px" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="productdetail-wrapper">
+                                <div class="product-name">
+                                    <span class="sku-number">@exclusiveItem.Name</span>
+                                </div>
+                                <div class="gift-info">
+                                    @T("CheckoutGifts.PopUp.ExclusiveItem.Product.AlreadyInCart.Message")
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="product-upper-row">
+                            <div class="productImg-wrapper">
+                                <input type="hidden" name="productId" value="@exclusiveItem.ProductId" />
+                                <div class="product-picture">
+                                    <a>
+                                        <img alt="@exclusiveItem.PictureModel.AlternateText" src="@exclusiveItem.PictureModel.ImageUrl" title="@exclusiveItem.PictureModel.Title" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="productdetail-wrapper">
+                                <div class="product-name">
+                                    <span class="sku-number">@exclusiveItem.Name</span>
+                                </div>
+                                <div class="product-description">
+                                    <span class="sku-number">@Html.Raw(exclusiveItem.Description)</span>
+                                </div>
+                                <div class="sku product-price">
+                                    <span class="current-price">@exclusiveItem.Price</span>
+                                </div>
+                                <div class="gift-info">
+                                    <span>@T("CheckoutGifts.PopUp.ExclusiveItem.ProductInfo", exclusiveItem.AvailableQuanitity, exclusiveItem.QtyLimit)</span>
+                                </div>
+                                <div class="product-Qty">
+                                    <span class="sku-number">
+                                        <select class="qty-drop" name="Qty_@exclusiveItem.ProductId">
+                                            @foreach (var value in exclusiveItem.AvailableQuantities)
+                                            {
+                                                <option value="@value.Value">
+                                                    @value.Text
+                                                </option>
+                                            }
+                                        </select>
+                                        <button type="button" class="button-1 giftpopup-btn" onclick="AddToCartGiftProduct(@(exclusiveItem.ProductId))"><span></span>@T("CheckoutGifts.GiftPopUp.AddToCart.Button.Text")</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+
+            @foreach (var item in Model.SpecialOffers)
+            {
+                <div class="product-upper-row special-product-wrap" if (!string.IsNullOrEmpty(item.BackgroundImageUrl))
+                     {
+                     style="background: #ffffff url('@item.BackgroundImageUrl') no-repeat center;"
+                     }>
+
+                    <div class="productdetail-wrapper">
+                        <div class="product-name">
+                            <span class="sku-number" id="offerName-@item.OfferId" style="display:none">@item.DiscountName</span>
+                        </div>
+                        <div class="product-Qty">
+                            <input type="hidden" id="AllowedSelections-@item.OfferId" value="@item.AllowedSelections" />
+                            @if (item.AllowedSelections > 0)
+                            {
+                                <button type="button" id="ShowOffer-@item.OfferId" class="button-1 giftpopup-btn" onclick="ShowSpecialOfferProducts(@(item.OfferId), @(item.DiscountId))"><span></span>@T("SpecialOffer.ClaimOffer.Button")</button>
+                            }
+                            else
+                            {
+                                <span class="already-cartmsg">@T("SpecialOffer.ClaimedOffer.Message")</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </form>
+</div>
+
+<!-- #region Task 612 Free Offers not Been Claimed -->
+
+<div id="special-warning-box" style="display:none;">
+    <p>@T("SpecialOffer.Warning.Message")</p>
+    <button id="checkout-anyway-btn" onclick="window.location.href='@Url.RouteUrl("Checkout")'">
+        @T("ProceedCheckout.Button.Text")
+    </button>
+</div>
+
+<!-- #endregion -->
+
+
+<div class="modal fade bd-example-modal-lg1 specialoffer-modal-wrap" id="specialOfferModal" tabindex="-1" role="dialog" aria-labelledby="specialOfferModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="specialOfferModalLabel">@T("SpecialOfferPopUp.Header")</h5>
+                <h5 class="special-offer-title" id="offerName">
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="specialOfferModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    <div class="specialoffer-backdrop"></div>
+</div>
+
+<script asp-location="Footer">
+
+    //Task 612 Free Offers not Been Claimed 
+    //this method will show warning dialog if use has unclaimed offers otherwise it will allow user to checkout process
+    function checkUnclaimedOffers() {
+        var hasUnclaimedOffer = false;
+
+        var hasUnclaimedOffer = $(".special-product-wrap input[id^='AllowedSelections-']")
+        .toArray()
+        .some(input => parseInt($(input).val(), 10) > 0);
+
+        if (hasUnclaimedOffer) {
+            $("#special-warning-box").dialog({
+            open: function () {
+                $(".ui-dialog").css("z-index", "5000"); // Dynamically increase z-index
+                $(".ui-dialog-content").css("overflow", "hidden"); //remove sidebar from dialog 
+            }
+        });
+            return false; // Prevent checkout
+        }
+
+        return true; // Allow checkout if no unclaimed offers
+    }
+    //Task 612 Free Offers not Been Claimed
+
+    //js for manage special offer bg image size based on device height and width
+    $('.giftcard-outer').on('shown.bs.modal', function () {
+        $('body').addClass('giftpopup-enable-body');
+
+        $('.special-product-wrap').each(function () {
+            // Force reflow to ensure accurate measurement
+            $(this).css('display', 'none');
+            var width = $(this).outerWidth();
+            var height = $(this).outerHeight();
+            $(this).css('display', '');
+
+            // Apply background size
+            $(this).css('background-size', width + 'px ' + height + 'px');
+        });
+    });
+
+    $('.giftcard-outer').on('shown.bs.modal', function () {
+        $('body').addClass('giftpopup-enable-body');
+    });
+
+    $('.giftcard-outer').on('hidden.bs.modal', function () {
+        $('body').removeClass('giftpopup-enable-body');
+        $("#giftPopUp").empty();
+        location.reload(true);
+    });
+
+    $('.specialoffer-modal-wrap').on('shown.bs.modal', function () {
+        $('.specialoffer-backdrop').addClass('active');
+    });
+
+    $('.specialoffer-modal-wrap').on('hidden.bs.modal', function (e) {
+        e.stopPropagation();
+    });
+
+    $('.specialoffer-backdrop').click(function (e) {
+        e.stopPropagation();
+        $(this).removeClass('active');
+        $('.specialoffer-modal-wrap').modal('hide');
+    });
+
+    // Function to set donation button active class based on the quantities in the cart
+    function setDonationButtonStyles() {
+
+        var donationQuantityInCart = @Model.DonationProductQtyInCart;
+
+        // Set style for the donation button based on the quantity in the cart
+        if (donationQuantityInCart === 1) {
+            $("#donation-button-1").addClass("donation-activebtn");
+        } else if (donationQuantityInCart === 2) {
+            $("#donation-button-2").addClass("donation-activebtn");
+        } else if (donationQuantityInCart === 5) {
+            $("#donation-button-3").addClass("donation-activebtn");
+        }
+    }
+
+    // set active button style for donation  button function when the document is ready
+    $(document).ready(function () {
+        setDonationButtonStyles();
+    });
+
+    //update allowed section in gift pop up
+    function updateAllowedSelectionsAndUI(offerId, totalQuantityAdded) {
+        // Update the allowed selections hidden input
+        var $allowedSelectionsInput = $("#AllowedSelections-" + offerId);
+        var allowedSelections = parseInt($allowedSelectionsInput.val(), 10);
+        allowedSelections -= totalQuantityAdded;
+        $allowedSelectionsInput.val(allowedSelections);
+
+        // Update the UI to reflect the new allowed selections
+        if (allowedSelections <= 0) {
+            $("#ShowOffer-" + offerId).replaceWith('<span class="already-cartmsg">@T("SpecialOffer.ClaimedOffer.Message")</span>');
+        }
+
+        return allowedSelections;
+    }
+
+    // Function to set up allowed selections message and dropdowns
+    function setupSpecialProductDropdowns(allowedSelections) {
+        $("#allowedSelectionsMessage").text("You can select up to " + allowedSelections + " products.");
+
+        $(".product-qty-dropdown").each(function () {
+            var $dropdown = $(this);
+            $dropdown.empty(); // Clear the old options
+            for (var i = 1; i <= allowedSelections; i++) {
+                $dropdown.append($('<option>', {
+                    value: i,
+                    text: i
+                }));
+            }
+            $dropdown.prop('disabled', false);
+        });
+    }
+
+    // Function to handle checkbox change event
+    function handleCheckboxChange(allowedSelections) {
+        $(".special-offer-checkbox").change(function () {
+            var $productRow = $(this).closest('.product-upper-row');
+            var $dropdown = $productRow.find('.product-qty-dropdown');
+            var selectedQty = parseInt($dropdown.val());
+
+            // Check if the checkbox is checked
+            if ($(this).is(':checked')) {
+                // Disable the dropdown
+                $dropdown.prop('disabled', true);
+            } else {
+                // Enable the dropdown
+                $dropdown.prop('disabled', false);
+            }
+
+            if (selectedQty > 0) {
+                var selectedCount = 0;
+                $(".special-offer-checkbox:checked").each(function () {
+                    var $productRow = $(this).closest('.product-upper-row');
+                    var $dropdown = $productRow.find('.product-qty-dropdown');
+                    var qty = parseInt($dropdown.val());
+                    selectedCount += qty;
+                });
+                if (selectedCount > allowedSelections) {
+                    $(this).prop("checked", false);
+                    $dropdown.prop('disabled', false);
+                    displayBarNotificationInSpecialOfferPopup("You can select up to " + allowedSelections + " products.", 'error', 5000);
+                }
+            }
+        });
+    }
+
+    // Function to show special offer products
+    function ShowSpecialOfferProducts(offerId, discountId) {
+        var allowedSelections = $("#AllowedSelections-" + offerId).val();
+
+        $.ajax({
+            url: '@Url.Action("GetSpecialOfferProducts", "CustomCheckout")',
+            type: 'GET',
+            data: { offerId: offerId, discountId: discountId },
+            success: function (response) {
+                if (response.success) {
+                    // Load the response content into the modal body
+                    $("#specialOfferModalBody").html(response.htmldata);
+                    // Show the modal
+                    $("#specialOfferModal").modal('show');
+                    $("#offerName").text($("#offerName-" + offerId).text());
+                    // Set up allowed selections message and dropdowns
+                    setupSpecialProductDropdowns(allowedSelections);
+
+                    // Handle checkbox change event
+                    handleCheckboxChange(allowedSelections);
+                } else {
+                    alert('Error: ' + response.message + (response.details ? "\nDetails: " + response.details : ""));
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    }
+
+    var isAddToCartGiftInProgress = false;
+
+    function AddToCartGiftProduct(id, isDonation, donationQty) {
+        if (isAddToCartGiftInProgress) {
+            return; // If a request is already in progress, exit the function
+        }
+
+        // Set the flag to true to indicate that a request is in progress
+        isAddToCartGiftInProgress = true;
+
+        var formData = {
+            donationButtonPrice1: @Json.Serialize(Model.DonationButtonPrice1),
+            donationButtonPrice2: @Json.Serialize(Model.DonationButtonPrice2),
+            donationButtonPrice3: @Json.Serialize(Model.DonationButtonPrice3),
+            donationProductQtyInCart: @Json.Serialize(Model.DonationProductQtyInCart),
+            giftItems: @Json.Serialize(Model.GiftItems),
+            exclusiveItems: @Json.Serialize(Model.ExclusiveItems),
+            specialOffers: @Json.Serialize(Model.SpecialOffers),
+            productId: id,
+            quantity: isDonation ? donationQty : $("select[name='Qty_" + id + "']").val(),
+            isDonation: isDonation ? true : false
+        };
+
+        // Update the special offers to include the current allowed selections
+        formData.specialOffers = formData.specialOffers.map(function (offer) {
+            var allowedSelectionsInput = $("#AllowedSelections-" + offer.OfferId);
+            if (allowedSelectionsInput.length) {
+                offer.AllowedSelections = parseInt(allowedSelectionsInput.val(), 10);
+            }
+            return offer;
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "@Html.Raw(Url.Action("GiftProductPopUp", "CustomCheckout"))",
+            data: formData,
+            datatype: "json",
+            success: function (res) {
+                if (res.success) {
+                    $("#giftPopUp").html(res.htmlData);
+                }
+                if (res.error) {
+                    if (typeof res.message === 'string') {
+                        alert(res.message);
+                    } else {
+                        alert(res.message.join("\n"));
+                    }
+                }
+            },
+            complete: function () {
+                isAddToCartGiftInProgress = false;
+            }
+        });
+    }
+
+    var isAddToCartOfferInProgress = false;
+    function AddSelectedProductsToCart() {
+
+        if (isAddToCartOfferInProgress) {
+            return; // If a request is already in progress, exit the function
+        }
+
+        // Set the flag to true to indicate that a request is in progress
+        isAddToCartOfferInProgress = true;
+
+        var selectedProducts = [];
+        var offerId = $('input[name="offerId"]').val();
+        $('.special-offer-checkbox:checked').each(function () {
+            var $productRow = $(this).closest('.product-upper-row');
+            var productId = $(this).data('product-id');
+            var productQty = parseInt($productRow.find('.product-qty-dropdown').val(), 10); // Parse quantity as integer
+
+            selectedProducts.push({
+                Id: productId,
+                Quantity: productQty
+            });
+        });
+
+        var postData = {
+            products: selectedProducts,
+            selectedOfferId: offerId,
+        };
+
+        if (selectedProducts.length > 0) {
+
+            $.ajax({
+                url: '@Url.Action("SpecialOfferProductAddToCart", "CustomCheckout")',
+                type: 'POST',
+                data: postData,
+                success: function (response) {
+                    if (response.success) {
+                        // Close the special offer modal
+                        $("#specialOfferModal").modal('hide');
+
+                        // Calculate the total quantity added
+                        var totalQuantityAdded = selectedProducts.reduce((total, product) => total + product.Quantity, 0);
+
+                        // Update the allowed selections and UI
+                        var allowedSelections = updateAllowedSelectionsAndUI(offerId, totalQuantityAdded);
+
+                    }
+                    else {
+                        displayBarNotificationInSpecialOfferPopup(response.message, 'error', 0);
+
+                        // If some products were added and some had warnings, update allowed selections accordingly
+                        if (response.addedProductIds && response.addedProductIds.length > 0) {
+                            var totalQuantityAdded = 0;
+                            response.addedProductIds.forEach(function (productId) {
+                                var product = selectedProducts.find(p => p.Id === productId);
+                                if (product) {
+                                    totalQuantityAdded += parseInt(product.Quantity, 10); // Ensure quantity is treated as a number
+                                }
+                            });
+
+                            // Update the allowed selections and UI in gift pop up
+                            var allowedSelections = updateAllowedSelectionsAndUI(offerId, totalQuantityAdded);
+
+                            //update dropdown for offer
+                            setupSpecialProductDropdowns(allowedSelections);
+
+                            //update chackbox change event for offer
+                            handleCheckboxChange(allowedSelections);
+
+                            $('.special-offer-checkbox').prop('checked', false);
+                        }
+                    }
+                },
+                complete: function () {
+                    isAddToCartOfferInProgress = false;
+                },
+                error: function (xhr, status, error) {
+                    alert('Error: ' + error);
+                    isAddToCartOfferInProgress = false;
+                }
+            });
+        }
+        else
+        {
+            isAddToCartOfferInProgress = false;
+            displayBarNotificationInSpecialOfferPopup('@T("SpecialOffer.AddToCart.Warning")', 'error', 3500);
+        }
+    }
+
+</script>

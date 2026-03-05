@@ -1,0 +1,134 @@
+﻿@model CustomManufacturerTabInfoModel
+
+@{
+    var customer = await workContext.GetCurrentCustomerAsync();
+
+    const string hideManufacturerIntregration = "Configure.HideInfoBlock";
+    var hideManufacturerIntregrationInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideManufacturerIntregration);
+
+    NopHtml.SetActiveMenuItemSystemName("Manufacturers");
+}
+
+<nop-card asp-name="custommanufacturerintegration-info" asp-icon="fas fa-th-list" asp-title="@T("Admin.Catalog.Manufacturer.ManufacturerIntegration.IntegrationTab")" asp-hide-block-attribute-name="@hideManufacturerIntregration" asp-hide="@hideManufacturerIntregrationInfoBlock" asp-advanced="false">
+    @if (Model.ManufacturerIntegrationModel.ManufacturerId > 0)
+    {
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+        {
+        Name = "manufacturerIntegration-grid",
+        UrlRead = new DataUrl("ManufacturerIntegrationList", "AdminManufacturerIntegration", new RouteValueDictionary { [nameof(Model.ManufacturerIntegrationSearchModel.ManufacturerId)] = Model.ManufacturerIntegrationSearchModel.ManufacturerId }),
+        UrlDelete = new DataUrl("ManufacturerIntegrationDelete", "AdminManufacturerIntegration", null),
+        Length = Model.ManufacturerIntegrationSearchModel.PageSize,
+        LengthMenu = Model.ManufacturerIntegrationSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+        new ColumnProperty(nameof(ManufacturerIntegrationModel.IntegrationField))
+        {
+        Title = T("Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationField").Text
+        },
+        new ColumnProperty(nameof(ManufacturerIntegrationModel.IntegrationValue))
+        {
+        Title = T("Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationValue").Text
+        },
+        new ColumnProperty(nameof(ManufacturerIntegrationModel.Id))
+        {
+        Title = T("Admin.Common.Delete").Text,
+        Width = "150",
+        Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+        ClassName = NopColumnClassDefaults.Button
+        }
+        }
+        })
+
+            <div class="card card-default">
+                <div class="card-header">
+                    @T("Admin.Catalog.Manufacturer.ManufacturerIntegration.AddNew")
+                </div>
+                <div class="card-body">
+                    <script>
+                        $(document).ready(function () {
+                            $('#addManufacturerIntegration').click(function () {
+                                var manufacturerId = $("#@Html.IdFor(model => model.ManufacturerIntegrationModel.ManufacturerId)").val();
+                                var integrationField = $("#@Html.IdFor(model => model.ManufacturerIntegrationModel.IntegrationField)").val();
+                                var integrationValue = $("#@Html.IdFor(model => model.ManufacturerIntegrationModel.IntegrationValue)").val();
+
+                                if (integrationField == "") {
+                                    $("#manufacturerIntregrationFieldAlert").click();
+                                    return;
+                                }
+
+                                if (integrationValue == "") {
+                                    $("#manufacturerIntregrationValueAlert").click();
+                                    return;
+                                }
+
+                                $('#addManufacturerIntegration').attr('disabled', true);
+
+                                var postData = {
+                                    manufacturerId: manufacturerId,
+                                    integrationField: integrationField,
+                                    integrationValue: integrationValue
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("ManufacturerIntegrationAdd", "AdminManufacturerIntegration"))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (!data.Result) {
+                                            return;
+                                        }
+                                        $("#@Html.IdFor(model => model.ManufacturerIntegrationModel.IntegrationField)").val("");
+                                        $("#@Html.IdFor(model => model.ManufacturerIntegrationModel.IntegrationValue)").val("");
+                                        updateTable('#manufacturerIntegration-grid');
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $("#manufacturerIntregrationAddAlert").click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        $('#addManufacturerIntegration').attr('disabled', false);
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                    <input type="hidden" asp-for="ManufacturerIntegrationModel.ManufacturerId">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ManufacturerIntegrationModel.IntegrationField" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ManufacturerIntegrationModel.IntegrationField" />
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ManufacturerIntegrationModel.IntegrationValue" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ManufacturerIntegrationModel.IntegrationValue" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-9 offset-md-3">
+                            <button type="button" id="addManufacturerIntegration" class="btn btn-primary">@T("Admin.Catalog.Manufacturer.ManufacturerIntegration.AddButton")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-body">
+            @T("Admin.Catalog.Manufacturers.IntegrationValues.SaveBeforeEdit")
+        </div>
+    }
+</nop-card>
+<nop-alert asp-alert-id="manufacturerIntregrationFieldAlert" asp-alert-message="@T("Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationField.Required")" />
+<nop-alert asp-alert-id="manufacturerIntregrationValueAlert" asp-alert-message="@T("Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationValue.Required")" />
+<nop-alert asp-alert-id="manufacturerIntregrationAddAlert" asp-alert-message="@T("Admin.Catalog.Manufacturer.ManufacturerIntegration.Alert.ManufacturerIntegrationAdd")" />

@@ -1,0 +1,324 @@
+﻿@model UserProfileAdditionalInfoModel
+
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<div id="user-role-data"
+     data-is-consultant="@Model.IsConsultant.ToString().ToLower()"
+     data-is-client-or-customer="@Model.IsClientOrCustomer.ToString().ToLower()">
+</div>
+<input type="hidden" asp-for="IsConsultant" />
+<input type="hidden" asp-for="IsClientOrCustomer" />
+<input type="hidden" id="hiddenvalues" value="@Model.WhatsappNumber">
+<input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="CustomerId" />
+<input type="hidden" asp-for="BrevoID" />
+
+@if (Model.IsConsultant)
+{
+    <div class="fieldset">
+        <div class="title">
+            <strong>@T("Account.AdditionalData")</strong>
+        </div>
+        <div class="form-fields">
+
+            <input type="hidden" asp-for="ProfileUpdated">
+
+            <div class="inputs">
+                <label asp-for="Title" asp-postfix=":"></label>
+                <select asp-for="Title" asp-items="@Model.AvailableTitles"></select>
+                <nop-required />
+                <span asp-validation-for="Title"></span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="Nationality" asp-postfix=":"></label>
+                <select asp-for="Nationality" asp-items="@Model.AvaialableNationality"></select>
+                <nop-required />
+                <span asp-validation-for="Nationality"></span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="IdNumber" asp-postfix=":"></label>
+                <input asp-for="IdNumber" />
+                <nop-required />
+                <span asp-validation-for="IdNumber">
+                </span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="Language" asp-postfix=":"></label>
+                <select asp-for="Language" asp-items="@Model.AvailableLanguages"></select>
+                <nop-required />
+                <span asp-validation-for="Language"></span>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="Ethnicity" asp-postfix=":"></label>
+                <select asp-for="Ethnicity" asp-items="@Model.AvailableEthnicity"></select>
+                <nop-required />
+                <span asp-validation-for="Ethnicity"></span>
+            </div>
+            <div class="bankdiscount-msgbox">
+                <p>@T("Account.UserProfileAdditionalInfo.BankName.Information")</p>
+                <p>@T("Account.UserProfileAdditionalInfo.BankName.Information.Note")</p>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="BankName" asp-postfix=":"></label>
+                <select asp-for="BankName" asp-items="@Model.AvailableBankNames"></select>
+            </div>
+
+            <div class="inputs">
+                <label asp-for="AccountHolder" asp-postfix=":"></label>
+                <input asp-for="AccountHolder" />
+            </div>
+
+            <div class="inputs">
+                <label asp-for="AccountNumber" asp-postfix=":"></label>
+                <input asp-for="AccountNumber" />
+            </div>
+
+            <div class="inputs">
+                <label asp-for="AccountType" asp-postfix=":"></label>
+                <select asp-for="AccountType" asp-items="@Model.AvailableAccountTypes"></select>
+            </div>
+
+            <div class="inputs news-letter">
+                <div class="wrapper">
+                    <label asp-for="ActivationDate" asp-postfix=":"></label>
+                    <label>@Model.ActivationDate</label>
+                    <input type="hidden" asp-for="ActivationDate" />
+                </div>
+            </div>
+
+            <div class="inputs news-letter">
+                <div class="wrapper">
+                    @if (Model.Accept)
+                    {
+                        <input type="checkbox" checked disabled />
+                        <input type="hidden" asp-for="Accept" />
+                    }
+                    else
+                    {
+                        <input asp-for="Accept" />
+                    }
+                    <label asp-for="Accept"></label>
+                    <a id="read-terms" style="font-size:14px" class="read">@T("Account.UserProfileAdditionalInfo.ConsultantAgreement.Read")</a>
+                </div>
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $('#read-terms').on('click',
+                        function (e) {
+                            e.preventDefault();
+                            displayPopupContentFromUrl(
+                                '@Url.RouteUrl("TopicPopup", new { SystemName = "ConsultantAgreement" })');
+                        });
+                });
+            </script>
+
+        </div>
+    </div>
+    @if (!Model.Accept)
+    {
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                $("#terms-of-aggrement-prompt").dialog();
+            });
+        </script>
+    }
+    <div id="terms-of-aggrement-prompt" style="display: none;">
+        <p>@T("Account.UserProfileAdditionalInfo.ConsultantAgreement.Prompt.Message")</p>
+    </div>
+}
+
+<script asp-location="Footer" type="text/javascript">
+    $("#@Html.IdFor(model => model.IdNumber)").on('input', function () {
+        $("span").remove(".customError");
+    });
+
+    $("#@Html.IdFor(model => model.WhatsappNumber)").on('input', function () {
+        $("span").remove(".customError");
+    });
+
+    //Boolean Validate id function
+    function IsValidId(idNumber) {
+        var issa = "Y";
+        var idno = idNumber;
+        idno = idno.trim();
+        if (issa == "Y" && idno != "") {
+            var obj = ValidateIdNumber(idno);
+            if (obj.correct == true) {
+                return true;
+            }
+            else {
+                $("#@Html.IdFor(model => model.IdNumber)").next().after('<span class="customError">' + obj.error + '</span>');
+                return false;
+            }
+        }
+    }
+
+    //Id validation function with error message
+    function ValidateIdNumber(idno) {
+
+        var odd = new Number();
+        var even_string = new String();
+        var even_result = new Number();
+        var even = new Number();
+        var result = new Number();
+        var obj = { "error": "", "birthdate": "", "gender": "", "citizen": "", "correct": "true" };
+        obj.error = new String();
+        var correct = true;
+
+        // Check length
+        if (idno.length == 13) {
+            // apply Luhn formula for check-digits
+            var tempTotal = 0;
+            var checkSum = 0;
+            var multiplier = 1;
+            for (var i = 0; i < 13; ++i) {
+                tempTotal = parseInt(idno.charAt(i)) * multiplier;
+                if (tempTotal > 9) {
+                    tempTotal = parseInt(tempTotal.toString().charAt(0)) + parseInt(tempTotal.toString().charAt(1));
+                }
+                checkSum = checkSum + tempTotal;
+                multiplier = (multiplier % 2 == 0) ? 1 : 2;
+            }
+            if ((checkSum % 10) != 0) {
+                correct = false;
+            };
+
+            // get first 6 digits as a valid date
+            var tempDate = new Date(idno.substring(0, 2), idno.substring(2, 4) - 1, idno.substring(4, 6));
+
+            var id_date = tempDate.getDate();
+            var id_month = tempDate.getMonth();
+            var id_year = tempDate.getFullYear();
+
+            var fullDate = id_date + "-" + (id_month + 1) + "-" + id_year;
+
+            if (!((tempDate.getYear() == idno.substring(0, 2)) && (id_month == idno.substring(2, 4) - 1) && (id_date == idno.substring(4, 6)))) {
+                correct = false;
+            }
+            else {
+                var yr = idno.substring(0, 2);
+                if (yr < '19') {
+                    yr = '20' + yr;
+                }
+                else {
+                    yr = '19' + yr;
+                }
+                obj.birthdate = yr + "-" + idno.substring(2, 4) + "-" + idno.substring(4, 6);
+                var d = new Date();
+
+                var b = Date.parse(obj.birthdate);
+                if (b > d.setFullYear(d.getFullYear() - 16)) {
+                    obj.error = obj.error.concat('You have to be over 16');
+                    correct = false;
+                }
+
+            };
+
+            // get the gender
+            var genderCode = idno.substring(6, 10);
+            obj.gender = parseInt(genderCode) < 5000 ? "F" : "M";
+
+            // get country ID for citzenship
+            if (parseInt(idno.substring(10, 11)) == 0) {
+                obj.citizen = "South African";
+            }
+
+
+        }
+        else {
+            correct = false;
+        };
+        if (!correct) {
+            if (obj.error.length == 0) {
+                obj.error = obj.error.concat('Invalid SA ID number');
+            }
+        }
+        obj.correct = correct
+        return obj;
+    }
+
+    function ValidateWhatsappNumber(whatsappNumber) {
+        if (whatsappNumber == "")
+            return true;
+
+        phoneRegex = /^0(6|7|8){1}[0-9]{1}[0-9]{7}$/;
+
+        if (!phoneRegex.test(whatsappNumber)) {
+            $("#@Html.IdFor(model => model.WhatsappNumber)").next().after('<span class="customError">@T("Account.UserProfileAdditionalInfo.WhatsappNumber.Invalid")</span>');
+            return false;
+        }
+        return true;
+    }
+
+     
+     $(document).ready(function () {
+        var replaceValue = $('#hiddenvalues').val();
+        $("#WhatsappNumber").val(replaceValue);
+
+         $('#submitForm').click(function () {
+
+           var $roleData = $('#user-role-data');
+           var isConsultant = $roleData.data('is-consultant') === true || $roleData.data('is-consultant') === "true";
+           var isClientOrCustomer = $roleData.data('is-client-or-customer') === true || $roleData.data('is-client-or-customer') === "true";
+
+            var nationality = $("#@Html.IdFor(model => model.Nationality)").children("option:selected").val();
+            var idNumber = $("#@Html.IdFor(model => model.IdNumber)").val();
+            var whatsappNumber = $("#@Html.IdFor(model => model.WhatsappNumber)").val();
+
+            var validWhatsappNumber = ValidateWhatsappNumber(whatsappNumber);
+
+            //Consultant logic
+            if (isConsultant)
+            {
+                if (nationality != '' && nationality == 'Y')
+                {
+                    //validate number
+                    var validIdNumber = IsValidId(idNumber);
+                    //If not validate number
+                    if (!validIdNumber)
+                    {
+                        //Do not submit form
+                        $("#infoForm").attr("onsubmit", "return false;");
+                    }
+                    else
+                    {
+                        if (!validWhatsappNumber) {//Do not submit form
+                            $("#infoForm").attr("onsubmit", "return false;");
+                        }
+                        else {
+                            //valid number then submit form
+                            $("#infoForm").removeAttr("onsubmit");
+                            $("#infoForm").submit();
+                        }
+                    }
+                }
+                else
+                {
+                        if (!validWhatsappNumber) {//Do not submit form
+                            $("#infoForm").attr("onsubmit", "return false;");
+                        }
+                        else {
+                            //valid number then submit form
+                            $("#infoForm").removeAttr("onsubmit");
+                            $("#infoForm").submit();
+                        }
+                }
+            }
+            // Client or customer
+            else if (isClientOrCustomer) {
+                if (!validWhatsappNumber) {//Do not submit form
+                    $("#infoForm").attr("onsubmit", "return false;");
+                }
+                else {
+                    //Not south african nationality then no need to validate form and just submit
+                    $("#infoForm").removeAttr("onsubmit");
+                    $("#infoForm").submit();
+                }
+            }
+        });
+    });
+</script>

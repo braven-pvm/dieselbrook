@@ -1,0 +1,62 @@
+﻿@model ReportParameterModel
+
+<input asp-for="@Model.ReportId" type="hidden" />
+<div class="card-body">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="AttributeControlTypeId" />
+        </div>
+        <div class="col-md-9">
+            @{
+                IEnumerable<SelectListItem> attributeControlTypes = await ((AttributeControlType)Model.AttributeControlTypeId)
+                .ToSelectListAsync(valuesToExclude:
+                //these attributes don't support some control types
+                new[] { (int)AttributeControlType.MultilineTextbox,(int)AttributeControlType.FileUpload,(int)AttributeControlType.ReadonlyCheckboxes,(int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
+            }
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+        toggleAttributeControlType();
+    });
+    function toggleAttributeControlType() {
+        var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
+
+        //values
+        if (selectedAttributeControlTypeId == @(((int)AttributeControlType.DropdownList).ToString()) ||
+            selectedAttributeControlTypeId == @(((int)AttributeControlType.RadioList).ToString()) ||
+            selectedAttributeControlTypeId == @(((int)AttributeControlType.Checkboxes).ToString()) ||
+            selectedAttributeControlTypeId == @(((int)AttributeControlType.ColorSquares).ToString()) ||
+            selectedAttributeControlTypeId == @(((int)AttributeControlType.ImageSquares).ToString()) ||
+            selectedAttributeControlTypeId == @(((int)AttributeControlType.ReadonlyCheckboxes).ToString())) {
+            $('[data-card-name=Parameter-value-list]').showElement();
+        } else {
+            $('[data-card-name=Parameter-value-list]').hideElement();
+        }
+    }
+</script> 

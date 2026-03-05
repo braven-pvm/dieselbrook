@@ -1,0 +1,29 @@
+﻿@model AwardListModel.AwardProductListModel
+
+<div class="award-product-item" data-productid="@Model.Id">
+    <div class="product-picture">
+        <a>
+            <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title" height="50px" width="50px" />
+        </a>
+    </div>
+    <div class="details">
+        <div class="product-detail-inner">
+            <div class="product-title-wrapper">
+                <h2 class="product-title">
+                    @Model.Name
+                </h2>
+            </div>
+            <div class="price-wrapper">
+                <span class="price">@Model.Price</span>
+            </div>
+            <div class="qty-field-wrapper">
+                <label for="qty-label" class="qty-label">Quantity</label>
+                <input type="number" id="qty-label" class="quantity-input form-control" value="@Model.Quantity" min="0" aria-label="@T("Products.Qty.AriaLabel")" data-initial-quantity="@Model.Quantity" />
+            </div>
+        </div>
+        <div class="prices-box">
+            <span class="price actual-price" style="display:none;">@Model.ProductPrice</span>
+
+        </div>
+    </div>
+</div>

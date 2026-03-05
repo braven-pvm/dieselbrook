@@ -1,0 +1,71 @@
+﻿@model IList<CustomReportParameterModel>
+
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+
+<div class="report-attributes">
+    @foreach (var attribute in Model)
+    {
+        var controlId = attribute.Id;
+        var controlName = attribute.Name;
+        <div class="inputs custom-attributes">
+
+            @switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                    {
+                        <select name="@(controlName)" id="@(controlId)">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Name">@attributeValue.Name</option>
+                            }
+                        </select>
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                    {
+                        <ul class="option-list">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <li>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlName)" value="@attributeValue.Name" checked="@attributeValue.IsPreSelected" />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                    {
+                        <ul class="option-list">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <li>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlName)" value="@attributeValue.Name" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    break;
+                case AttributeControlType.ReadonlyCheckboxes:
+                case AttributeControlType.TextBox:
+                    {
+                        <div class="report-form-group">
+                            <input name="@(controlName)" type="text" class="textbox report-text-field" id="@(controlId)" placeholder="" />
+                            <label for="@(controlId)" class="report-text-label">@(controlName) </label>
+                        </div>
+                    }
+                    break;
+                case AttributeControlType.MultilineTextbox:
+                case AttributeControlType.Datepicker:
+                case AttributeControlType.FileUpload:
+                case AttributeControlType.ColorSquares:
+                case AttributeControlType.ImageSquares:
+                    {
+                        //not support attribute type
+                    }
+                    break;
+            }
+        </div>
+    }
+</div>

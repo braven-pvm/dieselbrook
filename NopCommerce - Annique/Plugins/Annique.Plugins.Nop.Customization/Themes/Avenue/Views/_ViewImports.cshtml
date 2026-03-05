@@ -1,0 +1,71 @@
+﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Core.IWorkContext workContext
+@inject Nop.Core.IStoreContext storeContext
+@inject INopHtmlHelper NopHtml
+@inject Nop.Services.Configuration.ISettingService settingService
+@inject Annique.Plugins.Nop.Customization.Services.PickUpCollection.IPickUpCollectionService pickUpCollectionService
+@inject IHttpContextAccessor httpContextAccessor
+@inject Nop.Core.IWebHelper webHelper
+@inject Microsoft.AspNetCore.Mvc.ViewComponents.IViewComponentSelector viewComponentSelector
+@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
+@inject IPermissionService permissionService
+@inject IShoppingCartService shoppingCartService
+@inject Annique.Plugins.Nop.Customization.Services.AnniqueReport.IAnniqueReportService anniqueReportService
+@inject Annique.Plugins.Nop.Customization.Services.AnniqueCustomization.IAnniqueCustomizationConfigurationService anniqueCustomizationConfigurationService
+@inject CatalogSettings catalogSettings
+@inject Annique.Plugins.Nop.Customization.Services.CheckoutGifts.IGiftService giftService
+@inject Annique.Plugins.Nop.Customization.Services.OTP.IOtpService otpService
+@inject Annique.Plugins.Nop.Customization.Services.UserProfile.IUserProfileAdditionalInfoService userProfileAdditionalInfoService
+@inject Annique.Plugins.Nop.Customization.Services.ConsultantRegistrations.IConsultantNewRegistrationService consultantNewRegistrationService
+@inject ICustomerService customerService
+
+@using Nop.Core.Domain.Customers
+@using Microsoft.Extensions.Primitives
+@using Microsoft.AspNetCore.Http
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Web.Framework.UI
+@using Nop.Web.Framework.Mvc.Routing
+@using Nop.Web.Framework.Extensions
+@using System.Text.Encodings.Web
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Components
+@using Nop.Web.Framework.Infrastructure
+@using Annique.Plugins.Nop.Customization
+@using Annique.Plugins.Nop.Customization.Models.PickUpCollection
+@using Annique.Plugins.Nop.Customization.Models.UserProfile
+@using Annique.Plugins.Nop.Customization.Models.AnniqueEvents
+@using Annique.Plugins.Nop.Customization.Models.CheckoutGifts
+@using System.Text
+@using Nop.Web.Models.Common
+@using Nop.Core
+@using Nop.Web.Models.Customer
+@using Annique.Plugins.Nop.Customization.Models.AnniqueReports.Public
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Topics
+@using Nop.Web.Models.Catalog
+@using Nop.Web.Extensions
+@using Nop.Web.Models.ShoppingCart
+@using Nop.Core.Domain.Tax
+@using Annique.Plugins.Nop.Customization.Models.GiftCardAllocation
+@using Nop.Services.Orders
+@using Nop.Services.Security
+@using Nop.Core.Domain.Orders
+@using Annique.Plugins.Nop.Customization.Models.ConsultantAwards
+@using Annique.Plugins.Nop.Customization.Components
+@using Annique.Plugins.Nop.Customization.Models.UserLogin
+@using Nop.Services.Configuration
+@using Annique.Plugins.Nop.Customization.Models.OTP
+@using Annique.Plugins.Nop.Customization.Models.DiscountAllocation
+@using Nop.Web.Models.PrivateMessages
+@using System.Net
+@using Nop.Web.Framework.Security.Honeypot
+@using Nop.Services.Customers
+@using Annique.Plugins.Nop.Customization.Models.QuickCheckout
+@using Annique.Plugins.Nop.Customization.Models
+@using Nop.Web.Models.Order
+@using Annique.Plugins.Nop.Customization.Domain.AnniqueReports
+@using Annique.Plugins.Nop.Customization.Models.ConsultantRegistrations.Public

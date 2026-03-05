@@ -1,0 +1,23 @@
+﻿@model ReportParameterModel
+
+@{
+    const string hideInfoBlockName = "Report.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockName);
+
+    const string hideParameterValueBlockName = "Report.HideParameterValue";
+    var hideParametervalueBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideParameterValueBlockName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="@Model.ReportId" type="hidden" />
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <nop-cards id="Parameter-panels">
+                <nop-card asp-name="Parameter-info" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.AnniqueReports.Parameters.Info")" asp-hide-block-attribute-name="@hideInfoBlockName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Parameter.Info.cshtml", Model)</nop-card>
+                <nop-card asp-name="Parameter-value-list" asp-icon="fas fa-th-list" asp-title="@T("Admin.Configuration.AnniqueReports.ParameterValues")" asp-hide-block-attribute-name="@hideParameterValueBlockName" asp-hide="@hideParametervalueBlock" asp-advanced="true">@await Html.PartialAsync("ParameterValueList.cshtml", Model)</nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,186 @@
+﻿@model LoginModel
+
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/guest-login-modal.js" asp-location="Footer"></script>
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/bootstrap.bundle.min.js" asp-location="Footer"></script>
+@inject IWebHelper webHelper
+
+
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Login").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-login-page");
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
+    var loginModel = new CheckoutLoginModal();
+    var registerModel = new CheckoutRegisterModel();
+}
+
+<div class="page login-page">
+    <div class="page-title">
+        <h1>@T("Account.Login.Welcome")</h1>
+    </div>
+    @await Html.PartialAsync("_ExternalAuthentication.Errors")
+    <div class="page-body">
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LoginTop, additionalData = Model })
+        <div class="customer-blocks">
+
+            <div class="customer-block login-block">
+                <div class="login-inner-wrap login-outer-wrap">
+                    <div class="title">
+                        <h3><span>CUSTOMER</span> Login</h3>
+                    </div>
+                    <form class="wrapper loginform-outer-wrap" asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
+                        <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+                        <div class="form-fields">
+                            @if (Model.UsernamesEnabled)
+                            {
+                                <div class="inputs">
+                                    <label asp-for="Username" asp-postfix=":" class="input-name"></label>
+                                    <input asp-for="Username" placeholder="@T("Account.Login.Fields.UserName")" class="login-input username" />
+                                    <span asp-validation-for="Username"></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="inputs">
+                                    <label asp-for="Email" asp-postfix=":" class="input-name"></label>
+                                    <input asp-for="Email" placeholder="@T("Account.Login.Fields.Email")" class="login-input email" />
+                                    <span asp-validation-for="Email"></span>
+                                </div>
+                            }
+                            <div class="inputs">
+                                <label asp-for="Password" asp-postfix=":" class="input-name"></label>
+                                <input asp-for="Password" placeholder="@T("Account.Login.Fields.Password")" class="login-input password" />
+                                <span asp-validation-for="Password"></span>
+                            </div>
+                            <div class="inputs reversed remember-checkfield">
+                                <input type="checkbox" id="customerRememberMe" name="RememberMe" class="remember-check" />
+                                <label for="customerRememberMe">Remember Me</label>
+                            </div>
+                            @if (Model.DisplayCaptcha)
+                            {
+                                <nop-captcha />
+                            }
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" class="button-1 login-button">@T("Account.Login.LoginButton")</button>
+                        </div>
+                        <div class="loginlink-wrapper">
+                            <a asp-route="PasswordRecovery" class="forgot-password">@T("Account.Login.ForgotPassword")</a>
+                            <a class="register-button" title="@T("RegisterAsCustomer.Tooltip")" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg2">@T("Account.Register")</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="login-inner-wrap consultantlogin-outer-wrap">
+                    <div class="title">
+                        <h3>Registered <span>CONSULTANT</span> Login</h3>
+                    </div>
+                    <form class="wrapper consultant-login-wrap" asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
+                        <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+                        <div class="form-fields">
+                            @if (Model.UsernamesEnabled)
+                            {
+                                <div class="inputs">
+                                    <label asp-for="Username" asp-postfix=":" class="input-name"></label>
+                                    <input asp-for="Username" placeholder="@T("Registered.Consultant.UserName")" class="login-input username" />
+                                    <span asp-validation-for="Username"></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="inputs">
+                                    <label asp-for="Email" asp-postfix=":" class="input-name"></label>
+                                    <input asp-for="Email" placeholder="@T("Account.Login.Fields.Email")" class="login-input email" />
+                                    <span asp-validation-for="Email"></span>
+                                </div>
+                            }
+                            <div class="inputs">
+                                <label asp-for="Password" asp-postfix=":" class="input-name"></label>
+                                <input asp-for="Password" placeholder="@T("Account.Login.Fields.Password")" class="login-input password" />
+                                <span asp-validation-for="Password"></span>
+                            </div>
+                            <div class="inputs reversed remember-checkfield">
+                                <input type="checkbox" name="RememberMe" id="consultantRememberMe" class="remember-check" />
+                                <label for="consultantRememberMe">Remember Me</label>
+                            </div>
+                            @if (Model.DisplayCaptcha)
+                            {
+                                <nop-captcha />
+                            }
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" class="button-1 login-button">@T("Account.Login.LoginButton")</button>
+                        </div>
+                        <div class="loginlink-wrapper">
+                            <a asp-route="PasswordRecovery" class="forgot-password">@T("Account.Login.ForgotPassword")</a>
+                            @await Component.InvokeAsync("NewConsultantRegistrationLink")
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+        @{
+            var externalMethodsAvailable = await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication");
+        }
+        @if (!String.IsNullOrEmpty(await externalMethodsAvailable.RenderHtmlContentAsync()))
+        {
+            <div class="customer-block external-authentication">
+                <div class="wrapper">
+                    @await Component.InvokeAsync(typeof(ExternalMethodsViewComponent), "ExternalAuthentication")
+                </div>
+            </div>
+        }
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.LoginBottom, additionalData = Model })
+    </div>
+</div>
+<script asp-location="Footer">
+
+    //set return url for redirect after login or register event 
+    const returnUrl = '@(Context.Request.Query["ReturnUrl"].ToString())';
+
+    $(document).ready(function() {
+        // function to handle checkbox changes
+        function handleCheckboxChange() {
+            const isChecked = $(this).is(':checked');
+            const value = isChecked ? 'true' : 'false';
+            $(this).attr('data-val', value);
+            $(this).attr('value', value);
+
+            // the id of the changed checkbox and whether it is checked
+            if ($(this).attr('id') === 'customerRememberMe' && isChecked) {
+
+                // If customerRememberMe is checked, uncheck consultantRememberMe
+                $('#consultantRememberMe').prop('checked', false)
+                    .attr('data-val', 'false')
+                    .attr('value', 'false');
+
+            } else if ($(this).attr('id') === 'consultantRememberMe' && isChecked) {
+
+                // If consultantRememberMe is checked, uncheck customerRememberMe
+                $('#customerRememberMe').prop('checked', false)
+                    .attr('data-val', 'false')
+                    .attr('value', 'false');
+            }
+        }
+
+        // Attaching the function to the change event of both checkboxes
+        $('#customerRememberMe, #consultantRememberMe').on('change', handleCheckboxChange);
+    });
+</script>
+
+<!--Task 625 Login changes -->
+
+@await Html.PartialAsync("_GuestLoginRegisterModal", (loginModel, registerModel))
+
+<!--End Login sign up modal-->

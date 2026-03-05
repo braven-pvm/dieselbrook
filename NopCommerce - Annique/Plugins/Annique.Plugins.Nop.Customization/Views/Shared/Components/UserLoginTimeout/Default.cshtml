@@ -1,0 +1,20 @@
+﻿@model UserLoginTimeOutModel
+@{
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/TimeOut.js");
+}
+
+@if (Model.IsUserLoggedIn)
+{
+    <script asp-location="Footer">
+        // Set the parameters for the functions
+        loginTimeOutMinutes = @Model.LoginTimeOutMinutes; // Extract loginTimeOutMinutes
+        logoutUrl = "@(Url.Action("Logout", "Customer", new { area = "" }))";
+
+        // Attach event listeners to reset the timer on user activity
+        document.addEventListener('mousemove', resetInactivityTimer);
+        document.addEventListener('keydown', resetInactivityTimer);
+
+        // Initialize the timer when the page loads
+        resetInactivityTimer();
+    </script>
+}

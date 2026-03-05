@@ -1,0 +1,235 @@
+@model CustomerReportListModel.ReportDetailsModel
+
+@{
+    Layout = "_ColumnsOne";
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.ReportDetails").Text);
+
+    //task 629 New Features on Annique Reports
+    @if (!string.IsNullOrEmpty(Model.HiddenFieldsJs))
+    {
+        <script type="text/javascript" asp-location="Footer">
+            @Html.Raw(Model.HiddenFieldsJs)
+        </script>
+    }
+    //task 629 New Features on Annique Reports
+    // Load Custom CSS Files(seperate css configured inside reports)
+    string updatedCustomCSS = Model.CustomCSS;
+    @if (!string.IsNullOrWhiteSpace(Model.CustomCSS))
+    {
+        string[] cssFileUrls = anniqueReportService.ExtractFileUrlsFromFirstLine(Model.CustomCSS, ".css", out updatedCustomCSS);
+        foreach (string cssUrl in cssFileUrls)
+        {
+            <link type="text/css" rel="stylesheet" href="@($"{cssUrl}?v={DateTime.Now.Ticks}")" />
+        }
+    }
+    Model.CustomCSS = updatedCustomCSS; // Update the model property
+
+
+    //old deployed functionality
+    //Load Template Block (HTML) Files(template configured inside reports)
+    // string updatedTemplateBlock;
+    // string[] templateFileUrls = anniqueReportService.ExtractFileUrlsFromFirstLine(Model.TemplateBlock, ".html", out updatedTemplateBlock);
+    // foreach (string templateUrl in templateFileUrls)
+    // {
+    //     <script type="text/javascript" asp-location="Footer">
+    //         $.ajax({
+    //             url: "@($"{templateUrl}?v={DateTime.Now.Ticks}")",
+    //             dataType: "html",
+    //             success: function (data) {
+    //                 $("#div_print").append(data);
+    //             },
+    //             async: false
+    //         });
+    //     </script>
+    // }
+    // Model.TemplateBlock = updatedTemplateBlock;
+
+    //# task 602 Including HTML in Reports HTML using %filename.html% within template block file
+    //Load Template Block (HTML) Files(template configured inside reports)
+    string updatedTemplateBlock;
+    string[] templateFileUrls = anniqueReportService.ProcessTokensAndGetTempFileUrls(Model.TemplateBlock, ".html", relativeBasePath: "~/Reports/html", out updatedTemplateBlock);
+
+    foreach (string templateUrl in templateFileUrls)
+    {
+        <script type="text/javascript" asp-location="Footer">
+            $.ajax({
+            url: "@($"{templateUrl}?v={DateTime.Now.Ticks}")",
+            dataType: "html",
+            success: function (data) {
+            // Append the processed HTML to the div
+            $("#div_print").append(data);
+            },
+            async: false
+            });
+        </script>
+    }
+    Model.TemplateBlock = updatedTemplateBlock;
+    //end #602
+
+    //task 629 New Features on Annique Reports
+
+    // Load Custom JavaScript Files(seperate js configured inside reports)
+    string updatedCustomJS;
+    string[] jsFileUrls = anniqueReportService.ExtractFileUrlsFromFirstLine(Model.CustomJS, ".js", out updatedCustomJS);
+    @if (jsFileUrls.Any())
+    {
+        //when my common js not added facing vue loading issue
+        //set time out for custom js so first vue loads properly then custom js loads 
+        @if (!Model.IncludeReportCommonJs)
+        {
+            <script type="text/javascript" asp-location="Footer">
+                setTimeout(function () {
+                @foreach (var jsUrl in jsFileUrls)
+                {
+                    <text>
+                                    var script = document.createElement('script');
+                                    script.src = "@($"{jsUrl}?v={DateTime.Now.Ticks}")";
+                                    script.async = false;
+                                    document.body.appendChild(script);
+                    </text>
+                }
+                }, 01);
+            </script>
+        }
+        else
+        {
+            foreach (string jsUrl in jsFileUrls)
+            {
+                <script asp-location="Footer" type="text/javascript" src="@($"{jsUrl}?v={DateTime.Now.Ticks}")">
+                </script>
+            }
+        }
+
+    }
+    else
+    {
+        <script type="text/javascript">@Html.Raw(Model.CustomJS)</script>
+    }
+
+    //include report common js only if includeReportCommonJs flag is enabled
+    @if (Model.IncludeReportCommonJs)
+    {
+        //common js for all reports configured inside annique configuration settings
+        string updatedCommonMyAppJs;
+        string[] commonMyAppJsFileUrls = anniqueReportService.ExtractFileUrlsFromFirstLine(Model.CommonMyAppJs, ".js", out updatedCommonMyAppJs);
+        foreach (string commonUrl in commonMyAppJsFileUrls)
+        {
+            <script type="text/javascript" asp-location="Footer">
+                $.ajax({
+                url: "@($"{commonUrl}?v={DateTime.Now.Ticks}")",
+                dataType: "text",
+                success: function (data) {
+                // Create a script element
+                var scriptElement = document.createElement('script');
+
+                // Set the type attribute of the script element
+                scriptElement.type = 'text/javascript';
+
+                // Set the content of the script element to the loaded JavaScript code
+                scriptElement.text = data;
+
+                // Append the script element to the document's body
+                document.body.appendChild(scriptElement);
+                },
+                async: false
+                });
+            </script>
+        }
+        Model.CommonMyAppJs = updatedCommonMyAppJs; // Update the model property
+    }
+    else
+    {
+        Model.CommonMyAppJs = string.Empty;
+    }
+
+    //task 629 New Features on Annique Reports
+
+
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "https://cdn.jsdelivr.net/npm/vee-validate@3.4.14/dist/rules.umd.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/vee-validate.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/vee-validate-rules.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, " https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/moment.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/jquery.number.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/bootstrap-vue.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Annique.Customization/Content/js/vue.min.js");
+}
+
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/fontawesome/css/all.min.css" />
+<link type="text/css" rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/bootstrap-vue.css" />
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+
+@*external script configured inside annique configuration setting ReportScripts*@
+@Html.Raw(Model.ScriptsBlock)
+@if (!string.IsNullOrEmpty(Model.CustomCSS))
+{
+    @Html.Raw(Model.CustomCSS)
+}
+<div id="app" v-cloak class="mx-1 report-info-page">
+    <div class="report-info">
+
+        @*  task 629 New Features on Annique Reports *@
+        @if (Model.IncludeReportParameters)
+        {
+            <a class="button-2 print-order-button" onclick="printdiv('div_print');">Print</a>
+        }
+        @*   task 629 New Features on Annique Reports *@
+
+        <form id="report-form" class="form-report" onsubmit="return false;">
+            <input type="hidden" id="Username" name="username" value="@Model.Username" />
+            <input type="hidden" id="report" name="report" value="@Model.Name" />
+            <input type="hidden" id="storeId" name="storeId" value="@Model.StoreId" />
+
+            @*   task 629 New Features on Annique Reports *@
+            @if (Model.IncludeReportParameters)
+            {
+                @await Html.PartialAsync("_ReportParameters", Model.ReportParameters)
+                <div class="load-button">
+                    <button v-on:click="loadReport">
+                        <span class="load-img"></span>
+                    </button>
+                </div>
+            }
+            @*   task 629 New Features on Annique Reports *@
+
+        </form>
+    </div>
+
+    <div id="div_print">
+        @Html.Raw(Model.TemplateBlock)
+    </div>
+
+</div>
+<script asp-location="Footer">
+    function printdiv(elem) {
+        var mywindow = window.open('', 'PRINT');
+        var headstr = '<!DOCTYPE html> \
+                                                        <html lang="en"> \
+                                                        <head><title></title> \
+                                                          <link href="/Plugins/Annique.Customization/Content/css/bootstrap.min.css" rel="stylesheet"/> \
+                                                                  <link rel="stylesheet" media="all" href="/Reports/css/vds_print.css?v=@DateTime.Now.Ticks"/> \
+                                                          </head><body style="color:black;" onafterprint="self.close()"> \
+                                                 <div class="container padding-bottom-3x mb-1 mycont " style="width:100%;min-width:100%">\
+                                                <div class="btn btn-primary" onclick="self.print();return false;">Print</div>'
+
+
+        var footstr = '</div> \
+                                                  <script type="text/javascript" src="/lib_npm/jquery/jquery.min.js"/> \
+                                                  <script type="text/javascript" src="/Plugins/Annique.Customization/Content/js/popper.min.js"/> \
+                                                 <script type="text/javascript" src="/lib_npm/bootstrap/bootstrap.min.js"/> \
+                                             </body></html>'
+
+
+        mywindow.document.write(headstr);
+        mywindow.document.write(document.getElementById(elem).innerHTML);
+        mywindow.document.write(footstr);
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        return false;
+    }
+    @Html.Raw(Model.CommonMyAppJs)
+</script>
+

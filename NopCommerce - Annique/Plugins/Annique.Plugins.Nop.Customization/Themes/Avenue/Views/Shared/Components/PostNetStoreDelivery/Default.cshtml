@@ -1,0 +1,244 @@
+﻿@model PostNetStoreDeliveryModel
+
+<div class="form-group">
+    <div class="full-title">
+        <label asp-for="FirstName" class="models-labels"></label>
+    </div>
+    <div class="inputs half-width">
+        <input asp-for="FirstName" placeholder="Firstname" class="firstname" />
+    </div>
+    <div class="inputs half-width">
+        <input asp-for="LastName" placeholder="LastName" class="lastName" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="inputs half-width">
+        <label asp-for="Cell" class="input-cell"></label>
+        <input asp-for="Cell" placeholder="Enter Cell" class="cell" />
+    </div>
+    <div class="inputs half-width">
+        <label asp-for="ConfirmCell" class="input-confirmcell"></label>
+        <input asp-for="ConfirmCell" placeholder="Enter Confirm Cell" class="confirmcell" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="inputs full-width postalcode-wrap">
+        <label asp-for="Location" class="input-location models-labels"></label>
+        <input asp-for="Location" placeholder="Enter Postal code" class="location" />
+    </div>
+</div>
+<script asp-location="Footer">
+    $('.pickup-popup').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+        $("#tableDiv").children("table").remove();
+        $("#tableDiv").children("h3").remove();
+        $($("#confirmPickUpStore").hide()).removeClass("models-confirms-btns");
+        $($("#FilterPickUpStore").show()).addClass("models-pickup-btns");
+    });
+
+    $(document).ready(function () {
+        $("#confirmPickUpStore").hide();
+        $('#FilterPickUpStore').click(function () {
+            var firstName = $("#@Html.IdFor(model => model.FirstName)").val();
+            var lastName = $("#@Html.IdFor(model => model.LastName)").val();
+            var cell = $("#@Html.IdFor(model => model.Cell)").val();
+            var reCell = $("#@Html.IdFor(model => model.ConfirmCell)").val();
+            var location = $("#@Html.IdFor(model => model.Location)").val();
+
+            if (firstName == "") {
+                alert("Firstname is Required");
+                return;
+            }
+
+            if (lastName == "") {
+                alert("lastName is Required");
+                return;
+            }
+
+            phoneRegex = /^0(6|7|8){1}[0-9]{1}[0-9]{7}$/;
+
+            if (cell == "") {
+                alert("Cell is Required");
+                return;
+            }
+            else {
+                if (!phoneRegex.test(cell)) {
+                    alert("Cell format is invalid");
+                    return;
+                }
+            }
+
+            if (!phoneRegex.test(reCell)) {
+                alert("Confirm Cell format is invalid");
+                return;
+            }
+
+            if (cell != reCell) {
+                alert("Confirm Cell do not match with Cell");
+                return;
+            }
+
+            if (location == "") {
+                alert("Postalcode is Required");
+                return;
+            }
+            var postData = {
+                firstName: firstName,
+                lastName: lastName,
+                cell: cell,
+                location: location
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                datatype: "json",
+                type: "post",
+                url: "@(Url.Action("GetPickUpCollection", "PublicPickUpCollection"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    if (data.success) {
+
+                        var parsedData = JSON.parse(data.pickUpStores);
+                        var tableStr = "<table border='2'>";
+                        tableStr += "<h3>@T("Annique.Plugin.PostNetStoreDelivery.Table.Heading")</h3>";
+                        $.each(parsedData, function () {
+
+                            tableStr += "<tr><td><input type='radio' id='" + this.Id + "' value='" + this.Id + "' name='pickUpStoreId' /><label for='" + this.Id + "'><div><span class='model-check-name'>" + this.Name + "</span><span>" + this.Address + "</span></div><span class='kilo-meter'>" + this.Kms + "Kms</span></label></td></tr>";
+
+                        });
+                        tableStr += "</table>";
+                        $('#tableDiv').html(tableStr);
+
+                        $($("#FilterPickUpStore").hide()).removeClass("models-pickup-btns");
+                        $($("#confirmPickUpStore").show()).addClass("models-confirms-btns");
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Cannot perform this action.');
+                }
+            });
+
+        });
+    });
+
+    function ClearPostalCode() {
+        $("#@Html.IdFor(model => model.Location)").val('');
+        $("#tableDiv").children("table").remove();
+        $("#tableDiv").children("h3").remove();
+        $($("#confirmPickUpStore").hide()).removeClass("models-confirms-btns");
+        $($("#FilterPickUpStore").show()).addClass("models-pickup-btns");
+    }
+
+    function PepFormValidation(firstName, lastName, cell, pickUpStoreId) {
+        var valid = true;
+
+        if (firstName == "") {
+            alert("Firstname is Required");
+            valid = false;
+            return valid;
+        }
+
+        if (lastName == "") {
+            alert("lastName is Required");
+            valid = false;
+            return valid;
+        }
+
+        if (cell == "") {
+            alert("Cell is Required");
+            valid = false;
+            return valid;
+        }
+
+        if (pickUpStoreId == undefined) {
+            alert("Please Select Any pick up Store");
+            valid = false;
+            return valid;
+        }
+
+        return valid;
+    }
+
+    function OPCSavePickUpStore() {
+        var firstName = $("#@Html.IdFor(model => model.FirstName)").val();
+        var lastName = $("#@Html.IdFor(model => model.LastName)").val();
+        var cell = $("#@Html.IdFor(model => model.Cell)").val();
+        var pickUpStoreId = $("input[name='pickUpStoreId']:checked").val();
+
+        var formValid = PepFormValidation(firstName, lastName, cell, pickUpStoreId);
+
+        if (formValid) {
+            var postData = {
+                pickUpStoreId: pickUpStoreId,
+                firstName: firstName,
+                lastName: lastName,
+                cell: cell
+            };
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: '@Url.Action("SavePickUpStore", "PublicPickUpCollection")',
+                data: postData,
+                success: function (data) {
+                    if (data.success) {
+                        $('.bd-example-modal-lg1').modal('hide');
+                        selectedId = data.selected_id;
+                        Checkout.setStepResponse(data);
+                        SaveAsPickUpStore();
+                        Shipping.save();
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                complete: function () {
+                    this.resetLoadWaiting;
+                },
+                error: Checkout.ajaxFailure
+            });
+        }
+    }
+
+    function SavePickUpStore() {
+        var firstName = $("#@Html.IdFor(model => model.FirstName)").val();
+        var lastName = $("#@Html.IdFor(model => model.LastName)").val();
+        var cell = $("#@Html.IdFor(model => model.Cell)").val();
+        var pickUpStoreId = $("input[name='pickUpStoreId']:checked").val();
+
+        var formValid = PepFormValidation(firstName, lastName, cell, pickUpStoreId);
+
+        if (formValid) {
+            var postData = {
+                pickUpStoreId: pickUpStoreId,
+                firstName: firstName,
+                lastName: lastName,
+                cell: cell
+            };
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: '@Url.Action("SavePickUpStore", "PublicPickUpCollection")',
+                data: postData,
+                success: function (data) {
+                    if (data.success) {
+                        $('.bd-example-modal-lg1').modal('hide');
+                        location.href = data.redirect;
+                        return true;
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function (err) {
+                    alert(err.message);
+                }
+            });
+        }
+    }
+</script>

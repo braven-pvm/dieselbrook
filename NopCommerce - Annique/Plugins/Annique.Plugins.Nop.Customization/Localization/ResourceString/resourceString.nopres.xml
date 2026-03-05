@@ -1,0 +1,1706 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language Name="English">
+  <!--#region Menu -->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Menu.MainTitle">
+    <Value>Annique Plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Configure">
+    <Value>Annique Plugin</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Report">
+    <Value>Annique Report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Report.Tab">
+    <Value>Report</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.CustomShippingRule">
+    <Value>Annique Custom Shipping Rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.CustomShippingRule.Tab">
+    <Value>Custom Shipping Rule</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ChatFeedback">
+    <Value>Chatbot Feedback</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ChatFeedback.Tab">
+    <Value>Chatbot Feedback</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ConsultantRegistrationList">
+    <Value>Consultant Registrations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ConsultantRegistrationDetails">
+    <Value>Consultant Registration Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ConsultantRegistrationList.Tab">
+    <Value>Consultant Registrations</Value>
+  </LocaleResource>
+
+  <!--#end region-->
+
+  <!--#region Configuration-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Configure.Tab">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsEnablePlugin">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsEnablePlugin.Hint">
+    <Value>Enable/Disable Plugin</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.IsDefaultCountryIdEnabled">
+    <Value>Default Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsDefaultCountryIdEnabled.Hint">
+    <Value>Enable/disable setting default country id on customer profile update.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.DefaultCountryId">
+    <Value>Country Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.DefaultCountryId.Hint">
+    <Value>Select the default country to save its ID, which will be used to append the country code to the phone number.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.PickUpCollection.Configure.Tab">
+    <Value>PickUp Collection Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsPickUpCollection">
+    <Value>Pickup Store Collection</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsPickUpCollection.Hint">
+    <Value>Enable/Disable Pickup store collection functionality</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PickUpStoreRadius">
+    <Value>Pickup Store Radius</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PickUpStoreRadius.Hint">
+    <Value>Set number of radius from which you want to find Pickup Collections</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PickUpStoreRadius.Required">
+    <Value>Please set Positive Number for Pickup store Radius.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.SelectedCustomerRoleIdsForPickup">
+    <Value>Customer Roles for Pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.SelectedCustomerRoleIdsForPickup.Hint">
+    <Value>Select customer roles for pick up store functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.GeoLocationApiUsername">
+    <Value>Geo Location API Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.GeoLocationApiUsername.Hint">
+    <Value>Enter Username to be used in Geo Location API username parameter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PickupCustomAttributeId">
+    <Value>Pickup Custom Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PickupCustomAttributeId.Hint">
+    <Value>Select attribute used to store Pick up store code.</Value>
+  </LocaleResource>
+  <!--#end region-->
+
+  <!--#Staff customer role Order Rule Configuration-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.StaffCustomerRoleOrder.Configure.Tab">
+    <Value>Staff Customer Role Order Rule Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TotalOrderNo">
+    <Value>Total Order No</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TotalOrderNo.Hint">
+    <Value>Set total numbers of order staff customer has been allowed for.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TotalOrderNo.Required">
+    <Value>Please set positive Total number of Order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.OrderAmountLimit">
+    <Value>Amount Limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.OrderAmountLimit.Hint">
+    <Value>Set the Order Amount limit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.CustomerRoleId">
+    <Value>Customer Role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.CustomerRoleId.Hint">
+    <Value>Select customer role on which order rule will be applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.OrderSubtotalAmountForCustomerStaff">
+    <Value>Your order total exceeded by {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.OrderTotalNoExceedCustomerStaff">
+    <Value>You have already reached to your order limit for this calendar month</Value>
+  </LocaleResource>
+  <!--#end region-->
+
+  <!--#Category Integration -->
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.IntegrationTab">
+    <Value>Integration Values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.AddNew">
+    <Value>Add Integration Values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.AddButton">
+    <Value>Add</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Fields.IntegrationField">
+    <Value>Integration Field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Fields.IntegrationField.Hint">
+    <Value>Enter Integration Field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Fields.IntegrationField.Required">
+    <Value>Integration Field is Required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Fields.IntegrationValue">
+    <Value>Integration Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Fields.IntegrationValue.Hint">
+    <Value>Enter Integration Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Fields.IntegrationValue.Required">
+    <Value>Integration Value is Required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.CategoryIntegration.Alert.CategoryIntegrationAdd">
+    <Value>Failed to add Integration Values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.IntegrationValues.SaveBeforeEdit">
+    <Value>You need to save Categories before you add Integration Values.</Value>
+  </LocaleResource>
+  <!--#EndRegion-->
+
+  <!--#region PostNetStoreDeliveryModel-->
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDeliveryPopUp.Title">
+    <Value>PEP / PostNet Store Delivery</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Fields.FirstName">
+    <Value>Collection By</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Fields.Cell">
+    <Value>Cell</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Fields.ConfirmCell">
+    <Value>Confirm Cell</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Fields.Location">
+    <Value>Suburb Or Postal Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.BrowsePickUpStores.Button">
+    <Value>Browse Pick Up Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Clear.Button">
+    <Value>Clear</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Close.Button">
+    <Value>Close</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.AddPepPostnetReciepent.Button">
+    <Value>Add Pep / Postnet Recipient</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Confirm.Button">
+    <Value>Confirm</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.Table.Heading">
+    <Value>Select Pickup Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.PostalCodeAddress.NotFound">
+    <Value>Location for provided Postal code was not Found.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.InvalidAddress">
+    <Value>Address is invalid please select another address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.PostNetStoreDelivery.AlreadyExist">
+    <Value>Address with specified details already Exist</Value>
+  </LocaleResource>
+  <!--#end Region-->
+
+  <!--#region ManufacturerIntegration-->
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationField">
+    <Value>Integration Field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationField.Hint">
+    <Value>Enter Integration Field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationValue">
+    <Value>Integration Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationValue.Hint">
+    <Value>Enter Integration Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.IntegrationTab">
+    <Value>Integration Values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.AddNew">
+    <Value>Add Integration Values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.AddButton">
+    <Value>Add</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationField.Required">
+    <Value>Integration Field is Required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Fields.IntegrationValue.Required">
+    <Value>Integration Value is Required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.ManufacturerIntegration.Alert.ManufacturerIntegrationAdd">
+    <Value>Failed to add Integration Values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.IntegrationValues.SaveBeforeEdit">
+    <Value>You need to save Manufacturers before you can add Integration Values for this manufacturer page.</Value>
+  </LocaleResource>
+  <!--#end Region-->
+
+  <!--#region Shipping Address Validation-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ShippingAddressValidation.Tab">
+    <Value>Shipping Address Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ShippingAddressValidation">
+    <Value>Shipping Address Validation API</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ShippingAddressValidation.Hint">
+    <Value>Enter API For Shipping Address Validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.SearchBox.Province">
+    <Value>Please select your suburb, province and postal code combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.ShippingAddressValidation.Field.SubrubPostalCodeCombination">
+    <Value>SUBURB POSTAL CODE COMBINATION</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.ShippingAddressValidation.Field.Term">
+    <Value>Please enter search term to get suburb combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.ShippingAddressValidation.Field.State">
+    <Value>Please select any state to get suburb combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.ShippingAddressValidation.Term.NotFound">
+    <Value>Suburb Combination Not Found</Value>
+  </LocaleResource>
+  <!--#end region-->
+
+  <!--#region Shipping Address Validation-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ExclusiveItems.Configure.Tab">
+    <Value>Exclusive Items Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ExclusiveItemsCategoryId">
+    <Value>Exclusive Items Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ExclusiveItemsCategoryId.Hint">
+    <Value>Select Category for Exclusive Items.</Value>
+  </LocaleResource>
+  <!--End region-->
+
+  <!--#region User Profile-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ConsultantRole.Configure.Tab">
+    <Value>Consultant Role Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ConsultantRoleId">
+    <Value>Consultant Role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ConsultantRoleId.Hint">
+    <Value>Select Role of customer on which you want to show Additional features. (User Profile Additional Fields, Awards, Events , Gifts, Reports)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AdditionalData">
+    <Value>Additional Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Title.Required">
+    <Value>Title is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Nationality">
+    <Value>Nationality</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Nationality.Required">
+    <Value>Nationality is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.IdNumber">
+    <Value>Id Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.IdNumber.Required">
+    <Value>Id Number is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.IdNumberErrors.IdNumberAlreadyExists">
+    <Value>Provided Id Number already exist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Language.Required">
+    <Value>Language is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Ethnicity">
+    <Value>Ethnicity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Ethnicity.Required">
+    <Value>Ethnicity is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.BankName">
+    <Value>Bank Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.BankName.Information">
+    <Value>
+      Annique has a very dynamic Compensation Plan whereby you can earn extra income and not just your 20% off invoice discount.By completing your banking details, you enable us to pay in any extra discount straight into your bank on a monthly basis.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.BankName.Information.Note">
+    <Value>
+      Note: We don’t pay additional discount into a credit card. Please supply bank account information.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.AccountHolder">
+    <Value>Account Holder</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.AccountNumber">
+    <Value>Account Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.AccountType">
+    <Value>Account Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.ActivationDate">
+    <Value>Activation Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.Accept">
+    <Value>I agree with the terms of Agreement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.ConsultantAgreement.Read">
+    <Value>(Read)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.ConsultantAgreement.Prompt.Message">
+    <Value>Please remember to Accept the Consultant Agreement on your Profile</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.ProfileValidation.Message">
+    <Value>Please complete your Profile before Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.WhatsappNumber">
+    <Value>Whatsapp Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UserProfileAdditionalInfo.WhatsappNumber.Invalid">
+    <Value>Invalid Phone Number format</Value>
+  </LocaleResource>
+  <!--End region-->
+
+  <!-- #region Customer Affiliate Info-->
+  <LocaleResource Name="Account.AffiliateDetails">
+    <Value>Affiliate Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AffiliateInfo.AffiliateName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <!--End Region-->
+
+  <!--#region Annique Report Configuration-->
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Report.Configure.Tab">
+    <Value>Report Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.CommonJs">
+    <Value>Report Common Js</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.CommonJs.Hint">
+    <Value>Configure Common my app js for all reports.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ReportScripts">
+    <Value>Scripts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.ReportScripts.Hint">
+    <Value>Inject external Scripts for Reports.</Value>
+  </LocaleResource>
+
+  <!--#end Annique Report-->
+
+  <!--#region Login Time Limit-->
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.LoginTimeLimit.Configure.Tab">
+    <Value>Login Time Limit Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.LoginTimeLimit">
+    <Value>Login Time Limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.LoginTimeLimit.Hint">
+    <Value>Set the number of minutes to logout user automatically if no activity.</Value>
+  </LocaleResource>
+
+  <!--#end login time limit-->
+
+  <!--#region Annique Report-->
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Added">
+    <Value>The new Report has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.AddNew">
+    <Value>Add a new report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.BackToList">
+    <Value>back to report list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Deleted">
+    <Value>The Report has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.EditReportDetails">
+    <Value>Edit Report details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Updated">
+    <Value>The Report has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.Name.Hint">
+    <Value>Provide Unique Name for Report.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.Name.Required">
+    <Value>Name is required for Report.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.CustomCSS">
+    <Value>CSS</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.CustomCSS.Hint">
+    <Value>Provide CSS for Report.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.CustomJS">
+    <Value>Script</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.CustomJS.Hint">
+    <Value>Provide Custom Script for Report.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.TemplateBlock">
+    <Value>Template Block</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.TemplateBlock.Hint">
+    <Value>Provide Report Template Block.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.CustomText">
+    <Value>Custom Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.CustomText.Hint">
+    <Value>Provide Custom text Report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.AclCustomerRoles">
+    <Value>Limited to customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the report will be shown. Leave empty if you want this report to be visible to all users.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.Published.Hint">
+    <Value>Check to publish this report (visible in store). Uncheck to unpublish (report not available in store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.DisplayOrder.Hint">
+    <Value>Set the report's display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.DisplayOrder.Required">
+    <Value>Please provide positive Display Order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.IsMenuOption">
+    <Value>Menu Option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.IsMenuOption.Hint">
+    <Value>Check to make this report as menu option (visible in my account). Uncheck to display as normal report list (report not available in menu options of myaccount).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.TabOrder">
+    <Value>Tab Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.TabOrder.Hint">
+    <Value>Set the menu option display order(Set display order greater than 160).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.IncludeReportCommonJs">
+    <Value>Include ReportCommon Js</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.IncludeReportCommonJs.Hint">
+    <Value>Flog to include/exclude ReportCommon js from annique configuration settings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.IncludeReportParameters">
+    <Value>Include Report Parameters</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.IncludeReportParameters.Hint">
+    <Value>Flag for Print dive , refresh button and report parameters.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.URL">
+    <Value>URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.URL.Hint">
+    <Value>The URL for this report.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name e.g. 'some-report-name' to make your page URL 'http://www.yourStore.com/some-report-name'. Leave empty to generate it automatically based on the name of the report.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.SelectedHiddenFields">
+    <Value>Hidden Fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.SelectedHiddenFields.Hint">
+    <Value>Select the hidden fields for reports.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.PubliclyHostedPage">
+    <Value>Public Hosted Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AnniqueReport.Fields.PubliclyHostedPage.Hint">
+    <Value>When checked, the report will be hosted publicly and accessible via a direct report URL. This report will not be visible in the My Account menu or the reports list. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Reports">
+    <Value>Reports</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReport.ReportDetails">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ReportDetails">
+    <Value>Report Details</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters">
+    <Value>Parameters List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters.Info">
+    <Value>Parameter Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues">
+    <Value>Parameter Value List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues.Info">
+    <Value>Parameter Value Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters.AddNew">
+    <Value>Add New Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters.Field.Add">
+    <Value>Add Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters.Edit">
+    <Value>Edit Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters.Field.Edit">
+    <Value>Edit Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.Parameters.SaveBeforeEdit">
+    <Value>Save Report before add/update Report Parameters</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues.AddNew">
+    <Value>Add New Parameter Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues.Field.Add">
+    <Value>Add Parameter Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues.Edit">
+    <Value>Edit Parameter Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues.Field.Edit">
+    <Value>Edit Parameter Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AnniqueReports.ParameterValues.SaveBeforeEdit">
+    <Value>Save Parameter before add/update Parameter Values</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.ReportParameter.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameter.Fields.Name.Hint">
+    <Value>Name Of Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameter.Fields.Name.Required">
+    <Value>Name Of Parameter is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameter.Fields.AttributeControlType">
+    <Value>Attribute ControlType</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameter.Fields.AttributeControlType.Hint">
+    <Value>Select Control Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameter.Fields.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameter.Fields.DisplayOrder.Hint">
+    <Value>Set the parameter's display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.Name.Hint">
+    <Value>Name of Parameter Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.Name.Required">
+    <Value>Name of Parameter Value is Required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.IsPreSelected">
+    <Value>Pre-Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this value is pre-selected for the Parameter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReportParameterValue.Fields.DisplayOrder.Hint">
+    <Value>Set the parameter value's display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <!--End Region-->
+
+  <!--#region Administartor Login-->
+  <LocaleResource Name="Public.Username.NotExist">
+    <Value>No Customer found with provided username</Value>
+  </LocaleResource>
+  <!--#end Region-->
+
+  <!--#region Events-->
+  <LocaleResource Name="PageTitle.EventList">
+    <Value>Events</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.BookingList">
+    <Value>Event Bookings</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.Event.Time">
+    <Value>Time:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.Event.Button.BookNow">
+    <Value>BOOK NOW {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.BookingText">
+    <Value>Your Bookings</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.ConfirmButton">
+    <Value>Confirm</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.ConfirmCheckoutButton">
+    <Value>Confirm and Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Consultant">
+    <Value>Consultant</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Consultant.InValid">
+    <Value>Invalid Consultant</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Consultant.AlreadyExist">
+    <Value>Guest ticket already booked by {0} with Order Number {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Order">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Confirmed">
+    <Value>Confirmed</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Action">
+    <Value>Action</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.EditBookingModalTitle">
+    <Value>Edit a Booking</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.AddBookingModalTitle">
+    <Value>Add a Booking</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.NoBookingMessage">
+    <Value>There are no bookings to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.BookForYourselfModalTitle">
+    <Value>Book for yourself</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.BookForYourself.ModalBody">
+    <Value>Would you like to make a booking for yourself?</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.BookForYourselfModal.BookNow">
+    <Value>BOOK NOW</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.BookForYourselfModal.Cancle">
+    <Value>NO, Thanks</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.NotFound">
+    <Value>Booking Not Found</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.EventBooking.Error">
+    <Value>Can not perform this action</Value>
+  </LocaleResource>
+  <LocaleResource Name="AnniqueEvents.OrderItem.AttributeDescription">
+    <Value>Ticket</Value>
+  </LocaleResource>
+  <!--#end Event-->
+
+  <!--#region Checkout Gifts-->
+  <LocaleResource Name="CheckoutGifts.GiftPopUp.Title">
+    <Value>Special for You</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.GiftPopUp.GiftProductInfo">
+    <Value>Available {0} of {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.GiftPopUp.Product.AlreadyInCart.Message">
+    <Value>Gift Product already in Cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.GiftPopUp.AddToCart.Button.Text">
+    <Value>Add to Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.GiftPopUp.Checkout.Button.Text">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.OrderItem.AttributeDescription">
+    <Value>Gift</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.OrderItem.Donation.AttributeDescription">
+    <Value>Donation</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="CheckoutGifts.PopUp.ExclusiveItem.Title">
+    <Value>Exclusive Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.PopUp.ExclusiveItem.ProductInfo">
+    <Value>Available {0} of {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CheckoutGifts.PopUp.ExclusiveItem.Product.AlreadyInCart.Message">
+    <Value>Exclusive Product already in Cart.</Value>
+  </LocaleResource>
+  <!--#end Region-->
+
+  <!--#region Giftcard Allocation-->
+
+  <LocaleResource Name="Admin.GiftCards.Fields.Username">
+    <Value>Recipient's Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.Username.Hint">
+    <Value>Enter recipient's username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.AllocateGiftCard.Button">
+    <Value>Allocate Giftcard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.GiftCardAdditionalInfo.Alert.Failed">
+    <Value>Failed to add info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Public.GiftCards.GiftCardAdditionalInfo.Access.Validation.Message">
+    <Value>You are not authorized to access this Giftcard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Public.GiftCards.GiftCardAdditionalInfo.Access.GiftcardCode">
+    <Value>Gift Card Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Public.GiftCards.GiftCardAdditionalInfo.Access.RemainingAmount">
+    <Value>Remaining Amount</Value>
+  </LocaleResource>
+
+  <!--#end Giftcard-->
+
+  <!--#region Customer Changes-->
+
+  <LocaleResource Name="CustomerChanges.Field.Firstname">
+    <Value>Firstname</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Lastname">
+    <Value>Lastname</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.DateOfBirth">
+    <Value>DateOfBirth</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.TimeZoneId">
+    <Value>TimeZoneId</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.VatNumber">
+    <Value>VatNumber</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.VatNumberStatusId">
+    <Value>VatNumberStatusId</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Gender">
+    <Value>Gender</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Company">
+    <Value>Company</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.StreetAddress">
+    <Value>StreetAddress</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.StreetAddress2">
+    <Value>StreetAddress2</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.ZipPostalCode">
+    <Value>ZipPostalCode</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.City">
+    <Value>City</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.County">
+    <Value>County</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.CountryId">
+    <Value>CountryId</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.StateProvinceId">
+    <Value>StateProvinceId</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Fax">
+    <Value>Fax</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Newsletter">
+    <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Nationality">
+    <Value>Nationality</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.IdNumber">
+    <Value>IdNumber</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Ethnicity">
+    <Value>Ethnicity</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.BankName">
+    <Value>BankName</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.AccountHolder">
+    <Value>AccountHolder</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.AccountType">
+    <Value>AccountType</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.WhatsappNumber">
+    <Value>WhatsappNumber</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.Accept">
+    <Value>Accept</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerChanges.Field.AccountNumber">
+    <Value>AccountNumber</Value>
+  </LocaleResource>
+  <!--#end Customer Changes-->
+
+  <!--#region Awards-->
+  <LocaleResource Name="AwardHeaderLink.Text">
+    <Value>Claim Your Award</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.AwardList">
+    <Value>Award Redemption</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.RedeemNote">
+    <Value>The Award amount must be redeemed on one order, it cannot be redeemed on multiple orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.ExpiryDate">
+    <Value>Expires on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.AvailableAmount">
+    <Value>Available Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.ShowSelected">
+    <Value>Show Selected Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.AwardRedeemReminder">
+    <Value>You have an unclaimed Award</Value>
+  </LocaleResource>
+  <LocaleResource Name="Award.ProductAddToCartMessage">
+    <Value>Award Products added to Cart</Value>
+  </LocaleResource>
+  <!--#end Awards-->
+
+  <!--#Order Total summary-->
+  <LocaleResource Name="ShoppingCart.Totals.TotalRSP">
+    <Value>Total RSP</Value>
+  </LocaleResource>
+
+  <!--#end Order Total summary-->
+
+  <!--#region Otp Api configuration-->
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Otp.Configure.Tab">
+    <Value>Otp Api Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsOTP">
+    <Value>OTP</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsOTP.Hint">
+    <Value>Check to enable OTP functionality. Uncheck to make disable functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.OTPApiUrl">
+    <Value>Otp Api</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.OTPApiUrl.Hint">
+    <Value>Set Api url for Otp generation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsStageEnvType">
+    <Value>Stage Environment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsStageEnvType.Hint">
+    <Value>Check to make parameter staging=true in Otp Api. Uncheck to make parameter staging=false in Otp Api.</Value>
+  </LocaleResource>
+  <!--#end Otp Api Configuration-->
+
+  <!--#region Otp Form-->
+
+  <LocaleResource Name="Annique.Plugin.Otp.FormTitle">
+    <Value>Secure OTP Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Otp.Submit.Button">
+    <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Otp.SendViaSms.Button">
+    <Value>Send OTP Via Sms</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Otp.SendViaEmail.Button">
+    <Value>Send OTP Via Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Otp.Success.Message">
+    <Value>Otp Sent! Your OTP has been send Via </Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Otp.Valid.Message">
+    <Value>OTP Verified: Your OTP is valid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Otp.Invalid.Message">
+    <Value>Invalid OTP: "The OTP you have entered is not valid"</Value>
+  </LocaleResource>
+
+  <!--#end Otp Api Form-->
+
+  <LocaleResource Name="Default.BillingAddress.lable">
+    <Value>Billing Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Default.ShippingAddress.lable">
+    <Value>Shipping Address</Value>
+  </LocaleResource>
+
+
+  <!--#region shopping cart-->
+  <LocaleResource Name="ShoppingCart.TotalRsp">
+    <Value>Total RSP</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.Custom.Discount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <!--#end shopping cart-->
+
+  <!--#region filter by SKU-->
+
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.NameAsc">
+    <Value>Name: A to Z</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.NameDesc">
+    <Value>Name: Z to A</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.PriceAsc">
+    <Value>Price: Low to High</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.PriceDesc">
+    <Value>Price: High to Low</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Annique.Plugins.Nop.Customization.Domain.Enums.AnniqueProductSortingEnum.ItemCode">
+    <Value>Item Code</Value>
+  </LocaleResource>
+  <!--#end-->
+
+  <!--#region Discounts-->
+  <LocaleResource Name="DiscountList.Header">
+    <Value>Applied Special Vouchers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Available.DiscountList.Header">
+    <Value>Available Vouchers</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CustomerNotAuthorized">
+    <Value>You are not authorized to redeem this voucher</Value>
+  </LocaleResource>
+
+  <!--#end-->
+
+  <LocaleResource Name="ShoppingCart.ProductUnavailableMessage">
+    <Value>Please review your cart as some product(s) are not available.</Value>
+  </LocaleResource>
+
+  <!--#region Admin customer configuration-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.AdminCustomer.Configure.Tab">
+    <Value>Admin customer configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.AdminCustomerId">
+    <Value>Admin Customer Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.AdminCustomerId.Hint">
+    <Value>Select customer which will be used to send private messages.</Value>
+  </LocaleResource>
+  <!--#end-->
+
+  <!--#region Admin customer configuration-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ProductAlsoPuchased.Configure.Tab">
+    <Value>Product Also Purchased configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.SelectedExcludeCategoryIds">
+    <Value>Exclude Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.SelectedExcludeCategoryIds.Hint">
+    <Value>Select categories which you want to exclude from product also purchased.</Value>
+  </LocaleResource>
+  <!--#end-->
+
+  <LocaleResource Name="ActivityLog.GuestCustomer.RequestUrl">
+    <Value>Request : ({0}) made by IP Address: ({1})</Value>
+  </LocaleResource>
+
+  <!--#region User header bar-->
+  <LocaleResource Name="AffiliateWelcomeMessage.Header">
+    <Value>{0} Welcomes you {1}</Value>
+  </LocaleResource>
+
+  <!--#end-->
+
+  <LocaleResource Name="Annique.Plugin.Fields.CustomCacheExpireTime">
+    <Value>Custom Cache Expire Time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.CustomCacheExpireTime.Hint">
+    <Value>Specify custom cache time in minutes.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SpecialOffer.OrderItem.AttributeDescription">
+    <Value>Special Offer Item</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SpecialOffer.ClaimOffer.Button">
+    <Value>Claim Offer</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SpecialOffer.ClaimedOffer.Message">
+    <Value>Special Offer already claimed.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SpecialOfferPopUp.Header">
+    <Value>Special Offer Products</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SpecialOffer.Warning.Message">
+    <Value>You have unclaimed offers—don't miss out! Claim them before proceeding to checkout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ProceedCheckout.Button.Text">
+    <Value>Proceed Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SpecialOffer.AddToCart.Warning">
+    <Value>Please select a product before adding to the cart.</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="SpecialOfferPopUp.AddToCart.Button">
+    <Value>Add Selected Products to Cart</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.SpecialDiscountAccess.Error">
+    <Value>You can apply only one special voucher to your order.</Value>
+  </LocaleResource>
+
+  <!--#region Admin emailable api configuration-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Emailable.Configure.Tab">
+    <Value>Emailable API configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsEmailVerification">
+    <Value>Emailable Verification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsEmailVerification.Hint">
+    <Value>Enable/Disable Email verification using E-mailable API.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.EmailableApi">
+    <Value>Emailable API</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.EmailableApi.Hint">
+    <Value>Please provide emailable API endpoint.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.EmailableApiKey">
+    <Value>API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.EmailableApiKey.Hint">
+    <Value>Please provide api key used for emailable api.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.EmailableApi.Validation.Message">
+    <Value>This email is not deliverable. Please enter a correct email address.</Value>
+  </LocaleResource>
+  <!--#end-->
+
+  <!--#region Admin password rest api configuration-->
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.PasswordReset.Configure.Tab">
+    <Value>Password Reset configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PasswordResetApi">
+    <Value>Password Reset API</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PasswordResetApi.Hint">
+    <Value>Please provide password reset API endpoint.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PasswordResetApiKey">
+    <Value>API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PasswordResetApiKey.Hint">
+    <Value>Please provide api key used for password reset api.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PasswordResetMessageTemplateId">
+    <Value>Message Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PasswordResetMessageTemplateId.Hint">
+    <Value>Select Message template which will be used for password reset message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsStagingModeForPasswordReset">
+    <Value>Stage Environment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsStagingModeForPasswordReset.Hint">
+    <Value>Check to add staging=true in password Api json body. Uncheck to exclude staging property from password reset Api json body.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsPasswordResetEnabled">
+    <Value>Password reset By SMS</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsPasswordResetEnabled.Hint">
+    <Value>Check to enable password reset by sms functionality. Uncheck to make disable functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.SendViaSmsButton">
+    <Value>Recover Via SMS</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.PasswordRecovery.SmsHasBeenSent">
+    <Value>Sms with instructions has been sent to you.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.PasswordRecovery.SmsError">
+    <Value>We are not able to sent sms right now, Try sometime later.</Value>
+  </LocaleResource>
+  <!--#end-->
+
+  <!--#region COpy link to clipboard-->
+  <LocaleResource Name="Annique.Plugin.ProductShare.LinkCopy.Clipboard.Message">
+    <Value>Product Link copied to clipboard</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.ProductShare.LinkCopy.Clipboard.FailureMessage">
+    <Value>Error copying link to clipboard</Value>
+  </LocaleResource>
+  <!--End-->
+
+  <!--#region Annique custom shipping rule Configuration-->
+
+  <LocaleResource Name="Admin.Configuration.CustomShippingRule.Added">
+    <Value>The new custom shipping rule has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.CustomShippingRule.AddNew">
+    <Value>Add a new custom shipping rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.CustomShippingRule.BackToList">
+    <Value>back to custom shipping rule list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.CustomShippingRule.Deleted">
+    <Value>The Custom shipping rule has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.CustomShippingRule.EditCustomShippingRuleDetails">
+    <Value>Edit Custom shipping rule details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.CustomShippingRule.Updated">
+    <Value>The custom shipping rule has been updated successfully.</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.AclCustomerRoles">
+    <Value>Limited to customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the rule will be applied.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.IsCustomShippingRule">
+    <Value>Custom Shipping rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsCustomShippingRule.Hint">
+    <Value>Enable/disable Custom shipping rule funtionality.If enabled then Custom shipping rule will be applied otherwise default shipping rule will be applied.</Value>
+  </LocaleResource>
+  <!--#end Annique custom shipping rule-->
+
+  <LocaleResource Name="ActivityLog.EditCustomerRole.RemoveClientRole">
+    <Value>Removed the CLIENT role from the customer roles as the customer was added as an affiliated link.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.PhoneNumber.Validation.Message">
+    <Value>Provided phone number already exist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.WhatsAppNumber.Validation.Message">
+    <Value>Provided Whatsapp number already exist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.PhoneNumberIsNotProvided">
+    <Value>Phone number not provided.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.QuickCheckoutPopUp.Title.LoginText">
+    <Value>Login or</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.QuickCheckoutPopUp.Title.RegisterText">
+    <Value>Register</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.CheckoutPopUp.LoginForm.Title">
+    <Value>Login</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.CheckoutPopUp.RegisterForm.Title">
+    <Value>Register As Customer</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.CheckoutPopUp.LoginForm.Submit.Button.Title">
+    <Value>Login</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.CheckoutPopUp.RegisterForm.Submit.Button.Title">
+    <Value>Register</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.Login.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.Name.Required">
+    <Value>This field is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.Register.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.Name.Required">
+    <Value>This field is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.Register.Fields.Phone">
+    <Value>Phone Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.Phone.Required">
+    <Value>The Phone number field is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.IsFullTextSearchEnabled">
+    <Value>Full Text Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsFullTextSearchEnabled.Hint">
+    <Value>Enable/disable Full Text Search funtionality.If enabled then Full text stored procedure will be used for searching otherwise default Nop search logic will be used.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Trip.Configure.Tab">
+    <Value>Trip Promotion Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsTripEnable">
+    <Value>Trip Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsTripEnable.Hint">
+    <Value>Check to enable Trip promotion message functionality. Uncheck to make disable functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TripStartDate">
+    <Value>Start Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TripStartDate.Hint">
+    <Value>Select start date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TripEndDate">
+    <Value>End Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TripEndDate.Hint">
+    <Value>Select End date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TripMessageTemplate">
+    <Value>Message Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.TripMessageTemplate.Hint">
+    <Value>Provide message to show on cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.QualifyingAmount">
+    <Value>Qualifying Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.QualifyingAmount.Hint">
+    <Value>Provide amount which required to qualify for trip.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="RegisterAsCustomer.Tooltip">
+    <Value>Register as Customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="RegisterAsConsultant.Tooltip">
+    <Value>Register as Consultant</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Consultant">
+    <Value>Register As a Consultant.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.PendingOrders">
+    <Value>Pending Orders</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.PendingOrders.Tooltip">
+    <Value>Complete payment for you pending orders</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Checkout.ShippingAddress.SearchAddressPlaceholder">
+    <Value>Search Address....</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Checkout.ShippingAddress.SearchButton.Text">
+    <Value>Search</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Checkout.ShippingAddress.Address.Line">
+    <Value>Address</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Chatbot.Configure.Tab">
+    <Value>Chatbot Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsChatbotEnable">
+    <Value>Chatbot Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsChatbotEnable.Hint">
+    <Value>Check to enable chatbot functionality. Uncheck to make disable functionality.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.OpenAIApiKey">
+    <Value>OpenAI Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.OpenAIApiKey.Hint">
+    <Value>Provide OpenAI api key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PromptTemplate">
+    <Value>Prompt Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PromptTemplate.Hint">
+    <Value>Provide Promt template which will be used for Ai</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.SelectedChatbotAccessRoleIds">
+    <Value>Access Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.SelectedChatbotAccessRoleIds.Hint">
+    <Value>Select customer roles who can access chatbot feature</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.OriginalMessage">
+    <Value>Original Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.OriginalMessage.Hint">
+    <Value>Original Message requested by user.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.AiResponse">
+    <Value>Ai Response</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.AiResponse.Hint">
+    <Value>Response which retured by open ai.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.Status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.Status.Hint">
+    <Value>Status given by customer was response helpful or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.CreatedOnUtc">
+    <Value>CreatedOnUtc</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.CreatedOnUtc.Hint">
+    <Value>Time of feedback given by customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.Username.Hint">
+    <Value>Username of customer who has given feedback.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.IpAddress">
+    <Value>IpAddress</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ChatFeedbackModel.Fields.IpAddress.Hint">
+    <Value>Customer IpAddress.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.Chatfeedback.BackToList">
+    <Value>back to feedback list</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.CustomCSS">
+    <Value>Css</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.CustomCSS.Hint">
+    <Value>CSS for consultant registration page sections</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.CustomJS">
+    <Value>Js</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.CustomJS.Hint">
+    <Value>Custom js for consultant registration page sections</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.TopSectionPublished">
+    <Value>Top Section Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.TopSectionPublished.Hint">
+    <Value>Check to show the top section on the consultant registration page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.TopSectionBody">
+    <Value>Top Section Content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.TopSectionBody.Hint">
+    <Value>HTML or text content for the top section of the page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.LeftSectionPublished">
+    <Value>Left Section Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.LeftSectionPublished.Hint">
+    <Value>Check to show the left section on the consultant registration page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.LeftSectionBody">
+    <Value>Left Section Content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.LeftSectionBody.Hint">
+    <Value>HTML or text content for the left section of the page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.BottomSectionPublished">
+    <Value>Bottom Section Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.BottomSectionPublished.Hint">
+    <Value>Check to show the bottom section on the consultant registration page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.Consultant.Registration.BottomSectionBody">
+    <Value>Bottom Section Content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Consultant.Registration.BottomSectionBody.Hint">
+    <Value>HTML or text content for the bottom section of the page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.RegistrationPageSettings">
+    <Value>Registration Page Setting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.RegistrationPageSettings.Tab">
+    <Value>Registration Page Setting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.PageSetting.Saved">
+    <Value>Registration Page Setting has been saved.</Value>
+  </LocaleResource>
+
+  <!-- Labels for Model -->
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.FirstName">
+    <Value>First Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.FirstName.Hint">
+    <Value>Firstname of consultant.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.LastName">
+    <Value>Last Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.LastName.Hint">
+    <Value>Last name of consultant</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Title.Hint">
+    <Value>Selected Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Email.Hint">
+    <Value>consultant's Email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.ConfirmEmail">
+    <Value>Confirm Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Cell">
+    <Value>Cell</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Cell.Hint">
+    <Value>consultant's Cell.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Whatsapp">
+    <Value>WhatsApp Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Whatsapp.Hint">
+    <Value>consultant's Whatsapp.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Language.Hint">
+    <Value>consultant's Selected Language.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Postcode">
+    <Value>Post Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Postcode.Hint">
+    <Value>consultant's Postcode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.BestTimeToCall">
+    <Value>Best Time to Call</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.BestTimeToCall.Hint">
+    <Value>Selected best time to call.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Reason">
+    <Value>Reason for Joining</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Reason.Hint">
+    <Value>Selected reason for joining</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.HeardAbout">
+    <Value>Hear About Us</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.HeardAbout.Hint">
+    <Value>Selected hear about us</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Sponsor">
+    <Value>Sponsor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Sponsor.Hint">
+    <Value>consultant's sponser.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Status.Hint">
+    <Value>Registration status(Valid , invalid , new).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.IPAddress">
+    <Value>IP Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.IPAddress.Hint">
+    <Value>consultant's IP address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Browser">
+    <Value>Browser</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Browser.Hint">
+    <Value>consultant's Browser url.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.CreatedOnUtc">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.CreatedOnUtc.Hint">
+    <Value>Date and time when consultant created on.</Value>
+  </LocaleResource>
+
+  <!-- Validation Error Messages -->
+  <LocaleResource Name="Account.Register.Fields.FirstName.Required">
+    <Value>First name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.LastName.Required">
+    <Value>Last name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.Whatsapp.Required">
+    <Value>Whatsapp number is required.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Account.Register.Fields.Postcode.Required">
+    <Value>Post code is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.Title.Required">
+    <Value>Please select your title.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.Language.Required">
+    <Value>Please select a language.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.BestTimeToCall.Required">
+    <Value>Please select the best time to call.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.Reason.Required">
+    <Value>Please select your reason for joining.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Fields.HeardAbout.Required">
+    <Value>Please select how you heard about us.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.RegistrationValidationApiEndPoint">
+    <Value>Registration Validation API Endpoint</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.RegistrationValidationApiEndPoint.Hint">
+    <Value>Enter the endpoint URL for the registration validation API.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.RegistrationValidationApiKey">
+    <Value>Registration Validation API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.RegistrationValidationApiKey.Hint">
+    <Value>Enter the API key used to authenticate with the validation service.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.PostRedirectUrl">
+    <Value>Post Registration Redirect Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.PostRedirectUrl.Hint">
+    <Value>Enter the Url on which user will be redirected after loggedin.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.IsNopConsultantRegistration">
+    <Value>Nop Based Consultant Registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsNopConsultantRegistration.Hint">
+    <Value>Enable this setting to use the NOP-based consultant registration URL (/consultant-register) for the consultant link on the login page. If disabled, the system will use the legacy consultant registration URL (/new-consultant-registration)</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Fields.IsAdminAccessUrl">
+    <Value>Enable Url Access for Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Annique.Plugin.Fields.IsAdminAccessUrl.Hint">
+    <Value>Enable this setting to allow access url for consultant registration page for admins.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Fullname">
+    <Value>Full Name</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ConsultantRegistration.Fields.Country.Hint">
+    <Value>consultant's country.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Annique.Plugin.Nop.Customization.ConsultantRegistrationList.BackToList">
+    <Value>Back to Consultant Registartion List</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Consultant.Registration.FallbackError">
+    <Value>An unexpected error occurred during Registration. Try again later.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.Registration.Welcome.FallbackMessage">
+    <Value>Welcome to Rooibos!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.Registration.Warning.FallbackMessage">
+    <Value>Already registered. Thank you for your interest...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.RegistrationForm.Title">
+    <Value>Registration Form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.RegistrationForm.SubmitButton.Text">
+    <Value>Start Earning Today!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.RegistrationForm.Popup.ContinueButton.Text">
+    <Value>Continue</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.RegistrationForm.Popup.Close.Text">
+    <Value>Close</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.RegistrationForm.Popup.Success.Title">
+    <Value>Welcome to Annique Rooibos</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.RegistrationForm.Popup.Warning.Title">
+    <Value>Please fix the following Errors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Consultant.Registration.Affiliate.Welcome.Message">
+    <Value>{0} welcomes you!</Value>
+  </LocaleResource>
+</Language>

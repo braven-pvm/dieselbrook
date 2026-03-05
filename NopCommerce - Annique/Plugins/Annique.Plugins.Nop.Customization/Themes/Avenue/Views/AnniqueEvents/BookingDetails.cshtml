@@ -1,0 +1,373 @@
+﻿@model BookingDetailsModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.BookingList").Text);
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-eventbook-page");
+
+    var newBookingItemModel = new BookingDetailsModel.BookingItemsModel();
+    newBookingItemModel.EventId = Model.EventId;
+}
+<link rel="stylesheet" href="~/Plugins/Annique.Customization/Content/css/annique.css" />
+<script asp-exclude-from-bundle="true" src="~/Plugins/Annique.Customization/Content/js/bootstrap.bundle.min.js" asp-location="Footer"></script>
+
+@if (Model.ShowBookForSelfPopUp)
+{
+    <script asp-location="Footer">
+        $(window).load(function () {
+            $("#selfBook").trigger('click');
+        });
+    </script>
+}
+<div class="event-booking-page">
+    <div class="page-title">
+        <h1>
+            @T("PageTitle.BookingList")
+        </h1>
+    </div>
+    <h2 class="event-title">@Model.EventName</h2>
+    <div class="event-wrapper">
+        <div class="your-booking-wrappper">
+            <div class="event-booking-title">
+                <h3>@T("AnniqueEvents.EventBooking.BookingText")</h3>
+            </div>
+            <div class="booking-btn-wrapper">
+                <div class="add-event-btn">
+                    <button type="button" class="button-1" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg1"></button>
+                </div>
+                <div class="confirm-event-btn-wrapper">
+                    @if (Model.Items.Count > 0 && Model.Items.Any(b => b.OrderId == 0))
+                    {
+                        @if (Model.IsFreeTicket)
+                        {
+                            <button type="button" onclick="ConfirmCustomerFreeBooking(@(Model.EventId))">
+                                @T("AnniqueEvents.EventBooking.ConfirmButton")
+                            </button>
+                        }
+                        else
+                        {
+                            <a href="@Url.RouteUrl("ShoppingCart")">@T("AnniqueEvents.EventBooking.ConfirmCheckoutButton")</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <table class="data-table event-cart-table">
+            <colgroup>
+                <col width="1" class="footable-element" />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col width="1" />
+            </colgroup>
+            <thead>
+                <tr class="cart-table-row">
+                    <th class="footable-element index-cell">
+                        <span class="item-count">#</span>
+                    </th>
+                    <th class="remove-from-cart consultant-cell" data-hide="w410, w480, w580">
+                        @T("AnniqueEvents.EventBooking.Consultant")
+                    </th>
+                    <th class="customert-cell">
+                        @T("AnniqueEvents.EventBooking.Name")
+                    </th>
+                    <th class="order-cell" data-hide="w410, w480, w580, w768, w980, w1000">
+                        @T("AnniqueEvents.EventBooking.Order")
+                    </th>
+                    <th class="confirmed-order-cell" data-hide="w410, w480, w580, w768, w980, w1000">
+                        @T("AnniqueEvents.EventBooking.Confirmed")
+                    </th>
+                    <th class="product action-cell">
+                        @T("AnniqueEvents.EventBooking.Action")
+                    </th>
+                </tr>
+            </thead>
+            @if (Model.Items.Count > 0)
+            {
+                <tbody>
+                    @{
+                        var counter = 0;
+                    }
+                    @for (var i = 0; i < Model.Items.Count; i++)
+                    {
+                        counter++;
+                        var booking = Model.Items[i];
+                        <tr class="cart-item-row">
+                            <td class="footable-element index">
+                                <span class="item-count">@counter</span>
+                            </td>
+                            <td class="consultant-number">
+                                <span class="sku-number">@booking.Consultant</span>
+                            </td>
+                            <td class="booking-name">
+                                <span class="sku-number">@booking.Name</span>
+                            </td>
+                            <td class="booking-id">
+                                @if (booking.OrderId == 0)
+                                {
+                                    <span class="shopppingcart-icon"></span>
+                                }
+                                else
+                                {
+                                    <span class="sku-number">@booking.OrderId</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(booking.Confirmed))
+                                {
+                                    <span class="confirmed-icon"></span>
+                                }
+                            </td>
+                            <td>
+                                @if (booking.OrderId == 0 && booking.IsPrimaryRegistrant)
+                                {
+                                    <div class="action-btn-wrapper">
+                                        <button type="button" class="event-edit-btn"></button>
+                                        <button type="button" class="event-trash-btn" onclick="DeleteCustomerBooking(@(booking.Id))"></button>
+                                    </div>
+                                }
+                                @if (booking.OrderId == 0 && !booking.IsPrimaryRegistrant)
+                                {
+                                    <div class="action-btn-wrapper">
+                                        <button type="button" class="event-edit-btn" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg1-@booking.Id"></button>
+                                        <button type="button" class="event-trash-btn" onclick="DeleteCustomerBooking(@(booking.Id))"></button>
+                                    </div>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else
+            {
+                <tbody>
+                    <tr>
+                        <td>
+                            @T("AnniqueEvents.EventBooking.NoBookingMessage")
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+</div>
+<!--Update Modal -->
+@if (Model.Items.Count > 0)
+{
+    @for (var i = 0; i < Model.Items.Count; i++)
+    {
+        var booking = Model.Items[i];
+        <div class="modal fade bd-example-modal-lg1-@booking.Id edit-event-modelWrapper" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content edit-booking-event common-eventpopup-wrap">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="exampleModalLabel">@T("AnniqueEvents.EventBooking.EditBookingModalTitle")</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                    </div>
+                    <form id="booking-edit-form-@booking.Id">
+                        <div class="modal-body">
+                            @{
+                                @await Html.PartialAsync("_CreateOrUpdateBooking",booking)
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <button class="button-1 save-booking" type="button" onclick="UpdateCustomerBooking(@(booking.Id))">@T("Common.Save")</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
+<!--End Modal-->
+<!--Add Modal -->
+<div class="modal fade bd-example-modal-lg1 add-event-modelWrapper" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content add-booking-event common-eventpopup-wrap">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="exampleModalLabel">@T("AnniqueEvents.EventBooking.AddBookingModalTitle")</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <form id="booking-add-form">
+                <div class="modal-body">
+                    @{
+                        @await Html.PartialAsync("_CreateOrUpdateBooking",newBookingItemModel)
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button-1 save-booking" onclick="SaveCustomerBooking()">@T("Common.Save")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal-->
+<!--Book for self Modal -->
+<div class="modal fade bd-example-modal-lg1-s bookforself-modelWrapper" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content bookforself-event common-eventpopup-wrap">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="exampleModalLabel">@T("AnniqueEvents.EventBooking.BookForYourselfModalTitle")</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <form asp-controller="AnniqueEvents" asp-action="BookForSelf" method="post">
+                <input type="hidden" id="eventId" value="@Model.EventId" name="eventId" />
+                <div class="modal-body">
+                    <span class="checked-logo"></span>
+                    <span>@T("AnniqueEvents.EventBooking.BookForYourself.ModalBody")</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="button-1 book-now">@T("AnniqueEvents.EventBooking.BookForYourselfModal.BookNow")</button>
+                    <button type="button" class="button-1 cancel-btn" data-bs-dismiss="modal">@T("AnniqueEvents.EventBooking.BookForYourselfModal.Cancle")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<button type="button" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg1-s" style="display:none" id="selfBook"></button>
+<!-- End Modal-->
+
+<script asp-location="Footer">
+    $('.add-event-modelWrapper').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+        $("#booking-add-form").find("#NameError").hide();
+        $("#booking-add-form").find("#ConsultantError").hide();
+    });
+
+    $('.edit-event-modelWrapper').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+        $(this).find('form').find("#NameError").hide();
+        $(this).find('form').find("#ConsultantError").hide();
+    });
+    function ConfirmCustomerFreeBooking(id) {
+        var postData = {
+            eventId: id
+        };
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.Action("ConfirmFreeEvent", "AnniqueEvents")",
+            data: postData,
+            dataType: "json",
+            success: function (data, textStatus, jqXHR) {
+                if (data.success) {
+                    location.href = data.redirect;
+                }
+
+                if (data.error) {
+                    if (typeof data.message === 'string') {
+                        alert(data.message);
+                    } else {
+                        alert(data.message.join("\n"));
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Failed to place order');
+            }
+        });
+    }
+
+    function DeleteCustomerBooking(id) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                bookingId: id
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("BookingDelete", "AnniqueEvents")",
+                data: postData,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    location.href = data.redirect;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed to delete');
+                }
+            });
+        }
+    }
+
+    function SaveCustomerBooking() {
+        var consultant = $("#booking-add-form").find("#Consultant").val();
+        if (consultant == "") {
+            var name = $("#booking-add-form").find("#Name").val();
+            if (name == "") {
+                $("#booking-add-form").find("#NameError").show();
+                return;
+            }
+        }
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.Action("BookingAdd", "AnniqueEvents")",
+            data: $("#booking-add-form").serialize(),
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    location.href = data.redirect;
+                }
+                else {
+                    if (data.message != undefined) {
+                        $("#booking-add-form").find("#ConsultantError").html(data.message).show();
+                    }
+
+                    if (data.error != undefined) {
+                        alert(data.error);
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Failed to Add');
+            }
+        });
+    }
+
+    function UpdateCustomerBooking(id) {
+        var consultant = $("#booking-edit-form-" + id).find("#Consultant").val();
+        if (consultant == "") {
+            var name = $("#booking-edit-form-" + id).find("#Name").val();
+
+            if (name == "") {
+                $("#booking-edit-form-" + id).find("#NameError").show();
+                return;
+            }
+        }
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.Action("BookingUpdate", "AnniqueEvents")",
+            data: $("#booking-edit-form-" + id).serialize(),
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    location.href = data.redirect;
+                }
+                else {
+                    if (data.message != undefined) {
+                        $("#booking-edit-form-" + id).find("#ConsultantError").html(data.message).show();
+                    }
+                    if (data.error != undefined) {
+                        alert(data.error);
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Failed to update');
+            }
+        });
+    }
+</script>

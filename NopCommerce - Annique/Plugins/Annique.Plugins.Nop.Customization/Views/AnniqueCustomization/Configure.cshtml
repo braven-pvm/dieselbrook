@@ -1,0 +1,712 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_AdminLayout";
+
+    var customer = await workContext.GetCurrentCustomerAsync();
+
+    const string hideInfoBlockAttributeName = "Configure.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hidePickUpStoreInfo = "Configure.HidePickUpStoreInfoBlock";
+    var hidePickUpStoreBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePickUpStoreInfo);
+
+    const string hideInfoBlockCustomerInfo = "Configure.HideCustomerInfoBlock";
+    var HideCustomerInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockCustomerInfo);
+
+    const string hideShippingAddressValidation = "Configure.HideShippingAddressValidationBlock";
+    var hideShippingAddressValidationBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShippingAddressValidation);
+
+    const string hideInfoBlockExclusiveItemInfo = "Configure.HideCustomerInfoBlock";
+    var HideExclusiveItemInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockExclusiveItemInfo);
+
+    const string hideInfoBlockUserProfileInfo = "Configure.HideUserProfileInfoBlock";
+    var HideUserProfileInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockUserProfileInfo);
+
+    const string hideInfoBlockReport = "Configure.HideReportInfoBlock";
+    var HideReportInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockReport);
+
+    const string hideInfoBlockLoginTime = "Configure.HideLoginInfoBlock";
+    var HideLoginInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockLoginTime);
+
+    const string hideInfoBlockOtp = "Configure.HideOtpInfoBlock";
+    var HideOtpInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockOtp);
+
+    const string hideInfoBlockAdminCustomerInfo = "Configure.HideAdminCustomerInfoBlock";
+    var HideAdminCustomerInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAdminCustomerInfo);
+
+    const string hideProductAlsoPurchaseInfo = "Configure.HideProductAlsoPurchaseInfoBlock";
+    var HideProductAlsoPurchaseInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideProductAlsoPurchaseInfo);
+
+    const string hideEmailableInfo = "Configure.HideEmailableInfoBlock";
+    var HideEmailableInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideEmailableInfo);
+
+    const string hidePasswordResetInfo = "Configure.HidePasswordResetInfoBlock";
+    var HidePasswordResetInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePasswordResetInfo);
+
+    const string hideInfoBlockTrip = "Configure.HideTripInfoBlock";
+    var HideTripInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockTrip);
+
+    const string hideInfoBlockChatbot = "Configure.HideChatbotInfoBlock";
+    var HideChatbotInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockChatbot);
+
+    const string hideInfoBlockConsultantRegistration = "Configure.HideConsultantRegistrationInfoBlock";
+    var HideConsultantRegistrationInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockConsultantRegistration);
+
+    ViewBag.PageTitle = T("Annique.Plugin.Nop.Customization.Configure").Text;
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.Configure");
+
+    const int maxTextAreaRows = 10;
+    const int minTextAreaRows = 5;
+
+    int GetAreaRows(string rows)
+    {
+        if (string.IsNullOrEmpty(rows))
+            return 1;
+
+        var rowsCount = rows.Split(Environment.NewLine).Length;
+
+        return rowsCount switch
+        {
+            0 => 1,
+            < 10 => minTextAreaRows,
+            _ => maxTextAreaRows
+        };
+    }
+}
+
+<form asp-controller="AnniqueCustomization" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Annique.Plugin.Nop.Customization.Configure")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    <section class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+            <nop-cards id="theme-panels">
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
+
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsEnablePlugin_OverrideForStore" asp-input="IsEnablePlugin" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsEnablePlugin" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsEnablePlugin" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CustomCacheExpireTime_OverrideForStore" asp-input="CustomCacheExpireTime" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CustomCacheExpireTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CustomCacheExpireTime" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsDefaultCountryIdEnabled_OverrideForStore" asp-input="IsDefaultCountryIdEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsDefaultCountryIdEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsDefaultCountryIdEnabled" />
+                            </div>
+                        </div>
+
+                        <nop-nested-setting asp-for="IsDefaultCountryIdEnabled">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DefaultCountryId_OverrideForStore" asp-input="DefaultCountryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DefaultCountryId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="DefaultCountryId" asp-items="@Model.AvailableCountries" />
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsCustomShippingRule_OverrideForStore" asp-input="IsCustomShippingRule" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsCustomShippingRule" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsCustomShippingRule" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsFullTextSearchEnabled_OverrideForStore" asp-input="IsFullTextSearchEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsFullTextSearchEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsFullTextSearchEnabled" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.PickUpCollection.Configure.Tab")" asp-hide-block-attribute-name="@hidePickUpStoreInfo" asp-hide="@hidePickUpStoreBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsPickUpCollection_OverrideForStore" asp-input="IsPickUpCollection" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsPickUpCollection" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsPickUpCollection" />
+                            </div>
+                        </div>
+
+                        <nop-nested-setting asp-for="IsPickUpCollection">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PickUpStoreRadius_OverrideForStore" asp-input="PickUpStoreRadius" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PickUpStoreRadius" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="PickUpStoreRadius" />
+                                    <span asp-validation-for="PickUpStoreRadius"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="GeoLocationApiUsername_OverrideForStore" asp-input="GeoLocationApiUsername" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="GeoLocationApiUsername" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="GeoLocationApiUsername" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PickupCustomAttributeId_OverrideForStore" asp-input="PickupCustomAttributeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PickupCustomAttributeId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="PickupCustomAttributeId" asp-items="@Model.AvailableAddressCustomAttributes" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="CustomerRoleIdsForPickup_OverrideForStore" asp-input="SelectedCustomerRoleIdsForPickup" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SelectedCustomerRoleIdsForPickup" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedCustomerRoleIdsForPickup" asp-items="@Model.AvailableCustomerRoles" asp-multiple="true" />
+                                    <script asp-location="Footer">
+                                        $(document).ready(function () {
+                                            var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIdsForPickup)').data("kendoMultiSelect");
+                                            customerRoleIdsInput.setOptions({
+                                                autoClose: false,
+                                                filter: "contains"
+                                            });
+
+                                        @if (Model.AvailableCustomerRoles.Count == 0)
+                                        {
+                                            <text>
+                                                                    customerRoleIdsInput.setOptions({
+                                                                    enable: false,
+                                                                    placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                                                    });
+                                                                    customerRoleIdsInput._placeholder();
+                                                                    customerRoleIdsInput._enable();
+                                            </text>
+                                        }
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.StaffCustomerRoleOrder.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockCustomerInfo" asp-hide="@HideCustomerInfoBlock" asp-advanced="false">
+
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CustomerRoleId_OverrideForStore" asp-input="CustomerRoleId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CustomerRoleId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="CustomerRoleId" asp-items="@Model.AvailableCustomerRoles" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TotalOrderNo_OverrideForStore" asp-input="TotalOrderNo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TotalOrderNo" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TotalOrderNo" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="OrderAmountLimit_OverrideForStore" asp-input="OrderAmountLimit" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="OrderAmountLimit" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="OrderAmountLimit" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.ShippingAddressValidation.Tab")" asp-hide-block-attribute-name="@hideShippingAddressValidation" asp-hide="@hideShippingAddressValidationBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShippingAddressValidationApi_OverrideForStore" asp-input="ShippingAddressValidationApi" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShippingAddressValidationApi" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShippingAddressValidationApi" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.ExclusiveItems.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockExclusiveItemInfo" asp-hide="@HideExclusiveItemInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExclusiveItemsCategoryId_OverrideForStore" asp-input="ExclusiveItemsCategoryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExclusiveItemsCategoryId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ExclusiveItemsCategoryId" asp-items="@Model.AvailableCategories" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.ConsultantRole.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockUserProfileInfo" asp-hide="@HideUserProfileInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ConsultantRoleId_OverrideForStore" asp-input="ConsultantRoleId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ConsultantRoleId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ConsultantRoleId" asp-items="@Model.AvailableCustomerRoles" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Report.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockReport" asp-hide="@HideReportInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ReportScripts_OverrideForStore" asp-input="ReportScripts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ReportScripts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="ReportScripts" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ReportCommonJs_OverrideForStore" asp-input="ReportCommonJs" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ReportCommonJs" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="ReportCommonJs" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.LoginTimeLimit.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockLoginTime" asp-hide="@HideLoginInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="LoginTimeLimit_OverrideForStore" asp-input="LoginTimeLimit" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="LoginTimeLimit" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="LoginTimeLimit" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Otp.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockOtp" asp-hide="@HideOtpInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsOTP_OverrideForStore" asp-input="IsOTP" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsOTP" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsOTP" />
+                            </div>
+                        </div>
+
+                        <nop-nested-setting asp-for="IsOTP">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="OTPApiUrl_OverrideForStore" asp-input="OTPApiUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="OTPApiUrl" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="OTPApiUrl" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IsStageEnvType_OverrideForStore" asp-input="IsStageEnvType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IsStageEnvType" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IsStageEnvType" />
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.AdminCustomer.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockAdminCustomerInfo" asp-hide="@HideAdminCustomerInfoBlock" asp-advanced="false">
+
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AdminCustomerId_OverrideForStore" asp-input="AdminCustomerId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AdminCustomerId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="AdminCustomerId" asp-items="@Model.AvailableAdminCustomers" />
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.ProductAlsoPuchased.Configure.Tab")" asp-hide-block-attribute-name="@hideProductAlsoPurchaseInfo" asp-hide="@HideProductAlsoPurchaseInfoBlock" asp-advanced="false">
+
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExcludedCategoryIds_OverrideForStore" asp-input="SelectedExcludeCategoryIds" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SelectedExcludeCategoryIds" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="SelectedExcludeCategoryIds" asp-items="@Model.AvailableCategories" asp-multiple="true" />
+                                <script asp-location="Footer">
+                                    $(document).ready(function () {
+                                        var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedExcludeCategoryIds)').data("kendoMultiSelect");
+                                        categoryIdsInput.setOptions({
+                                            autoClose: false,
+                                            filter: "contains"
+                                        });
+
+                                    @if (Model.AvailableCategories.Count == 0)
+                                    {
+                                        <text>
+                                                        categoryIdsInput.setOptions({
+                                                            enable: false,
+                                                        placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")'
+                                                                                                });
+                                                        categoryIdsInput._placeholder();
+                                                        categoryIdsInput._enable();
+                                        </text>
+                                    }
+                                                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.PasswordReset.Configure.Tab")" asp-hide-block-attribute-name="@hidePasswordResetInfo" asp-hide="@HidePasswordResetInfoBlock" asp-advanced="false">
+
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsPasswordResetEnabled_OverrideForStore" asp-input="IsPasswordResetEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsPasswordResetEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsPasswordResetEnabled" />
+                            </div>
+                        </div>
+
+                        <nop-nested-setting asp-for="IsPasswordResetEnabled">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IsStagingModeForPasswordReset_OverrideForStore" asp-input="IsStagingModeForPasswordReset" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IsStagingModeForPasswordReset" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IsStagingModeForPasswordReset" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PasswordResetApi_OverrideForStore" asp-input="PasswordResetApi" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PasswordResetApi" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="PasswordResetApi" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PasswordResetApiKey_OverrideForStore" asp-input="PasswordResetApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PasswordResetApiKey" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="PasswordResetApiKey" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PasswordResetSmsMessageTemplateId_OverrideForStore" asp-input="PasswordResetSmsMessageTemplateId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PasswordResetSmsMessageTemplateId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="PasswordResetSmsMessageTemplateId" asp-items="@Model.AvailableMessageTemplates" />
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Emailable.Configure.Tab")" asp-hide-block-attribute-name="@hideEmailableInfo" asp-hide="@HideEmailableInfoBlock" asp-advanced="false">
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="IsEmailVerification_OverrideForStore" asp-input="IsEmailVerification" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="IsEmailVerification" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="IsEmailVerification" />
+                        </div>
+                    </div>
+                    <nop-nested-setting asp-for="IsEmailVerification">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EmailableApi_OverrideForStore" asp-input="EmailableApi" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EmailableApi" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EmailableApi" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EmailableApiKey_OverrideForStore" asp-input="EmailableApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EmailableApiKey" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EmailableApiKey" />
+                            </div>
+                        </div>
+
+                    </nop-nested-setting>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Trip.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockTrip" asp-hide="@HideTripInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsTripEnable_OverrideForStore" asp-input="IsTripEnable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsTripEnable" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsTripEnable" />
+                            </div>
+                        </div>
+
+                        <nop-nested-setting asp-for="IsTripEnable">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="TripStartDate_OverrideForStore" asp-input="TripStartDate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="TripStartDate" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="TripStartDate" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="TripEndDate_OverrideForStore" asp-input="TripEndDate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="TripEndDate" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="TripEndDate" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="QualifyingAmount_OverrideForStore" asp-input="QualifyingAmount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="QualifyingAmount" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="QualifyingAmount" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="TripMessageTemplate_OverrideForStore" asp-input="TripMessageTemplate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="TripMessageTemplate" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="TripMessageTemplate" />
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.Chatbot.Configure.Tab")" asp-hide-block-attribute-name="@hideInfoBlockChatbot" asp-hide="@HideChatbotInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsChatbotEnable_OverrideForStore" asp-input="IsChatbotEnable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsChatbotEnable" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsChatbotEnable" />
+                            </div>
+                        </div>
+
+                        <nop-nested-setting asp-for="IsChatbotEnable">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="OpenAIApiKey_OverrideForStore" asp-input="OpenAIApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="OpenAIApiKey" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="OpenAIApiKey" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PromptTemplate_OverrideForStore" asp-input="PromptTemplate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PromptTemplate" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-textarea rows="@GetAreaRows(Model.PromptTemplate)" asp-for="@Model.PromptTemplate"></nop-textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ChatbotAccessRoles_OverrideForStore" asp-input="SelectedChatbotAccessRoleIds" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SelectedChatbotAccessRoleIds" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedChatbotAccessRoleIds" asp-items="@Model.AvailableCustomerRoles" asp-multiple="true" />
+                                    <script asp-location="Footer">
+                                        $(document).ready(function () {
+                                            var chatbotCustomerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedChatbotAccessRoleIds)').data("kendoMultiSelect");
+                                            chatbotCustomerRoleIdsInput.setOptions({
+                                                autoClose: false,
+                                                filter: "contains"
+                                            });
+
+                                        @if (Model.AvailableCustomerRoles.Count == 0)
+                                        {
+                                            <text>
+                                                                            chatbotCustomerRoleIdsInput.setOptions({
+                                                                        enable: false,
+                                                                        placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                                                        });
+                                                                            chatbotCustomerRoleIdsInput._placeholder();
+                                                                            chatbotCustomerRoleIdsInput._enable();
+                                            </text>
+                                        }
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+
+
+                        </nop-nested-setting>
+
+                    </div>
+                </nop-card>
+
+                <nop-card asp-name="theme-general" asp-icon="fas fa-info" asp-title="@T("Annique.Plugin.Nop.Customization.ConsultantRegistrationList.Tab")" asp-hide-block-attribute-name="@hideInfoBlockConsultantRegistration" asp-hide="@HideConsultantRegistrationInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsNopConsultantRegistration_OverrideForStore" asp-input="IsNopConsultantRegistration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsNopConsultantRegistration" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsNopConsultantRegistration" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsAdminAccessUrl_OverrideForStore" asp-input="IsAdminAccessUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsAdminAccessUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsAdminAccessUrl" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="RegistrationValidationApiEndPoint_OverrideForStore" asp-input="RegistrationValidationApiEndPoint" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="RegistrationValidationApiEndPoint" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RegistrationValidationApiEndPoint" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="RegistrationValidationApiKey_OverrideForStore" asp-input="RegistrationValidationApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="RegistrationValidationApiKey" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RegistrationValidationApiKey" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PostRedirectUrl_OverrideForStore" asp-input="PostRedirectUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PostRedirectUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PostRedirectUrl" />
+                            </div>
+                        </div>
+
+                    </div>
+                </nop-card>
+
+            </nop-cards>
+        </div>
+    </section>
+</form>

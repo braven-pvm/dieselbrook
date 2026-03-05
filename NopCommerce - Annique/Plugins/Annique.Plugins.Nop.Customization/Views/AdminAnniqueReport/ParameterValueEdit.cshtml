@@ -1,0 +1,39 @@
+﻿@model ReportParameterValueModel
+@{
+    Layout = "_AdminPopupLayout";
+}
+
+@{
+    ViewBag.PageTitle = T("Admin.Configuration.AnniqueReports.ParameterValues.Field.Edit").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Annique.Plugin.Nop.Customization.Report");
+}
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try { window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click(); }
+        catch (e) { }
+        window.close();
+    </script>
+}
+<input asp-for="@Model.ReportParameterId" type="hidden" />
+<form asp-controller="AdminAnniqueReport" asp-action="ParameterValueEdit" method="post"
+      asp-route-ReportParameterId="@Context.Request.Query["ReportParameterId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]"
+      id="parameter-value-form">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.AnniqueReports.ParameterValues.Field.Edit") - @Model.Name
+
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate.ParameterValue.cshtml", Model)
+</form>

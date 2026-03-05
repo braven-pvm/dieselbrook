@@ -1,0 +1,35 @@
+﻿@model ReportParameterValueModel
+
+<input asp-for="@Model.ReportParameterId" type="hidden" />
+<div class="card-body">
+
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" asp-required="true" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsPreSelected" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsPreSelected" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-sm-9">
+            <nop-editor asp-for="DisplayOrder" />
+        </div>
+    </div>
+
+</div>
