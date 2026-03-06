@@ -25,20 +25,22 @@
 12. [Reference: Table & Key Data Reference](#12-reference-table--key-data-reference)
 13. [Reference: Trigger Architecture](#13-reference-trigger-architecture)
 14. [Reference: MLM & Campaign Systems](#14-reference-mlm--campaign-systems)
+15. [Reference: Discovery Workshop Notes (WS1)](#15-reference-discovery-workshop-notes-ws1)
 
 ---
 
 ## 1. Executive Summary
 
-Annique operates a **heavily customised AccountMate v7.x ERP** on SQL Server 2014, with NopCommerce as the current customer webstore. The two systems communicate via a **middleware service at `nopintegration.annique.com`** — a black box that the ERP wakes up by firing empty HTTP POSTs ("doorbell" calls). The middleware then reads the ERP database directly using its own SQL credentials and pushes changes to NopCommerce.
+Annique operates a **heavily customised AccountMate v7.x ERP** on SQL Server 2014, with NopCommerce as the current customer webstore. The two systems communicate via a **three-tier middleware stack**: (1) `nopintegration.annique.com` — a **Visual FoxPro Web Connection** application (source code obtained: `NISource/`) — woken by empty HTTP POST "doorbell" calls from the ERP; (2) `annique.com/api-backend/` — a **ASP.NET 8 REST API** (`AnqIntegrationApiSource/`) that the VFP tier calls via JWT; and (3) a **massive NopCommerce plugin** (`Annique.Plugins.Nop.Customization`, 280+ custom files) that handles storefront behaviour.
 
-**The key migration insight:** replacing NopCommerce with Shopify means building a new middleware service that replicates everything `nopintegration.annique.com` does internally — a task that currently cannot be scoped because that service's source code, logic, and DB credentials are unknown.
+**The key migration insight:** replacing NopCommerce with Shopify means building a new middleware service that replicates everything `nopintegration.annique.com` and `annique.com/api-backend/` do — a task now fully scopeable since all three source codebases have been obtained and analysed.
 
 ### Critical Immediate Actions (pre-migration)
 | Priority | Item |
 |---|---|
+| 🔴 URGENT | Rotate SA credentials `sa`/`AnniQu3S@` (AccountMate) and `sa`/`Difficult1` (NopCommerce) — hardcoded **SA (system administrator)** credentials found in `NISource/syncproducts.prg` |
 | 🔴 URGENT | Rotate Namibia backoffice admin password — plaintext credentials found hardcoded in `sp_ws_UpdateImage` |
-| 🔴 BLOCKER | Obtain source code / owner of `nopintegration.annique.com` — migration cannot be scoped without it |
+| ✅ RESOLVED | ~~Obtain source code / owner of `nopintegration.annique.com`~~ — Source obtained: VFP Web Connection (`NISource/`). Full logic documented in Sections 3–4. |
 | 🟠 HIGH | Confirm whether `amanniquenam` (Namibia ERP) is actively used — changes migration scope significantly |
 | 🟠 HIGH | Get production server access to read SQL Agent job schedules |
 | 🟠 HIGH | Decide on Shopify Plus (B2B) vs standard — drives exclusive items and campaign pricing approach |
@@ -80,17 +82,24 @@ Annique operates a **heavily customised AccountMate v7.x ERP** on SQL Server 201
          ▲                       ▲
          │  HTTP (doorbell POST) │  HTTP (doorbell POST + direct SQL)
          │                       │
-┌────────┴───────────────────────────────────────────────────────┐
-│  nopintegration.annique.com  │  shopapi.annique.com            │
-│  (Black box — own SQL creds) │  (staff sync — black box)       │
-│  Triggered by ERP POST calls │                                 │
-│  Reads ERP DB independently  │                                 │
-└────────────────────────────────────────────────────────────────┘
-         ▲ triggered by
-┌────────┴───────────────────────────────────────────────────────┐
-│         ACCOUNTMATE ERP — sp_NOP_* stored procedures           │
-│         (fire empty POSTs to nopintegration on schedule)       │
-└────────────────────────────────────────────────────────────────┘
+┌────────┴───────────────────────────────────────────────────────────┐
+│  nopintegration.annique.com                                        │
+│  Visual FoxPro Web Connection (NISource/)                          │
+│  · oNopSql → SQL Server 20.87.212.38,63000 UID=sa PWD=Difficult1  │
+│  · oAMSql  → SQL Server 172.19.16.100     UID=sa PWD=AnniQu3S@    │
+│  · oNop    → HTTPS annique.com/api-backend/ (JWT IntegrationUser)  │
+│  syncorders.prg · syncproducts.prg · syncorderstatus.prg           │
+│  syncconsultant.prg · syncstaff.prg                                │
+├────────────────────────────────────────────────────────────────────┤
+│  shopapi.annique.com (staff sync — separate service, source TBD)   │
+└────────────────────────────────────────────────────────────────────┘
+         ▲ triggered by                   ▲ also calls
+┌────────┴──────────────────┐   ┌─────────┴───────────────────────┐
+│  ACCOUNTMATE ERP          │   │  annique.com/api-backend/        │
+│  sp_NOP_* stored procs    │   │  NopCommerce Web API plugin      │
+│  (fire empty POSTs on     │   │  (Product CRUD, Customer CRUD,   │
+│   schedule via SQL Agent) │   │   Auth, Category, Address)       │
+└───────────────────────────┘   └─────────────────────────────────┘
 ```
 
 ### 2.2 Key Facts at a Glance
@@ -102,27 +111,60 @@ Annique operates a **heavily customised AccountMate v7.x ERP** on SQL Server 201
 | Active consultants | 10,308 (of 119,616 total in `arcust`) |
 | Active products | ~800 (of 10,676 in `icitem`) |
 | Current webstore | NopCommerce (separate SQL Server, `[NOP]` linked server) |
-| Integration middleware | `nopintegration.annique.com` — **black box, source unknown** |
-| Integration method | Empty HTTP POSTs from SQL Server OLE Automation |
+| Integration middleware | `nopintegration.annique.com` — **Visual FoxPro Web Connection app** (source now obtained: `NISource/`) |
+| NopCommerce API backend | `annique.com/api-backend/` — NopCommerce Web API plugin; NISource authenticates as `IntegrationUser` |
+| New middleware (C# .NET 8) | `AnqIntegrationApiSource/` — JWT-authenticated API for Brevo, WhatsApp, registration validation |
+| Integration method | Empty HTTP POSTs from SQL Server OLE Automation (doorbell pattern) |
+| NISource DB access | `sa` / `AnniQu3S@` (AccountMate) · `sa` / `Difficult1` (NopCommerce) — **hardcoded in VFP source** |
 | Sync queue | `icWsUpdate` — 7.2M rows, 22 pending (never purged) |
 | Current campaign | Feb_2026 — 20% consultant discount, 21% MLM rate, 15% VAT |
 | Delivery mix | Fastway 44%, Berco 34%, Skynet 16%, Postnet 6% |
 | Namibia ERP | `amanniquenam` — auto-mirrored via triggers (operational status unknown) |
+| Default consultant password | `{ccustno}Anq!` (e.g., `CONSU0001Anq!`) — set by `syncconsultant.prg` |
+| Staff NopCommerce password | `cIdno` (national ID number) — set by `syncstaff.prg` |
+| Order sync schedule | Every **10 min** (`sp_NOP_syncOrders`) |
+| Availability sync schedule | Every **5 min** (`sp_NOP_syncItemAvailability`) |
+| Item change sync schedule | Every **15 min** 7am–5pm (`sp_NOP_syncItemChanges`) |
+| Full item sync schedule | **3× daily** — 12:15am, 7:00am, 3:15pm (`sp_NOP_syncItemAll`) |
+| Order status sync schedule | Every **20 min** 6am–5pm (NopCommerce-side `ANQ_syncOrderStatus` SP) |
+| Exclusive items sync | Every **30 min** (`sp_ws_syncsoxitems`) — runs on **both** `amanniquelive` and `amanniquenam` |
+| Staff sync schedule | **1st of every month** 9:00am (`sp_NOP_syncStaff`) |
+| NopCommerce → AM customer sync | Every **hour** 7am–5pm (`ANQ_CustomerChanges_UPDATE` + `ANQ_CustomerAddress_UPDATE`) — **bi-directional** |
+| Gift sync schedule | Every **15 min** (`ANQ_SyncGift` on NopCommerce SQL Server) |
+| PayU reconciliation | Every **hour** (`ANQ_Payu_GetPendingOrderTransactionStates` on NopCommerce) |
+| Consultant discount display | Flat 20% — **only visible at checkout**, not shown on product pages |
+| Active sellable SKUs (DRP) | 227 (vs ~800 `icitem` active rows — DRP covers stocked/planned only) |
 
 ### 2.3 Confirmed Architecture Facts
 
 | Fact | Source |
 |---|---|
 | All `sp_NOP_*` HTTP calls send **no payload** — they are empty doorbell POSTs | Full SP source verified: `sp_NOP_syncOrders`, `sp_NOP_syncItemAll`, `sp_NOP_syncItemAvailability`, `sp_NOP_syncItemChanges`, `sp_NOP_syncOrderStatus` |
-| `nopintegration.annique.com` has its own SQL credentials to `amanniquelive` | Deduced from doorbell pattern — service must read DB independently |
+| `nopintegration.annique.com` is a **Visual FoxPro Web Connection application** | `NISource/nopintegrationmain.prg` + `.fxp` Web Connection libraries — NOT .NET or Node.js |
+| NISource accesses AccountMate as `sa` with `AnniQu3S@` | `syncproducts.prg`: `SERVER=172.19.16.100;UID=sa;PWD=AnniQu3S@;database=amanniquelive` (prod) |
+| NISource accesses NopCommerce as `sa` with `Difficult1` | `syncproducts.prg`: `SERVER=20.87.212.38,63000;UID=sa;PWD=Difficult1;database=annique` (prod) |
+| NISource also calls `annique.com/api-backend/` (NopCommerce Web API) as `IntegrationUser` | `nopapi.prg` + `syncclass.prg`: authenticates via JWT, calls `Product_Create`, `Customer_Create`, etc. |
+| `AnqIntegrationApiSource` is a newer C# .NET 8 API, separate from NISource | Handles: Brevo, WhatsApp, registration validation, JWT auth for API clients (multi-tenant) |
 | `wsSetting.ws.url` is only a kill-switch — all `sp_NOP_*` hardcode their URLs | Verified in all 5 NOP sync SPs |
 | `sp_ws_HTTP` always POSTs — no GET path exists | Source: `EXEC @ret = sp_OAMethod @token, 'open', NULL, 'POST'` |
 | Auth header is misspelled: `Authentication` not `Authorization` | Source: `sp_OAMethod @token, 'setRequestHeader', NULL, 'Authentication'` |
-| `sp_ws_UpdateImage` contains plaintext Namibia backoffice admin credentials | Source: `WebLogin_txtPassword=4nnique4admin@` in POST body — **critical security issue** |
-| `NopIntegration..Brevolog` is a Brevo email marketing log, NOT an API audit log | Confirmed from SP source: INSERT targeting Brevo campaign tracking |
-| `NOP_OfferList` and `NOP_Offers` tables do NOT exist in the live database | Confirmed: these tables are absent from `amanniquelive` |
+| Idempotency: order already synced check via `sosord.cPono = NOP OrderID` | `syncorders.prg`: `loadbase("cPono='...' AND ccustno='...'")`  — prevents double-processing |
+| Inactive consultants are auto-reactivated when they place an order | `syncorders.prg`: `EXEC sp_ws_reactivate @ccustno='...'` called if `arcust.cStatus <> 'A'` |
+| Customer role in NopCommerce determines which AccountMate account gets charged | `syncorders.prg`: Consultant→`ccustno`, Staff→`STAFF1`, Bounty→`ASHOP1`, Client→`ASHOP2` |
+| `NOP_OfferList` and `NOP_Offers` tables exist in the **NopCommerce DB** (not amanniquelive) | `Offers.cs` / `OfferList.cs` domain objects in `Annique.Plugins.Nop.Customization` confirmed |
 | `[WEBSTORE]` linked server is live production code — not dead | `sp_ws_autopickverify` and `sp_ws_gensoxitems` actively use it |
 | AutoPick batches in 15-minute or 10-order windows | Source: `IF @rows=0 OR (@mins<15 AND @rows<10)` |
+| `sp_ws_UpdateImage` contains plaintext Namibia backoffice admin credentials | Source: `WebLogin_txtPassword=4nnique4admin@` in POST body — **critical security issue** |
+| `NopIntegration..Brevolog` is a Brevo email marketing log, NOT an API audit log | Confirmed from SP source: INSERT targeting Brevo campaign tracking |
+| `NOP_OfferList` / `NOP_Offers` do NOT exist in `amanniquelive` — they ARE in the NopCommerce DB as `AnqOffer`/`AnqOfferList` | `Offers.cs` / `OfferList.cs` in `Annique.Plugins.Nop.Customization`; actively used by `SpecialOffersService` |
+| Customer sync is **bi-directional** — NopCommerce profile/address changes push BACK to AccountMate | NopCommerce SQL Agent job: `ANQ_CustomerChanges_UPDATE` + `ANQ_CustomerAddress_UPDATE` every hour |
+| A previously undocumented endpoint exists: `POST /SyncCancelOrders.api` on `nopintegration.annique.com` | AccountMate SQL Agent job: runs every 15min between 8am–5:59pm — cancels orders in AM when cancelled in NOP |
+| `shopapi.annique.com` handles **voucher notifications** in addition to staff sync | AccountMate SQL Agent job calls `POST https://shopapi.annique.com/NotifyVouchers.api?instancing=single` every 4 hours |
+| `sp_ws_syncsoxitems` exclusive item sync runs on **both** `amanniquelive` and `amanniquenam` | SQL Agent job: "Sync Customer Exclusive Items" every 30 min — explicitly listed "amanniquelive and amanniquenam" |
+| `ANQ_SyncAffiliate` is called via direct SQL from AccountMate as `EXEC Nop.Annique.[dbo].[ANQ_SyncAffiliate]` | SQL Agent job: "NOP - Sync Affiliates" runs every 4 hours 6am–4pm — this is a **linked-server direct call**, not HTTP |
+| Consultant 20% discount is **only visible at checkout** — not displayed on product pages | WS1 Discovery notes: "flat 20% discount, visible only at checkout" |
+| November peak is approximately **2× normal order and revenue volume** | WS1 Campaign notes confirmed |
+| Lost cart tracking is stored in the **Brevo database** (`LostCart_Tick` SP runs hourly on Brevo DB) | NopCommerce side SQL Agent job |
 
 ---
 
@@ -143,27 +185,91 @@ EXEC sp_ws_HTTP @cURL = @curl, @cretvalue = @cretvalue OUTPUT, @cresponse = @cre
 -- @cresponse is captured but never read or logged
 ```
 
-The service does all the work itself:
+The service (a VFP Web Connection process) does all the work itself:
 
 ```
 ERP fires:  POST /syncorders.api  ← empty body, no data
 
-nopintegration service:
-    1. Uses its own SQL connection to amanniquelive (credentials unknown)
-    2. Reads whatever it needs:
-         /syncorders.api              → reads SOPortal / NOP Orders
-         /syncproducts.api?type=all   → reads icitem
-         /syncproducts.api?type=changes → reads changes table
-         /syncproducts.api?type=availability → reads icqoh
-         /syncorderstatus.api         → reads soportal WHERE cstatus='S'
-    3. Determines what has changed using its own state tracking (unknown method)
-    4. Pushes to NopCommerce
-    5. Returns HTTP 200
+nopintegration (VFP syncorders.prg):
+    1. oNopSql → connects to NopCommerce SQL Server (sa/Difficult1)
+    2. EXEC ANQ_UnprocessedOrders → finds orders with:
+           OrderStatusID=20, ShippingStatusID=20,
+           PaymentStatusID=30 (or OrderTotal=0),
+           no Shipment record, ID>30
+    3. For each order:
+         a. Load Order, Customer, billing + shipping Address, OrderItems, OrderNotes
+         b. Determine AccountMate account from customer role:
+              Annique Consultant → arcust.ccustno (Username)
+              AnniqueStaff / AnniqueExco → STAFF1
+              Bounty → ASHOP1 (intercompany)
+              Client / default → ASHOP2 / ASHOP1
+         c. Parse payment: PayU (credit card / EFT / PayFlex), COD, Manual EFT, Gift Card
+         d. oAMSql → connect to AccountMate (sa/AnniQu3S@)
+         e. Auto-reactivate: EXEC sp_ws_reactivate if cStatus<>'A'
+         f. Idempotency: skip if sosord WHERE cPono='{OrderID}' AND ccustno='{custno}' exists
+         g. Create sosord (order header) + sostrs (order lines) + soskit (kit components)
+         h. Create SOPortal record
+         i. oNop → POST to api-backend/ to create NopCommerce Shipment record
+    4. Returns HTTP 200
 
 ERP sees 200 → SP exits. No record of what was synced.
 ```
 
-The `?type=` query parameter is the **only instruction** the ERP gives. `?instancing=single` prevents concurrent runs.
+The `?type=` query parameter is the **only instruction** the ERP gives to `/syncproducts.api`. `?instancing=single` prevents concurrent runs.
+
+### 3.1a Customer Role → AccountMate Account Mapping
+
+| NopCommerce Role | AccountMate `ccustno` | Use Case |
+|---|---|---|
+| `Annique Consultant` | `arcust.ccustno` (= NopCommerce `Username`) | Standard consultant order |
+| `AnniqueStaff` | `STAFF1` | Internal staff purchase |
+| `AnniqueExco` | `STAFF1` | Executive committee purchase |
+| `Bounty` | `ASHOP1` | Inter-company / reseller |
+| `Client` | `ASHOP2` | Retail customer |
+| *(default — no match)* | `ASHOP1` | Guest / unclassified |
+
+### 3.1b Order Shipping Method Determination
+
+| Condition | `cShipVia` / `cFrgtCode` |
+|---|---|
+| Staff order (STAFF1) or collect flag | `COLLECT` |
+| TEST01 customer | `BERCO` |
+| ShippingAddress.CustomAttributes has StorePickupPoint → `"PN"` | `POSTNET` |
+| ShippingAddress.CustomAttributes has StorePickupPoint → other code | `SKYNET` |
+| All other | `COURIER` (specific carrier determined by warehouse) |
+
+### 3.1c Order Payment Method Mapping
+
+| NopCommerce Payment System Name | AccountMate Payment Method |
+|---|---|
+| `Atluz.PayUSouthAfrica` | `creditcard` (card number) / `eft` (bank) / `payflex` |
+| `Payments.CashOnDelivery` | `account` |
+| `Payments.Manual` | `eft` |
+| *(OrderTotal = 0)* | `eft` (reference: "Free") |
+| Gift card also applied | `giftcard` segment in payment collection |
+
+### 3.1d Key sosord Field Mapping (Shopify must replicate)
+
+| `sosord` field | Value / Source |
+|---|---|
+| `cSono` | `PADL(NOP.CustomOrderNumber, 10)` |
+| `cCustno` | AccountMate account (per role map above) |
+| `cPono` | NopCommerce `Order.ID` (idempotency key) |
+| `cOrderby` | NopCommerce `CustomerID` (as string) |
+| `cEnterby` | `"Web Order"` (consultants) or `"Shop Order"` (retail) |
+| `cPaycode` | `"CWO"` (cash with order — hardcoded) |
+| `cBankno` | `"ABS423"` (hardcoded bank reference) |
+| `lSource` | `4` (webshop source code — hardcoded) |
+| `lHold` | `1` if order number starts with `'Z'` or customer = `TEST01` |
+| `nDiscRate` | `arcust.nDiscRate` (consultant's discount rate) |
+| `nSalesamt` | `Order.OrderSubtotalExclTax` |
+| `nTaxAmt1` | `Order.OrderTax` |
+| `nDiscAmt` | `Order.OrderDiscount` |
+| `nFrtAmt` | `Order.OrderShippingExclTax` |
+| `nFrtTax1` | `Order.OrderShippingInclTax - Order.OrderShippingExclTax` |
+| `nXchgRate` | `Order.CurrencyRate` |
+| `dOrder` | `Order.CreatedOnUtc` (converted to local date) |
+
 
 ### 3.2 The sp_ws_HTTP Transport Layer
 
@@ -204,6 +310,29 @@ The ERP is **not a standalone database**. Changes flow automatically across mult
 | `[Portal].Accountmate_Webstore.dbo` | ❌ | Linked server | Consultant discount sync (absent on test) |
 
 **Namibia auto-mirror (critical):** Every field-level change to `icitem` fires `SA_NAM_ItemChanges` trigger → mirrors to `amanniquenam.dbo.icitem`. Same for campaign changes via `socamp_insupd`. **If Shopify product management bypasses the ERP trigger chain, Namibia goes out of sync silently.**
+
+### 3.4 SQL Agent Job Schedule (AccountMate Side) — Now Confirmed
+
+> Source: `Accountmate - SQL Jobs for Dieselbrook.xlsx` provided by Annique IT (resolves RISK-08 / D2).
+
+| Job Name | Schedule | Command / SP | Database |
+|---|---|---|---|
+| NOP - Sync Orders | **Every 10 min** | `EXEC sp_NOP_syncOrders` | `amanniquelive` |
+| NOP - Sync Availability | **Every 5 min** | `EXEC sp_NOP_syncItemAvailability` | `amanniquelive` |
+| NOP - Sync Cancel Orders | **Every 15 min** (8am–6pm) | `POST https://nopintegration.annique.com/SyncCancelOrders.api` | `amanniquelive` |
+| NOP - Sync Item Changes | **Every 15 min** (7am–5pm) | `EXEC sp_NOP_syncItemChanges` | `amanniquelive` |
+| NOP - Update Invoiced Tickets | **Every 15 min** (7am–8pm) | `EXEC sp_ws_invoicedtickets` | `amanniquelive` |
+| Sync Customer Exclusive Items | **Every 30 min** | `EXEC sp_ws_syncsoxitems` | `amanniquelive` **and** `amanniquenam` |
+| NOP - Send Voucher Notification | **Every 4 hours** (8am–midnight) | `POST https://shopapi.annique.com/NotifyVouchers.api` | `NopIntegration` |
+| NOP - Sync Affiliates | **Every 4 hours** (6am–4pm) | `EXEC Nop.Annique.[dbo].[ANQ_SyncAffiliate]` (linked server) | `amanniquelive` |
+| NOP - Full Item Sync | **3× daily** (12:15am, 7:00am, 3:15pm) | `EXEC sp_NOP_syncItemAll` | `amanniquelive` |
+| NOP - Sync Staff | **1st of month** 9:00am | `EXEC sp_NOP_syncStaff` | `amanniquelive` |
+
+**Notes:**
+- `NOP - Sync Cancel Orders` calls `nopintegration.annique.com/SyncCancelOrders.api` — a **previously undocumented endpoint** not found in any ERP stored procedure; the middleware must expose this path
+- `NOP - Sync Affiliates` uses a **direct linked-server SQL call** (`EXEC Nop.Annique.[dbo].[ANQ_SyncAffiliate]`), not HTTP — this will stop working when `[NOP]` linked server is removed
+- `Sync Customer Exclusive Items` runs on **both** `amanniquelive` and `amanniquenam` — exclusive item grants also propagate to Namibia
+- `NOP - Update Invoiced Tickets` (`sp_ws_invoicedtickets`) had not been previously documented — needs source review
 
 ---
 
@@ -253,10 +382,13 @@ icitem (Item Master — 10,700 items, ~800 active)
     │
     ├── FULL SYNC (manual): sp_NOP_syncItemAll
     │       POST /syncproducts.api?type=all&instancing=single (empty)
-    │       nopintegration reads full icitem, pushes to NOP Product table
+    │       NISource: EXEC sp_ws_getactiveNEW @ldate='...' → scans all active items
+    │       For each item: calls oNop.Product_Create or Product_Update (via api-backend/)
+    │       After all: EXEC ANQ_SyncPublished (marks non-campaign items as published)
     │
     ├── DELTA SYNC (scheduled): sp_NOP_syncItemChanges
     │       POST /syncproducts.api?type=changes (empty)
+    │       NISource: EXEC sp_ws_getactiveNEW @ldate='...' @citemno='...'
     │       nopintegration reads `changes` WHERE cfieldname='cstatus'
     │
     ├── STOCK SYNC (scheduled): sp_NOP_syncItemAvailability
@@ -267,6 +399,26 @@ icitem (Item Master — 10,700 items, ~800 active)
             Reads iciimgUpdateNOP queue (7,744 pending)
             Writes to [NOP].annique.dbo.ANQ_SyncImage (direct linked server — no HTTP)
 ```
+
+**Product field mapping (icitem → NopCommerce Product via sp_ws_getactiveNEW):**
+
+| NopCommerce Product field | Source in AccountMate | Notes |
+|---|---|---|
+| `Sku` | `icitem.citemno` | Primary key |
+| `Name` | `icitem.cdescript` | |
+| `ManufacturerPartNumber` | `icitem.cuid` | Internal UID |
+| `Gtin` | `icitem.cbarcode1` | Barcode |
+| `Price` | `ROUND(npprice × 1.15, 2)` | Excl-tax price + 15% VAT = displayed RSP |
+| `OldPrice` | `nprcinctx` | Current RSP (may differ from campaign price) |
+| `Weight` | `nweight` | |
+| `AvailableStartDatetimeUtc` | `dfrom` | Campaign start |
+| `AvailableEndDatetimeUtc` | `dto` (set to 23:59:59) | Campaign end |
+| `Published` | `cstatus='A' AND lportal=1` | Unpublished if inactive or not portal-enabled |
+| `VisibleIndividually` | `lfree=0` | Free gifts hidden from browse |
+| `StockStatus` (custom field) | — | Added via `AlterProductSchema.sql` |
+| `HasDiscountsApplied` | `nDiscRate > 0` | |
+
+After new product created: `EXEC ANQ_SyncImage '{citemno}'` and `EXEC ANQ_SyncProductSEO {ProductID}` run automatically.
 
 **Trigger-driven queue (stock changes):**
 ```
@@ -335,26 +487,28 @@ Document numbering:
 
 ### 5.1 `nopintegration.annique.com` — Primary Integration Middleware
 
-> **Black box.** Source code unknown. Called by ERP via empty doorbell POSTs. Reads `amanniquelive` using its own SQL credentials.
+> **Source obtained and fully analysed.** Built with **West Wind Web Connection** (Visual FoxPro web framework). Source: `NISource/` folder (21 `.prg` files). Triggered by ERP doorbell POSTs; executes all sync logic internally via direct SQL, then calls `annique.com/api-backend/` for NopCommerce writes.
 
-| Endpoint | Triggered By | Direction | What It Does (inferred) | Last SP Change |
-|---|---|---|---|---|
-| `POST /syncorders.api` | `sp_NOP_syncOrders` | NOP → AM | Reads NOP Orders, creates `arinvc`/`aritrs` in AccountMate | 2026-01-09 |
-| `POST /syncproducts.api?type=all` | `sp_NOP_syncItemAll` | AM → NOP | Full `icitem` push to NOP Product table | 2024-09-03 |
-| `POST /syncproducts.api?type=availability` | `sp_NOP_syncItemAvailability` | AM → NOP | Pushes `icqoh` to NOP Product.StockQuantity | 2024-09-03 |
-| `POST /syncproducts.api?type=changes` | `sp_NOP_syncItemChanges` | AM → NOP | Reads `changes` table (cfieldname='cstatus'), delta sync | 2024-09-03 |
-| `POST /syncorderstatus.api?instancing=single` | `sp_NOP_syncOrderStatus` | AM → NOP | Reads `soportal` cStatus='S', updates NOP order status | 2024-10-28 |
-| `POST /sendsms.api` | `sp_SendAdminSMS` | AM → NOP | **Only call with a body**: `{'username':'...','message:':'...'}` | 2025-05-07 |
+| Endpoint | Triggered By | Schedule | Direction | What It Does | Last SP Change |
+|---|---|---|---|---|---|
+| `POST /syncorders.api` | `sp_NOP_syncOrders` | **Every 10 min** | NOP → AM | Reads NOP Orders, creates `arinvc`/`aritrs` in AccountMate | 2026-01-09 |
+| `POST /syncproducts.api?type=all` | `sp_NOP_syncItemAll` | **3× daily** (12:15am, 7am, 3:15pm) | AM → NOP | Full `icitem` push to NOP Product table | 2024-09-03 |
+| `POST /syncproducts.api?type=availability` | `sp_NOP_syncItemAvailability` | **Every 5 min** | AM → NOP | Pushes `icqoh` to NOP Product.StockQuantity | 2024-09-03 |
+| `POST /syncproducts.api?type=changes` | `sp_NOP_syncItemChanges` | **Every 15 min** (7am–5pm) | AM → NOP | Reads `changes` table (cfieldname='cstatus'), delta sync | 2024-09-03 |
+| `POST /syncorderstatus.api?instancing=single` | `sp_NOP_syncOrderStatus` | Every 20 min (NOP-side job) | AM → NOP | Reads `soportal` cStatus='S', updates NOP order status | 2024-10-28 |
+| `POST /SyncCancelOrders.api?instancing=single` | SQL Agent job (AM) | **Every 15 min** (8am–6pm) | NOP → AM | ⚠️ **Newly discovered** — cancels orders in AccountMate when cancelled in NopCommerce | — |
+| `POST /sendsms.api` | `sp_SendAdminSMS` | On-demand | AM → NOP | **Only call with a body**: `{'username':'...','message:':'...'}` | 2025-05-07 |
 
 All calls use: `Authentication: BASIC 0123456789ABCDEF0123456789ABCDEF` (hardcoded, header name typo'd).
 
-### 5.2 `shopapi.annique.com` — Staff/Consultant Sync
+### 5.2 `shopapi.annique.com` — Staff/Consultant Sync + Voucher Notifications
 
-> **Black box.** Separate service from nopintegration. Source code unknown.
+> **Source TBD.** Separate service from nopintegration. Now confirmed to handle at least two distinct functions. Owner still unconfirmed.
 
-| Endpoint | Triggered By | Direction | Purpose | Last SP Change |
-|---|---|---|---|---|
-| `POST /syncstaff.api` | `sp_NOP_syncStaff` | AM → ShopAPI | Sync `arcust` consultant accounts to webstore | 2023-03-20 |
+| Endpoint | Triggered By | Schedule | Direction | Purpose | Last SP Change |
+|---|---|---|---|---|---|
+| `POST /syncstaff.api` | `sp_NOP_syncStaff` | **1st of month**, 9am | AM → ShopAPI | Sync `arcust` consultant accounts to webstore | 2023-03-20 |
+| `POST /NotifyVouchers.api?instancing=single` | SQL Agent job (NopIntegration DB) | **Every 4 hours** (8am–midnight) | NOP → ShopAPI | Send voucher availability notifications to consultants | — |
 
 ### 5.3 `backofficenam.annique.com` — Namibia Backoffice ⚠️ SECURITY ISSUE
 
@@ -402,6 +556,55 @@ These procedures pre-date NopCommerce and some are still active. `wsSetting.ws.u
 | Skynet | 16% | `SkyTrack` table (inferred) | Active |
 | Postnet | 6% | `sp_ws_UPdatePostnetStores` | Active |
 
+### 5.7 `annique.com/api-backend/` — NopCommerce Web API (AnqIntegrationApiSource)
+
+> **Source obtained.** ASP.NET 8 REST API (`AnqIntegrationApiSource/`). Serves as the write-interface to NopCommerce for NISource (VFP). Also handles new registrations, Brevo/WhatsApp comms, and product reviews. Multi-tenant: `ApiClient` table in Settings DB stores per-environment `NopDbConnection` + `AccountMateDbConnection`.
+
+**Auth:** JWT Bearer (issued by `AuthController`) + `X-Api-Key` header. NISource authenticates as user `IntegrationUser`.
+
+| Controller / Endpoint group | Called By | Purpose |
+|---|---|---|
+| `AuthController` | NISource (`SyncClass.INIT`) | Issue JWT token for `IntegrationUser` |
+| Product Create/Update/Delete | NISource `nopapi.prg` | Upsert NopCommerce `Product` records |
+| Product Inventory (`AdjustInventory`, `ProductWarehouse`) | NISource | Update NopCommerce stock quantities |
+| Product Picture upload | NISource | Upload/replace product images |
+| Category Create/Update | NISource | Manage NopCommerce categories |
+| Customer Create/Update/Delete | NISource `syncconsultant.prg` | Upsert NopCommerce `Customer` from `arcust` |
+| Customer Role assign/remove | NISource | Set `Annique Consultant`, `AnniqueStaff`, etc. |
+| Customer SetPassword | NISource | Set initial consultant password (`{ccustno}Anq!`) |
+| Address Create/Update | NISource | Billing/shipping address management |
+| Shipment Create/Ship/Deliver | NISource `syncorders.prg` | Create NopCommerce `Shipment` record (marks order as processed) |
+| Order Note Create | NISource | Add admin notes to NOP orders |
+| `ValidateNewRegistrationController` | NopCommerce plugin (`ConsultantNewRegistrationService`) | Validate new consultant registration; find sponsor via `ANQ_LocateRefSponsor`; send Brevo notification to sponsor |
+| `BrevoController` / `BrevoTestController` | Internal / admin | Direct Brevo API integration |
+| `ProductReviewsController` | NopCommerce theme | Product review management |
+| `UploadController` | NopCommerce admin | Image/file upload |
+| `WhatsappOptInController` | NopCommerce storefront | WhatsApp opt-in flow |
+| `OutboxDebugController` | Admin monitoring | View/retry Brevo outbox queue |
+| `MeController` | API client | Return current authenticated user info |
+
+**Key shared DB entities (EF Core contexts):**
+- AccountMate: `Arcust`, `Arcadr`, `Arinvc`, `Aritrs`, `Icitem`, `Icikit`, `Sosord`, `Sostr`, `Soskit`, `Soship`, `Sosptr`, `Soxitem`, `Arcash`, `Arcapp`, `Aritrk`
+- NopCommerce custom: `AnqNewRegistration`, `AnqExclusiveItem`, `AnqOffer`, `AnqOfferList`, `AnqEvent`, `AnqEventItem`, `AnqGift`, `AnqGiftCardAdditionalInfo`, `AnqGiftsTaken`, `AnqAward`, `AnqAwardShoppingCartItem`, `AnqBooking`, `AnqCategoryIntegration`, `AnqManufacturerIntegration`, `AnqCustomerChange`, `AnqDiscountAppliedToCustomer`, `AnqDiscountUsage`, `AnqLookup`, `AnqUserProfileAdditionalInfo`
+
+### 5.8 NopCommerce-Side SQL Agent Jobs
+
+These jobs run **on the NopCommerce SQL Server** (`20.87.212.38,63000`, database `Annique`), independently of the ERP. They are a critical part of the sync architecture and must be replicated when NopCommerce is replaced.
+
+| SQL Job | Schedule | SP | Notes |
+|---|---|---|---|
+| Sync Order Status | Every **20 min** (6am–5pm) | `EXEC ANQ_syncOrderStatus` | Pushes shipment status from AM → NOP |
+| Sync - Gifts | Every **15 min** | `EXEC ANQ_SyncGift` | Syncs gift item availability/assignment |
+| Sync Affiliates | Every **15 min** | `EXEC ANQ_SyncAffiliates` | Syncs affiliate data |
+| Sync - Customers to AM | Every **hour** (7am–5pm) | `EXEC ANQ_CustomerChanges_UPDATE` + `EXEC ANQ_CustomerAddress_UPDATE` | **Bi-directional** — NopCommerce profile/address changes pushed BACK to AccountMate |
+| Sync - Published | Every **hour** (7am–5pm) | `EXEC ANQ_SyncPublished` | Marks products as published/unpublished |
+| Brevo - Update Transaction Attributes | Every **hour** | `EXEC ANQ_Brevo_PushOrderItemTransactionalAttributes` | Pushes order transaction data to Brevo for email flows |
+| Check and mark PayU paid / not processed | Every **hour** | `EXEC ANQ_Payu_GetPendingOrderTransactionStates` | PayU payment reconciliation loop |
+| Lost Cart Run | Every **hour** | `EXEC LostCart_Tick` | Abandoned cart tracking — runs in `Brevo` database |
+| Build Full Text | Every **4 hours** (3am–12am) | `EXEC ANQ_BUILDFullText` | Rebuilds full-text search index |
+
+**⚠️ Critical migration implication:** These jobs running on the NopCommerce SQL Server will stop working the moment NopCommerce DB is decommissioned. The new middleware must absorb all of them — especially the bi-directional customer sync and the PayU reconciliation loop.
+
 ---
 
 ## 6. What Must Be Replaced vs. What Stays
@@ -428,18 +631,29 @@ These procedures pre-date NopCommerce and some are still active. `wsSetting.ws.u
 |---|---|---|
 | NopCommerce storefront | Shopify storefront | — |
 | NopCommerce customer accounts | Shopify customers + MLM metafields | MEDIUM |
-| `nopintegration.annique.com` middleware | New middleware (see Section 7) | HIGH — source unknown |
+| `nopintegration.annique.com` + `annique.com/api-backend/` middleware stack | New middleware (see Section 7) — fully scopeable now source is obtained | HIGH |
 | `sp_NOP_syncOrders` (pull orders from NOP) | Shopify Order webhook → middleware → AM | HIGH |
 | `sp_NOP_syncItemAll/Changes/Availability` | Middleware polls `icitem`/`changes`/`icqoh` → Shopify Product/Inventory API | MEDIUM |
 | `sp_NOP_syncOrderStatus` | Middleware polls `soportal` cStatus='S' → Shopify Fulfillment API | MEDIUM |
 | `sp_NOP_syncSoxitems` (direct NOP DB write) | Shopify B2B catalog / custom app / customer metafields | HIGH |
 | `sp_ws_UpdateImageNOP` (direct NOP DB write) | Middleware polls `iciimgUpdateNOP` → Shopify Image API | LOW |
-| `sp_NOP_syncStaff` → `shopapi.annique.com` | Extend middleware to create/update Shopify customers | LOW |
+| `sp_NOP_syncStaff` / `syncconsultant.prg` | Extend middleware to create/update Shopify customers | LOW |
 | `sp_SendAdminSMS` → `nopintegration` | Re-point to new middleware `/sendsms.api` | LOW |
 | `[NOP]` linked server | Decommission after middleware live | — |
 | `SOPortal` as web order intake | `soportal` becomes Shopify order staging table (fed by middleware) | MEDIUM |
-| NopCommerce campaign/offer pages | Shopify Metaobjects + theme sections | MEDIUM |
-| `NOP_Discount` + missing `NOP_Offers` tables | Shopify Discount API | MEDIUM |
+| NopCommerce `SpecialOffersService` (`AnqOffer`/`AnqOfferList`) | Shopify Metaobjects + Discount API | MEDIUM |
+| NopCommerce `ExclusiveItemsService` (`AnqExclusiveItem`) | Shopify B2B Catalogs (Plus) or custom checkout function | HIGH |
+| NopCommerce `AwardService` (`AnqAward`) — consultant reward redemption | Custom Shopify app + metafields or Shopify Loyalty integration | HIGH |
+| NopCommerce `EventService` (`AnqEvent`/`AnqEventItem`) — events with exclusive item grants | Custom Shopify app | HIGH |
+| NopCommerce `GiftService` + `GiftCardAdditionalInfoService` | Custom Shopify gift card handling | MEDIUM |
+| NopCommerce `BookingService` (`AnqBooking`) — click-and-collect bookings | Custom Shopify app or store location feature | MEDIUM |
+| NopCommerce `OtpService` — OTP for new registration | Custom Shopify flow / Brevo OTP | LOW |
+| NopCommerce `DiscountCustomerMappingService` — per-consultant monthly discount | Shopify B2B Price Lists (Plus) or Discount Function | HIGH |
+| NopCommerce `ConsultantNewRegistrationService` + `ValidateNewRegistration` API | Custom Shopify registration app calling AnqIntegrationApi or new equivalent | MEDIUM |
+| NopCommerce `AnniqueReportService` — template-based dynamic reports | Separate admin tool / Power BI | LOW |
+| NopCommerce `ChatbotService` — AI chatbot | Shopify Chat app or custom integration | LOW |
+| NopCommerce `AnniqueOrderTotalCalculationService` + `OverriddenPriceCalculationService` | Shopify Checkout Extensions / Functions | HIGH |
+| Annique.Plugins.Payments.AdumoOnline (SA payment gateway) | Shopify Payment App (AdumoOnline / PayU SA) — requires payment partner | HIGH |
 
 ### 6.3 Must Be Reworked (Not Replaced)
 
@@ -480,18 +694,25 @@ These procedures pre-date NopCommerce and some are still active. `wsSetting.ws.u
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │  SCHEDULED POLLERS                                        │   │
-│  │  ~5 min: icWsUpdate pending rows → Shopify Inventory API  │   │
-│  │  ~5 min: iciimgUpdateNOP pending → Shopify Image API      │   │
-│  │  ~5 min: soportal cStatus='S'  → Shopify Fulfillment API  │   │
-│  │  ~5 min: changes table (cstatus delta) → Shopify Product  │   │
-│  │  Monthly: campaign change → Shopify price list update     │   │
+│  │  SCHEDULED POLLERS (intervals from confirmed SQL Agent schedules)│ │
+│  │  Every 5 min:  icWsUpdate pending rows → Shopify Inventory API │ │
+│  │  Every 5 min:  iciimgUpdateNOP pending → Shopify Image API     │ │
+│  │  Every 10 min: ANQ_UnprocessedOrders → Shopify Order write-back│ │
+│  │  Every 15 min: SyncCancelOrders → cancel orders in AM          │ │
+│  │  Every 15 min: changes (cstatus delta) → Shopify Product       │ │
+│  │  Every 20 min: soportal cStatus='S' → Shopify Fulfillment API  │ │
+│  │  Every hour:   NOP customer changes → AccountMate arcust       │ │
+│  │  Every hour:   PayU reconciliation loop                         │ │
+│  │  Every 4 hr:   Voucher notifications → shopapi.annique.com     │ │
+│  │  3× daily:     full icitem push → Shopify Product              │ │
+│  │  Monthly:      campaign change → Shopify price list update     │ │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  LEGACY-COMPATIBLE API PATHS (ERP SPs unchanged)          │   │
 │  │  POST /syncorders.api          POST /syncproducts.api     │   │
 │  │  POST /syncorderstatus.api     POST /sendsms.api          │   │
+│  │  POST /SyncCancelOrders.api    (new — not in any known SP)│   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐   │
@@ -510,7 +731,7 @@ These procedures pre-date NopCommerce and some are still active. `wsSetting.ws.u
 
 **Key transition enabler:** The ERP's `sp_NOP_*` procedures hardcode their endpoint paths (`/syncorders.api`, etc.). Hosting the new middleware on a domain with the same paths — and only updating the hardcoded domain in each SP — means the ERP requires minimal changes during cutover.
 
-> ⚠️ **The Black Box Constraint:** This design assumes the new middleware can replicate what `nopintegration.annique.com` does when each endpoint is triggered. **That is not currently knowable.** Before this architecture can be built, the service's source code, SQL login, and state-tracking method must be obtained. See Section 8 (RISK-13) and Section 9.
+> ✅ **Source constraint resolved.** All three source codebases have been obtained and analysed (`NISource/`, `AnqIntegrationApiSource/`, `Annique.Plugins.Nop.Customization`). The new middleware can now be specified with full confidence. The detailed sync logic, field mappings, state tracking, payment parsing, and carrier routing are all documented in Sections 3–4.
 
 ### 7.2 Shopify Feature Decisions
 
@@ -629,22 +850,43 @@ Every `sp_NOP_*` procedure hardcodes `https://nopintegration.annique.com/...` im
 
 ---
 
-#### RISK-13 · `nopintegration.annique.com` is a complete black box
+#### ~~RISK-13~~ · ✅ RESOLVED — `nopintegration.annique.com` source obtained and analysed
 
-The ERP sends no data to this service — it reads `amanniquelive` via its own SQL connection and determines what to sync independently. From the ERP side: no source code, no admin interface, no logs, no known SQL login, no known state-tracking method.
+The service is **West Wind Web Connection** (Visual FoxPro web framework). Source code: `NISource/` folder, 21 `.prg` files. All internal logic is now fully documented in Sections 3–4 of this document.
 
-This is the **single biggest design blocker**. Without knowing what it does internally, the new middleware spec is guesswork.
+**Resolved findings:**
+- **Framework:** West Wind Web Connection VFP web app — NOT .NET or Node.js
+- **DB access:** SA credentials hardcoded in `syncproducts.prg` (see RISK-15 below)
+- **State tracking:** No internal watermark — uses `ANQ_UnprocessedOrders` SP to find unprocessed orders; uses existence of NOP `Shipment` record as order-processed flag
+- **Sync trigger:** Responds to ERP doorbell POSTs; does NOT have its own scheduled jobs independent of ERP
+- **NopCommerce writes:** All NopCommerce writes go via `annique.com/api-backend/` (JWT auth as `IntegrationUser`) — NISource does not write directly to NopCommerce DB for standard objects
+- **Key source files:** `syncorders.prg` · `syncproducts.prg` · `syncorderstatus.prg` · `syncconsultant.prg` · `syncstaff.prg` · `nopapi.prg` · `syncclass.prg`
 
-**What is needed:**
-1. Who built/owns `nopintegration.annique.com`? Internal dev? Third-party vendor?
-2. Source code or repository
-3. What SQL login it uses and what it reads
-4. How it tracks sync state (watermark timestamps? dedicated state table?)
-5. Whether it has scheduled jobs that run independently of ERP POST calls
+The new middleware spec can now be written with full confidence. New RISK (RISK-15) identified during source review.
 
-**If source is unobtainable:** The service's effects must be observed by snapshotting the NopCommerce DB before and after each endpoint trigger. Adds 2–4 weeks of reverse-engineering to discovery.
+---
 
-**Risk if ignored:** New middleware will miss edge cases, batch logic, and error recovery that the existing service handles silently.
+#### RISK-15 · SA (`system administrator`) credentials hardcoded in NISource source
+
+`NISource/syncproducts.prg` lines 22–24 contain hardcoded SQL Server SA credentials:
+
+```
+AccountMate (live):  SERVER=172.19.16.100;UID=sa;PWD=AnniQu3S@;database=amanniquelive
+AccountMate (stage): SERVER=196.3.178.122,62111;UID=sa;PWD=AnniQu3S@;database=amanniquelive
+NopCommerce (live):  SERVER=20.87.212.38,63000;UID=sa;PWD=Difficult1;database=annique
+NopCommerce (stage): SERVER=20.87.212.38,63000;UID=sa;PWD=Difficult1;database=staging
+NopIntegration:      SERVER=196.3.178.122,62111;UID=sa;PWD=AnniQu3S@;database=NopIntegration
+```
+
+**SA = SQL Server System Administrator — full access to create/drop databases, add logins, read all data.**
+
+This is **more severe than RISK-14** (Namibia backoffice admin credentials). Anyone who has ever had access to the `NISource/` git repository has full SA access to both the AccountMate and NopCommerce SQL Servers.
+
+**Mitigation (independent of migration):**
+1. **Rotate both SA passwords immediately** — `AnniQu3S@` (AccountMate) and `Difficult1` (NopCommerce)
+2. Create a dedicated, least-privilege SQL login for the NISource service (read-only on NopCommerce, scoped write access on AccountMate)
+3. Move credentials to environment variables or Windows Credential Manager — remove from source code
+4. Audit `sys.logins` for unknown logins on both servers — SA breach may have gone unnoticed
 
 ---
 
@@ -658,11 +900,16 @@ This is the **single biggest design blocker**. Without knowing what it does inte
 
 ---
 
-#### RISK-08 · SQL Agent job schedule is unknown
+#### ~~RISK-08~~ · ✅ RESOLVED — SQL Agent job schedules obtained
 
-All sync SPs are assumed to run on SQL Agent schedules — but access to `msdb.dbo.sysjobs` is denied with the current login. Sync frequency is unknown. Middleware must be designed to match it or customer-visible stock/order discrepancies will occur.
+Full schedules provided by Annique IT team (`Accountmate -SQL Jobs for Dieselbrook.xlsx` + `NOP-SQL Jobs for Dieselbrook.xlsx`). All sync frequencies are now known — see Section 2.2 Key Facts and Section 3.2a below.
 
-**Discovery needed:** `msdb` access via DBA or Windows credentials.
+**Key schedule facts for middleware design:**
+- Order sync: **every 10 min** — new middleware must match or tighten this
+- Stock/availability: **every 5 min** — fastest current sync
+- Order cancellation: **every 15 min** (8am–6pm) — a previously undocumented flow
+- Full item sync: **3× per day** — not once daily as previously assumed
+- Customer changes (NOP → AM): **every hour** — customer sync is bi-directional
 
 ---
 
@@ -712,36 +959,43 @@ These must be resolved before a migration can be properly scoped or priced.
 
 | # | Action | Who | Urgency |
 |---|---|---|---|
-| **D1** | Identify who built/owns `nopintegration.annique.com` and obtain source code | Annique IT / CTO | 🔴 Blocker |
-| **D2** | Get production SQL Server access — query `msdb.dbo.sysjobs` for SQL Agent schedule | Annique DBA | 🔴 Blocker |
+| **D1** | ~~Identify who built/owns `nopintegration.annique.com` and obtain source code~~ | ✅ RESOLVED | Source obtained (`NISource/`) — VFP Web Connection, fully documented |
+| **D2** | ~~Get production SQL Server access — query `msdb.dbo.sysjobs` for SQL Agent schedule~~ | ✅ RESOLVED | Full schedules provided by Annique IT team (`Accountmate -SQL Jobs for Dieselbrook.xlsx` + `NOP-SQL Jobs for Dieselbrook.xlsx`) — see Section 3.4 |
 | **D3** | Confirm whether `amanniquenam` (Namibia ERP) is actively used by Namibia staff | Annique management | 🔴 Blocker |
 | **D4** | Decide: Shopify Plus (B2B) or Shopify Advanced / standard? | Business stakeholder | 🔴 Blocker |
-| **D5** | Identify who built/owns `shopapi.annique.com` | Annique IT | 🟠 High |
+| **D5** | Identify source / owner of `shopapi.annique.com` | Annique IT | 🟠 High — partially resolved: now known to handle voucher notifications + staff sync |
 | **D6** | Confirm `[WEBSTORE]` linked server presence on production; confirm if `anniquestore.co.za` is still live | Annique IT / DBA | 🟠 High |
+| **D7** | Obtain source of `SyncCancelOrders.api` and `sp_ws_invoicedtickets` | Annique IT | 🟠 High — both discovered via SQL Agent job list; no source reviewed yet |
+| **D8** | Confirm `NOP - Sync Affiliates` linked-server call (`Nop.Annique.[dbo].[ANQ_SyncAffiliate]`) — what does it do? | Annique IT / DBA | 🟠 High — this is a direct SQL call that will break when `[NOP]` is removed |
 
 ### 9.2 Security Actions — Do Now, Not After Migration
 
 | # | Action | How | Urgency |
 |---|---|---|---|
 | **S1** | Rotate Namibia backoffice Administrator password | Change via `backofficenam.annique.com` admin panel; update `sp_ws_UpdateImage` | 🔴 Immediate |
-| **S2** | Create restricted API user for `sp_ws_UpdateImage` calls | Add scoped backoffice API account; remove admin use | 🟠 High |
-| **S3** | Move `sp_ws_UpdateImage` credentials out of SP source | Use SQL Server Credential object or encrypted `wsSetting` row | 🟠 High |
-| **S4** | Check `arcust.cbankacct` for plaintext bank accounts | `SELECT TOP 1 cbankacct FROM arcust WHERE cbankacct IS NOT NULL` | 🟠 High |
-| **S5** | Audit the SQL login used by `nopintegration.annique.com` | Check `sys.syslogins`; confirm read-only vs read-write access scope | 🟠 High |
+| **S2** | **Rotate NISource SA password `AnniQu3S@`** (AccountMate live + stage) | Change SA password on both SQL Server instances; update NISource env config | 🔴 Immediate |
+| **S3** | **Rotate NISource SA password `Difficult1`** (NopCommerce live + stage) | Change SA password on NopCommerce SQL Server; update NISource env config | 🔴 Immediate |
+| **S4** | Create dedicated least-privilege SQL login to replace SA in NISource | Scoped to specific tables: read on NopCommerce, write on sosord/arinvc in AccountMate | 🔴 Immediate |
+| **S5** | Move NISource DB credentials to environment variables — remove from source code | Use West Wind Web Connection config / env vars; never commit credentials | 🔴 Immediate |
+| **S6** | Create restricted API user for `sp_ws_UpdateImage` calls | Add scoped backoffice API account; remove admin use | 🟠 High |
+| **S7** | Move `sp_ws_UpdateImage` credentials out of SP source | Use SQL Server Credential object or encrypted `wsSetting` row | 🟠 High |
+| **S8** | Check `arcust.cbankacct` for plaintext bank accounts | `SELECT TOP 1 cbankacct FROM arcust WHERE cbankacct IS NOT NULL` | 🟠 High |
+| **S9** | Audit `sys.logins` on AccountMate and NopCommerce SQL Servers | Check for unknown logins — SA breach may have created unauthorized accounts | 🟠 High |
 
 ### 9.3 Pre-Scoping Technical Questions
 
-| # | Question | Why It Matters |
-|---|---|---|
-| **Q1** | What tables does `nopintegration.annique.com` read from `amanniquelive`? | Defines middleware data access requirements |
-| **Q2** | How does it track sync state — watermark timestamps, row ID, or dedicated table? | Defines delta-sync strategy for new middleware |
-| **Q3** | Does it have internal scheduled jobs that fire without ERP POSTs? | Determines if orphaned jobs will keep running after cutover |
-| **Q4** | What is the exact field mapping from `icitem` to NopCommerce `Product`? | Defines Shopify Product field mapping |
-| **Q5** | How are campaign discounts currently presented to consultants in NopCommerce? | Defines Shopify customer pricing approach |
-| **Q6** | How many consultants have active exclusive items at any one time? | Scopes exclusive item solution complexity |
-| **Q7** | Are there event registrations through the webstore that generate `soxitems`? | Determines if `sp_ws_gensoxitems` / `[WEBSTORE]` replacement is needed |
-| **Q8** | Does Namibia need its own Shopify store, or share SA's? | Determines if separate project scope applies |
-| **Q9** | What is the target go-live date? Does it require parallel running of NopCommerce + Shopify? | Determines if a feature-flag cutover approach is needed |
+| # | Question | Status | Why It Matters |
+|---|---|---|---|
+| **Q1** | What tables does `nopintegration.annique.com` read from `amanniquelive`? | ✅ **Answered** — `sosord`, `arcust`, `arinvc`, `soportal`, `icitem`, `iciwhs`/`icqoh`, `changes` | Middleware data access requirements defined in Sections 3–4 |
+| **Q2** | How does it track sync state — watermark timestamps, row ID, or dedicated table? | ✅ **Answered** — `ANQ_UnprocessedOrders` SP identifies new orders; `Shipment` record existence = processed | Delta-sync strategy for new middleware is now known |
+| **Q3** | Does it have internal scheduled jobs that fire without ERP POSTs? | ✅ **Answered** — No; triggered exclusively by ERP doorbell POSTs (`sp_NOP_*`) | No orphaned jobs to worry about post-cutover |
+| **Q4** | What is the exact field mapping from `icitem` to NopCommerce `Product`? | ✅ **Answered** — via `sp_ws_getactiveNEW` SP; full mapping in Section 4.2 | Shopify Product field mapping defined |
+| **Q5** | How are campaign discounts currently presented to consultants in NopCommerce? | ❓ Open | Defines Shopify customer pricing approach |
+| **Q6** | How many consultants have active exclusive items at any one time? | 19,574 `soxitems` rows known; NOP `AnqExclusiveItem` count unknown | Scopes exclusive item solution complexity |
+| **Q7** | Are there event registrations through the webstore that generate `soxitems`? | ❓ Open | Determines if `sp_ws_gensoxitems` / `[WEBSTORE]` replacement is needed |
+| **Q8** | Does Namibia need its own Shopify store, or share SA's? | ❓ Open | Determines if separate project scope applies |
+| **Q9** | What is the target go-live date? Does it require parallel running of NopCommerce + Shopify? | ❓ Open | Determines if a feature-flag cutover approach is needed |
+| **Q10** | What NopCommerce features do consultants actively use? (Awards, Events, Gifts, Bookings) | ❓ Open | Determines replacement scope — each is a custom plugin feature |
 
 ---
 
@@ -752,7 +1006,7 @@ These must be resolved before a migration can be properly scoped or priced.
 - `wsSetting.ws.url = https://anniquestore.co.za/` — NOT nopintegration
 - All `sp_NOP_*` hardcode `nopintegration.annique.com` — wsSetting change alone won't redirect them
 - `sp_ws_syncItems` hardcodes `https://anniquestore.co.za/` — ignores wsSetting even in the `sp_ws_*` family
-- `NOP_OfferList` and `NOP_Offers` tables do NOT exist in the live database
+- `NOP_OfferList` / `NOP_Offers` do NOT exist in `amanniquelive` — they exist in the NopCommerce DB as `AnqOffer`/`AnqOfferList` (active in custom plugin)
 - `changes` table column structure confirmed
 - `sp_ct_Rebates` reads `compplanlive..ctcomph`, creates invoices with item `SASAILM165`
 - `[WEBSTORE]` linked server code is NOT dead — `sp_ws_autopickverify` + `sp_ws_gensoxitems` use it
@@ -768,13 +1022,45 @@ These must be resolved before a migration can be properly scoped or priced.
 - All `sp_NOP_*` calls confirmed as empty doorbell POSTs (no data payload)
 - `sp_ws_HTTP` source confirmed — always POST, no GET, header name typo, OLE Automation
 
+### ✅ Confirmed via Source Code Analysis (NISource / AnqIntegrationApiSource / NopCommerce Plugin)
+
+- `nopintegration.annique.com` is **West Wind Web Connection** (Visual FoxPro) — source: `NISource/` (21 `.prg` files)
+- Full AccountMate SQL Agent job schedule confirmed (see Section 3.4): orders every 10 min, availability every 5 min, full sync 3× daily, cancel orders every 15 min, staff sync 1st of month
+- Full NopCommerce-side SQL Agent job schedule confirmed (see Section 5.8): customer sync to AM hourly, gift sync every 15 min, PayU reconciliation hourly, lost cart hourly
+- `shopapi.annique.com` confirmed to handle: staff sync (monthly) + voucher notifications (every 4 hours)
+- `SyncCancelOrders.api` is a **previously undocumented endpoint** on `nopintegration.annique.com` — runs every 15 min via SQL Agent
+- NopCommerce → AccountMate customer sync is **bi-directional**: `ANQ_CustomerChanges_UPDATE` + `ANQ_CustomerAddress_UPDATE` push NOP profile changes back to AM every hour
+- Exclusive items sync (`sp_ws_syncsoxitems`) runs on **both** `amanniquelive` and `amanniquenam` — 30-min cycle
+- `NOP - Sync Affiliates` uses a **direct linked-server SQL call** to NopCommerce DB, not HTTP
+- Consultant 20% discount only visible at checkout — not shown on product pages
+- November peak volume is ~2× normal
+- DRP covers 227 active SKUs (vs ~800 `icitem` active rows) — DRP = demand-planned/stocked items only
+- Lost cart tracking lives in the **Brevo database** (SP: `LostCart_Tick`)
+- `annique.com/api-backend/` is **ASP.NET 8** — source: `AnqIntegrationApiSource/`; handles NopCommerce writes + Brevo/WhatsApp + new registration validation
+- NopCommerce custom plugin: `Annique.Plugins.Nop.Customization` (280+ C# files, 25+ custom services)
+- NISource uses `sa`/`AnniQu3S@` for AccountMate (live: `172.19.16.100`, stage: `196.3.178.122,62111`) — **hardcoded in source**
+- NISource uses `sa`/`Difficult1` for NopCommerce (`20.87.212.38,63000`) — **hardcoded in source**
+- NISource authenticates to `annique.com/api-backend/` as `IntegrationUser` (JWT, via `syncclass.prg`)
+- Order processed state tracked via `ANQ_UnprocessedOrders` SP + existence of NOP `Shipment` record
+- NISource does NOT have independent scheduled jobs — triggered only by ERP doorbell POSTs
+- Order→AM field mapping fully documented: `cPono` = NOP Order ID (idempotency key), `cBankno="ABS423"` (hardcoded), `lSource=4`
+- Default consultant NopCommerce password: `{ccustno}Anq!` (e.g., `ANQ001234Anq!`)
+- Staff NopCommerce password: `arcust.cIdno` (national ID number)
+- Carrier routing: STAFF1 → `COLLECT`; StorePickupPoint `FirstName="PN"` → `POSTNET`; others → `SKYNET`; default → `COURIER`
+- Payment parse: `Atluz.PayUSouthAfrica` → PayU (credit card / EFT / PayFlex); `Payments.CashOnDelivery` → account; `Payments.Manual` → EFT
+- Auto-reactivation: inactive consultants reactivated via `EXEC sp_ws_reactivate` on order creation
+- AnqIntegrationApi is multi-tenant: `ApiClient` table stores per-environment DB connection strings
+- All 20 ANQ_* custom NopCommerce EF entities confirmed (see Section 5.7)
+- `AnqOffer`/`AnqOfferList`, `AnqEvent`/`AnqEventItem`, `AnqAward`, `AnqBooking`, `AnqGift` — all confirmed active NopCommerce features requiring Shopify equivalents
+- Brevo integration: outbox pattern with retry; template IDs 431, 588, 584, 59; logs to `logs/brevo-.log` (14-day rolling)
+- `ANQ_CategoryIntegration` and `ANQ_ManufacturerIntegration` tables bridge AccountMate categories to NopCommerce categories/brands
+- New consultant registration validates via `ANQ_LocateRefSponsor` SP (finds sponsor by postal code); sends Brevo notification to sponsor
+
 ### 🔲 Still Unknown — Requires Further Access
 
-- SQL Agent job definitions and sync schedules (`msdb` access denied)
 - Production `wsSetting.ws.url` value
 - Production linked server configuration (`[NOP]`, `[WEBSTORE]`, `[Portal]`)
-- `nopintegration.annique.com` source code, SQL login, and internal state-tracking logic
-- `shopapi.annique.com` source code and owner
+- `shopapi.annique.com` source code and full owner — *function partially known: staff sync + voucher notifications*
 - Whether `amanniquenam` is actively operational on production
 - Whether `arcust.cbankacct` is plaintext or encrypted
 - Whether `compplanlive` is accessible with current credentials
@@ -782,6 +1068,12 @@ These must be resolved before a migration can be properly scoped or priced.
 - Whether event registrations via `anniquestore.co.za` are still in use
 - Shopify Plus vs. standard plan decision
 - Namibia store scope (shared vs separate)
+- Which NopCommerce features (Awards, Events, Gifts, Bookings, Donation, Spin and Win) are currently live vs WIP vs planned
+- Source code for `SyncCancelOrders.api` and `sp_ws_invoicedtickets`
+- What `ANQ_SyncAffiliate` does (linked-server call from AccountMate — no source reviewed)
+- Which SMS provider handles OTP and password reset delivery
+- Whether guest checkout or PayU-without-redirect are live or still WIP
+- What the Skin Care Analysis tool integrates with (custom vs third-party)
 
 ---
 
@@ -1015,6 +1307,84 @@ Key related tables:
     Level1 / Level2        — tier membership
     MoDownlinerV1 (1M)     — monthly downline snapshots
 ```
+
+---
+
+## 15. Reference: Discovery Workshop Notes (WS1)
+
+> Source: `WS1 - Campaigns.docx` and `WS1 - Item Master.docx` — Dieselbrook Discovery Notes, February 2026.
+
+### 15.1 Pricing Waterfall (Confirmed)
+
+| Layer | Source | Sync | Notes |
+|---|---|---|---|
+| Standard Retail Price | Item Master (`icitem.npprice × 1.15`) | Daily (3× daily full sync) | Base for all products |
+| Monthly Promotion Price | `backoffice.annique.com` → `socamp`/`sosppr` | ~10 min | Price override only — **no new SKU created** |
+| Flash Sale Price | `backoffice.annique.com` | ~10 min | Price override; reverts to monthly when flash stock exhausted, then to standard |
+| Consultant Discount (20%) | Applied at checkout | Checkout only | Flat — no tiering by consultant level. **Not shown on product pages.** |
+| Starter Kit (~50% off) | Item Master (bundle SKU priced at ~50% off) | Daily | New consultants only, first order only, max 1 of each of 4 available kits |
+
+**Priority:** Flash Sale → Monthly Promotion → Standard (consultant discount applies on top at checkout)
+
+**⚠️ Open item:** Where does the pricing revert trigger reside when flash sale stock exhausts — in NopCommerce (stock count) or backoffice.annique.com?
+
+### 15.2 SKU Architecture (Confirmed)
+
+- All products are **flat SKUs** — no variants natively. Product size/format variations are separate SKUs.
+- Bundles, kits, gift items, and voucher items are each their own SKU in the Item Master.
+- Starter kit compositions change infrequently (~1–2× per year).
+- DRP (Demand Requirements Planning) tracks **227 active SKUs** (vs ~800 active `icitem` rows — DRP covers stocked/planned only).
+- When a kit is sold, stock is deducted at the **component level** (not just bundle SKU) — confirmed from DRP breakdown.
+- Kit composition is defined in `icikit` (8,510 rows).
+- **Shopify opportunity:** Consolidate related flat SKUs into parent/variant structure — improves browsing and SEO, but adds integration complexity.
+
+### 15.3 Content Management Split (Proposed)
+
+| Managed in AccountMate (Item Master) | Managed in NopCommerce (stays in Shopify) |
+|---|---|
+| SKU, barcode, cost price | SEO metadata (meta titles, descriptions, URL slugs) |
+| Weight, dimensions | Extended marketing descriptions / copy |
+| Standard retail pricing | Cross-sell / upsell relationships |
+| Product images (primary) | Product tags and filters |
+| Product status (active/inactive) | Collection / category assignment |
+| Inventory levels | Additional lifestyle images / video content |
+
+**⚠️ Key implication:** SEO content, extended descriptions, and cross-sells live only in NopCommerce — not synced from AccountMate. These will need a separate migration strategy (export from NopCommerce, re-import to Shopify). **Do not assume icitem covers all product data.**
+
+### 15.4 Voucher Framework (Gaps Documented)
+
+| Gap | Impact |
+|---|---|
+| Single voucher per user (no stacking) | Cannot have multiple voucher types active simultaneously |
+| No user segmentation | All voucher assignment is manual — no behaviour-based targeting |
+| Visibility only at login pop-up and checkout | Customers unaware of vouchers during browsing |
+| No stacking | Cannot combine vouchers (e.g., free shipping + discount) |
+
+**Current state:** Vouchers are manually created in `backoffice.annique.com` and linked to individual accounts.
+**Desired state (from WS1 notes):** Behavioural targeting, stacking, site-wide visibility.
+
+### 15.5 Fulfillment Model (Open Question)
+
+Consultants can have 50+ shipping addresses stored in NopCommerce. This implies consultants may receive products and redistribute to their own end customers — not all orders are direct-to-consumer. **This significantly affects the Shopify shipping architecture:**
+- If consultants act as sub-distributors, their shipping address list must be preserved in Shopify.
+- The fulfillment model (Annique ships direct to end customer vs ships to consultant) must be confirmed.
+
+### 15.6 Key Open Items from WS1 Not Yet Answered
+
+| # | Item | Workstream |
+|---|---|---|
+| 1 | Where does Starter Kit first-order restriction logic reside? (NopCommerce / AccountMate / both) | WS1 |
+| 2 | How is flash sale inventory ring-fenced from regular stock? | WS1 + WS3 |
+| 3 | Where does flash sale pricing revert trigger reside? | WS1 + WS3 |
+| 4 | Confirm promotion conflict priority: Flash → Monthly → Standard | WS1 |
+| 5 | Any campaign processes specific to November peak not covered? | WS1 |
+| 6 | Confirm approval workflow for campaigns (maker/checker or creator has full publish authority?) | WS1 |
+| 7 | How are gift/voucher SKUs triggered, fulfilled, and reconciled between NopCommerce and AccountMate? | WS1 + WS3 |
+| 8 | Product variants: are any used, or all separate flat SKUs? | WS1 |
+| 9 | Where does web-specific product content (SEO, descriptions, cross-sells) live? | WS1 + WS2 |
+| 10 | Is the fulfilment model DTC (Annique → end customer) or consultant-redistributed? | WS1 + WS3 |
+| 11 | QlikView reporting: scope of campaign performance reports to be mapped | WS2 |
+| 12 | Complete the Offer Mechanics Matrix — 17 potential offer types; which are currently live? | WS1 |
 
 ---
 
