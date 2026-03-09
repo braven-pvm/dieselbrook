@@ -1,0 +1,141 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                                                                                                                                             
+CREATE PROCEDURE sp_NOP_DiscountINS 
+                                                                                                                                                                                                                         
+	@Id int = NULL OUTPUT,
+                                                                                                                                                                                                                                      
+	@ANQ_ID int =NULL,
+                                                                                                                                                                                                                                          
+	@Name nvarchar(200),
+                                                                                                                                                                                                                                        
+	@CouponCode nvarchar(100) = NULL,
+                                                                                                                                                                                                                           
+	@AdminComment nvarchar(max) =NULL,
+                                                                                                                                                                                                                          
+	@DiscountTypeId int = 6,
+                                                                                                                                                                                                                                    
+	@UsePercentage bit =1,
+                                                                                                                                                                                                                                      
+	@DiscountPercentage numeric(18, 4) =100,
+                                                                                                                                                                                                                    
+	@DiscountAmount numeric(18, 4) =0,
+                                                                                                                                                                                                                          
+	@MaximumDiscountAmount numeric(18, 4) =NULL,
+                                                                                                                                                                                                                
+	@StartDateUtc datetime2(6) =NULL,
+                                                                                                                                                                                                                           
+	@EndDateUtc datetime2(6) =NULL,
+                                                                                                                                                                                                                             
+	@RequiresCouponCode bit =0,
+                                                                                                                                                                                                                                 
+	@IsCumulative bit =1,
+                                                                                                                                                                                                                                       
+	@DiscountLimitationId int =0,
+                                                                                                                                                                                                                               
+	@LimitationTimes int =1,
+                                                                                                                                                                                                                                    
+	@MaximumDiscountedQuantity int =1,
+                                                                                                                                                                                                                          
+	@AppliedToSubCategories bit =1,
+                                                                                                                                                                                                                             
+	@IsActive bit =0
+                                                                                                                                                                                                                                            
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+AS
+                                                                                                                                                                                                                                                           
+BEGIN
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+IF @ID IS NOT NULL RETURN;
+                                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+INSERT Nop_Discount
+                                                                                                                                                                                                                                          
+([ANQ_ID]
+                                                                                                                                                                                                                                                    
+      ,[Name]
+                                                                                                                                                                                                                                                
+      ,[CouponCode]
+                                                                                                                                                                                                                                          
+      ,[AdminComment]
+                                                                                                                                                                                                                                        
+      ,[DiscountTypeId]
+                                                                                                                                                                                                                                      
+      ,[UsePercentage]
+                                                                                                                                                                                                                                       
+      ,[DiscountPercentage]
+                                                                                                                                                                                                                                  
+      ,[DiscountAmount]
+                                                                                                                                                                                                                                      
+      ,[MaximumDiscountAmount]
+                                                                                                                                                                                                                               
+      ,[StartDateUtc]
+                                                                                                                                                                                                                                        
+      ,[EndDateUtc]
+                                                                                                                                                                                                                                          
+      ,[RequiresCouponCode]
+                                                                                                                                                                                                                                  
+      ,[IsCumulative]
+                                                                                                                                                                                                                                        
+      ,[DiscountLimitationId]
+                                                                                                                                                                                                                                
+      ,[LimitationTimes]
+                                                                                                                                                                                                                                     
+      ,[MaximumDiscountedQuantity]
+                                                                                                                                                                                                                           
+      ,[AppliedToSubCategories]
+                                                                                                                                                                                                                              
+      ,[IsActive])
+                                                                                                                                                                                                                                           
+	  VALUES (
+                                                                                                                                                                                                                                                  
+	  @ANQ_ID
+                                                                                                                                                                                                                                                   
+      ,@Name
+                                                                                                                                                                                                                                                 
+      ,@CouponCode
+                                                                                                                                                                                                                                           
+      ,@AdminComment
+                                                                                                                                                                                                                                         
+      ,@DiscountTypeId
+                                                                                                                                                                                                                                       
+      ,@UsePercentage
+                                                                                                                                                                                                                                        
+      ,@DiscountPercentage
+                                                                                                                                                                                                                                   
+      ,@DiscountAmount
+                                                                                                                                                                                                                                       
+      ,@MaximumDiscountAmount
+                                                                                                                                                                                                                                
+      ,@StartDateUtc
+                                                                                                                                                                                                                                         
+      ,@EndDateUtc
+                                                                                                                                                                                                                                           
+      ,@RequiresCouponCode
+                                                                                                                                                                                                                                   
+      ,@IsCumulative
+                                                                                                                                                                                                                                         
+      ,@DiscountLimitationId
+                                                                                                                                                                                                                                 
+      ,@LimitationTimes
+                                                                                                                                                                                                                                      
+      ,@MaximumDiscountedQuantity
+                                                                                                                                                                                                                            
+      ,@AppliedToSubCategories
+                                                                                                                                                                                                                               
+      ,@IsActive
+                                                                                                                                                                                                                                             
+	  )
+                                                                                                                                                                                                                                                         
+SET @id=@@IDENTITY
+                                                                                                                                                                                                                                           
+END
+                                                                                                                                                                                                                                                          
+

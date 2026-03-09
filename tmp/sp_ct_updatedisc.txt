@@ -1,0 +1,34 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[sp_ct_updatedisc] AS
+                                                                                                                                                                                                                 
+
+                                                                                                                                                                                                                                                             
+BEGIN
+                                                                                                                                                                                                                                                        
+DECLARE @tbl TABLE (ccustno CHAR(10),nCrsp NUMERIC(12,2))
+                                                                                                                                                                                                    
+INSERT @tbl
+                                                                                                                                                                                                                                                  
+select ccustno, SUM(nsp) AS nCRSP FROM CompPlanLive.dbo.ctCOnsv Group by ccustno
+                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+ALTER TABLE arcust DISABLE TRIGGER ALL
+                                                                                                                                                                                                                       
+UPDATE ARCUST SET nDiscRate=20 WHERE arcust.cclass='CONSULTANT' and ccustno not in (select ccustno from @tbl)
+                                                                                                                                                
+UPDATE ARCUST  SET nDiscrate=
+                                                                                                                                                                                                                                
+CASE WHEN  t.nCrsp>2869.50 then 20 else 20 end
+                                                                                                                                                                                                               
+FROM ARCUST JOIN @tbl t on ARCUST.ccustno=t.ccustno
+                                                                                                                                                                                                          
+WHERE arcust.cclass='CONSULTANT'
+                                                                                                                                                                                                                             
+and NOT (t.nCrsp<2869.50 and arcust.ndiscrate=20)
+                                                                                                                                                                                                            
+ALTER TABLE arcust ENABLE TRIGGER ALL
+                                                                                                                                                                                                                        
+END                                                                                                                                                                                                                                                            
+

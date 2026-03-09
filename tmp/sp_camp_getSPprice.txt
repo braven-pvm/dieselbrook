@@ -1,0 +1,95 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/** ID: IC90025.01 Name: vsp_ic_getprice Owner: AM ScriptDate: 03/07/2014 **/
+                                                                                                                                                                                
+CREATE procedure [dbo].[sp_camp_getSPprice]
+                                                                                                                                                                                                                  
+@ccustno char(10), @citemno char(20),
+                                                                                                                                                                                                                        
+@dorder datetime,   
+                                                                                                                                                                                                                                         
+@cretuid CHAR(15) output,
+                                                                                                                                                                                                                                    
+@nretvalue numeric(16, 4) = 0 output,
+                                                                                                                                                                                                                        
+@nretvalinctx numeric(16,4) = 0 output   
+                                                                                                                                                                                                                    
+as
+                                                                                                                                                                                                                                                           
+begin
+                                                                                                                                                                                                                                                        
+   declare @lnretvalue numeric(16,4), @lnretvalinctx numeric(16,4),
+                                                                                                                                                                                          
+   @dfrom datetime, @dto datetime,@cId INT
+                                                                                                                                                                                                                   
+	
+                                                                                                                                                                                                                                                            
+	select @cId=ID, @dfrom=dfrom, @dto=dto  from Campaign 
+                                                                                                                                                                                                      
+	where  CAST(@dorder AS DATE) BETWEEN dfrom and dto 
+                                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+Select @cretuid=d.cuid,
+                                                                                                                                                                                                                                      
+	   @nretvalue=ISNULL(d.nprice,i.nprice),
+                                                                                                                                                                                                                    
+	   @nretvalinctx=ISNULL(d.nrsp,i.nprcinctx)
+                                                                                                                                                                                                                 
+	   FROM icitem i 
+                                                                                                                                                                                                                                           
+		LEFT OUTER JOIN Campsku s on s.campaignid=@cID and i.citemno=s.citemno 
+                                                                                                                                                                                    
+		LEFT OUTER JOIN campdetail d  on d.campaignid=@cID and d.campskuid=s.id
+                                                                                                                                                                                    
+		AND @dorder BETWEEN d.dfrom and d.dto AND d.linactive=0
+                                                                                                                                                                                                    
+		WHERE i.citemno=@citemno 
+                                                                                                                                                                                                                                  
+end
+                                                                                                                                                                                                                                                          
+/*
+                                                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+select * from CampDetail where cuid='8V0J0ZN81000142'
+                                                                                                                                                                                                        
+DECLARE	@return_value int,
+                                                                                                                                                                                                                                   
+		@cretuid char(15),
+                                                                                                                                                                                                                                         
+		@nretvalue numeric(16, 4),
+                                                                                                                                                                                                                                 
+		@nretvalinctx numeric(16, 4)
+                                                                                                                                                                                                                               
+
+                                                                                                                                                                                                                                                             
+EXEC	@return_value = [dbo].[sp_camp_getSPprice]
+                                                                                                                                                                                                              
+		@ccustno = N'TEST01',
+                                                                                                                                                                                                                                      
+		@citemno = N'BCMTB19014',
+                                                                                                                                                                                                                                  
+		@dorder = N'2022-07-13',
+                                                                                                                                                                                                                                   
+		@cretuid = @cretuid OUTPUT,
+                                                                                                                                                                                                                                
+		@nretvalue = @nretvalue OUTPUT,
+                                                                                                                                                                                                                            
+		@nretvalinctx = @nretvalinctx OUTPUT
+                                                                                                                                                                                                                       
+
+                                                                                                                                                                                                                                                             
+SELECT	@cretuid as N'@cretuid',
+                                                                                                                                                                                                                              
+		@nretvalue as N'@nretvalue',
+                                                                                                                                                                                                                               
+		@nretvalinctx as N'@nretvalinctx'
+                                                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+*/
+                                                                                                                                                                                                                                                           
+

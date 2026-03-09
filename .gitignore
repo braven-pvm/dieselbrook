@@ -1,0 +1,11 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Database backups (too large for git)
+database/
+
+# OS
+.DS_Store
+Thumbs.db

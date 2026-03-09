@@ -1,0 +1,235 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/** ID: IC90025.01 Name: vsp_ic_getprice Owner: AM ScriptDate: 03/07/2014 **/
+                                                                                                                                                                                
+create procedure vsp_ic_getprice
+                                                                                                                                                                                                                             
+@ccustno char(10), @citemno char(20), @cwarehouse char(10),
+                                                                                                                                                                                                  
+@cspeccode1 char(10), @cspeccode2 char(10), @cmeasure char(10),
+                                                                                                                                                                                              
+@dorder datetime, @lusecusprc smallint, @custitm smallint, @lpriceenabled smallint,   
+                                                                                                                                                                       
+@nordqty numeric(16,4), @bfromfront bit = 1, @nretvalue numeric(16, 4) = 0 output,
+                                                                                                                                                                           
+@lusespprice smallint = 0 output, @nxchgrate numeric(16,6) = 1,
+                                                                                                                                                                                              
+@ndec integer = 0, @nretvalinctx numeric(16,4) = 0 output   
+                                                                                                                                                                                                 
+as
+                                                                                                                                                                                                                                                           
+begin
+                                                                                                                                                                                                                                                        
+    declare @lccurrcode char(3), @lcpricebase char(1)
+                                                                                                                                                                                                        
+    declare @lluselprice smallint, @lnexpdays integer, @lnlprcopt integer
+                                                                                                                                                                                    
+    declare @lnregprice numeric(16,4), @lnregprcinctx numeric(16,4), @lnminprice numeric(16,4)
+                                                                                                                                                               
+    declare @lnretvalue numeric(16,4), @lnretvalinctx numeric(16,4)
+                                                                                                                                                                                          
+    declare @lcmeasure char(10), @lncnvqty numeric(16,4)
+                                                                                                                                                                                                     
+    declare @lnprice numeric(16,4), @lnprcinctx numeric(16,4)
+                                                                                                                                                                                                
+
+                                                                                                                                                                                                                                                             
+    /* .MS803 .10012833 .04/26/2012 .begin. */
+                                                                                                                                                                                                               
+    declare @llusedcustitm smallint
+                                                                                                                                                                                                                          
+    select @llusedcustitm = 0
+                                                                                                                                                                                                                                
+    /* .MS803 .10012833 .04/26/2012 .end. */
+                                                                                                                                                                                                                 
+
+                                                                                                                                                                                                                                                             
+    /* Get converting factor */
+                                                                                                                                                                                                                              
+    select @lcmeasure = cmeasure from icitem where citemno = @citemno
+                                                                                                                                                                                        
+    if @cmeasure = '' or @cmeasure = @lcmeasure
+                                                                                                                                                                                                              
+       select @lncnvqty = 1
+                                                                                                                                                                                                                                  
+    else
+                                                                                                                                                                                                                                                     
+       begin
+                                                                                                                                                                                                                                                 
+           select @lncnvqty = ncnvqty from icunit where cmeasure = @cmeasure
+                                                                                                                                                                                 
+           select @lncnvqty = @lncnvqty/ncnvqty from icunit where cmeasure = @lcmeasure
+                                                                                                                                                                      
+       end
+                                                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+    select @lnlprcopt = nlprcopt, @lcpricebase = cpricebase from arsyst
+                                                                                                                                                                                      
+    select @lccurrcode = ccurrcode, @lluselprice = luselprice, @lnexpdays = nexpdays
+                                                                                                                                                                         
+      from arcust where ccustno = @ccustno
+                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+    /* Get Regular Price*/
+                                                                                                                                                                                                                                   
+    execute vsp_ic_getregprice @ccustno = @ccustno, @citemno = @citemno, @cspeccode1 = @cspeccode1,
+                                                                                                                                                          
+      @cspeccode2 = @cspeccode2, @cmeasure = @cmeasure, @dorder = @dorder, @nordqty = @nordqty,
+                                                                                                                                                              
+      @lpriceenabled = @lpriceenabled, @ncnvqty = @lncnvqty, @nretvalue = @lnregprice output,
+                                                                                                                                                                
+      @lusespprice = @lusespprice output, @nretvalinctx = @lnregprcinctx output   
+                                                                                                                                                                           
+    select @lnretvalue = @lnregprice, @lnretvalinctx = @lnregprcinctx   
+                                                                                                                                                                                     
+    
+                                                                                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+    /* Get contract Price */
+                                                                                                                                                                                                                                 
+    -- if ( @custitm = 1) and (@lusecusprc = 1) and exists (select citemno from iccprc where ccustno = @ccustno   
+                                                                                                                                           
+    if ( @custitm = 1) and (@lusecusprc = 1) and exists (select citemno from iccprc where ccustno = @ccustno
+                                                                                                                                                 
+        and citemno = @citemno and cmeasure = @cmeasure and lactive = 1 and ldefprice = 0)
+                                                                                                                                                                   
+        /* .MS803 .10012833 .12/12/2011 .begin. */
+                                                                                                                                                                                                           
+        --  execute vsp_ic_getcontractprice @ccustno = @ccustno, @citemno = @citemno,
+                                                                                                                                                                        
+        --  @cmeasure = @cmeasure, @dorder = @dorder, @nretvalue = @lnretvalue output,
+                                                                                                                                                                       
+        --  @nretvalinctx = @lnretvalinctx output 
+                                                                                                                                                                                                           
+        begin
+                                                                                                                                                                                                                                                
+            declare @lntempprc numeric(16,4), @lntempprctx numeric(16,4)
+                                                                                                                                                                                     
+            execute vsp_ic_getcontractprice @ccustno = @ccustno, @citemno = @citemno,
+                                                                                                                                                                        
+                @cmeasure = @cmeasure, @dorder = @dorder, @nretvalue = @lntempprc output,
+                                                                                                                                                                    
+                @nretvalinctx = @lntempprctx output
+                                                                                                                                                                                                          
+            if @lntempprc <> 0.00
+                                                                                                                                                                                                                            
+                begin
+                                                                                                                                                                                                                                        
+                    select @lnretvalue = @lntempprc
+                                                                                                                                                                                                          
+                    select @llusedcustitm = 1
+                                                                                                                                                                                                                
+                end
+                                                                                                                                                                                                                                          
+            if @lntempprctx <> 0.00
+                                                                                                                                                                                                                          
+                begin
+                                                                                                                                                                                                                                        
+                    select @lnretvalinctx = @lntempprctx
+                                                                                                                                                                                                     
+                    select @llusedcustitm = 1
+                                                                                                                                                                                                                
+                end
+                                                                                                                                                                                                                                          
+        end
+                                                                                                                                                                                                                                                  
+        /* .MS803 .10012833 .12/12/2011 .end. */ 
+                                                                                                                                                                                                            
+
+                                                                                                                                                                                                                                                             
+    /* .MS803 .10012833 .04/26/2012 .begin. */
+                                                                                                                                                                                                               
+    -- else
+                                                                                                                                                                                                                                                  
+    -- 10012833: cascade to multiple pricing and multi-currenct pricing if customer pricing is zero
+                                                                                                                                                          
+    if @llusedcustitm = 0
+                                                                                                                                                                                                                                    
+    /* .MS803 .10012833 .04/26/2012 .end. */
+                                                                                                                                                                                                                 
+      if @lpriceenabled = 1 and @lnlprcopt in(1,2) and @lluselprice = 1
+                                                                                                                                                                                      
+         /* Get last Customer Price*/
+                                                                                                                                                                                                                        
+         execute vsp_ic_getlastprice @ccustno = @ccustno, @citemno = @citemno, @dorder = @dorder,
+                                                                                                                                                            
+             @nlprcopt = @lnlprcopt, @nexpdays = @lnexpdays, @cspeccode1 = @cspeccode1, @cspeccode2 = @cspeccode2,
+                                                                                                                                           
+                         @cmeasure = @cmeasure, @nretvalue = @lnretvalue output, @nretvalinctx = @lnretvalinctx output   
+                                                                                                                                    
+       else
+                                                                                                                                                                                                                                                  
+         /* Get Multi-Currency Price*/
+                                                                                                                                                                                                                       
+         if @lcpricebase = 'S' or @lcpricebase = 'I' and exists(select nprice from icimcp where ctype = @lcpricebase
+                                                                                                                                         
+            and citemno = @citemno and ccurrcode = @lccurrcode)
+                                                                                                                                                                                              
+            begin
+                                                                                                                                                                                                                                            
+               execute vsp_ic_getcurrprice @citemno = @citemno, @cpricebase = @lcpricebase,
+                                                                                                                                                                  
+                  @ccurrcode = @lccurrcode, @nretvalue = @lnretvalue output,
+                                                                                                                                                                                 
+                  @nretvalinctx = @lnretvalinctx output   
+                                                                                                                                                                                                   
+               select @nretvalue = @lnretvalue * @lncnvqty,
+                                                                                                                                                                                                  
+                  @nretvalinctx = @lnretvalinctx * @lncnvqty   
+                                                                                                                                                                                              
+               if @bfromfront = 1
+                                                                                                                                                                                                                            
+                  select lusespprice = @lusespprice, nretvalue = @nretvalue
+                                                                                                                                                                                  
+               return
+                                                                                                                                                                                                                                        
+            end
+                                                                                                                                                                                                                                              
+
+                                                                                                                                                                                                                                                             
+    select @lusespprice =
+                                                                                                                                                                                                                                    
+    case
+                                                                                                                                                                                                                                                     
+            when @lusespprice = 1 and @nretvalue = @lnregprice and @nretvalinctx = @lnregprcinctx   
+                                                                                                                                                         
+            then 1
+                                                                                                                                                                                                                                           
+        else
+                                                                                                                                                                                                                                                 
+            0
+                                                                                                                                                                                                                                                
+    end
+                                                                                                                                                                                                                                                      
+
+                                                                                                                                                                                                                                                             
+    select @lnprice = @lnretvalue, @lnprcinctx = @lnretvalinctx   
+                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+    execute vsp_am_speccurr @nbaseamt = @lnprice,
+                                                                                                                                                                                                            
+      @nxchgrate = @nxchgrate, @ndec = @ndec,
+                                                                                                                                                                                                                
+      @nretamt = @nretvalue output
+                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+    execute vsp_am_speccurr @nbaseamt = @lnprcinctx,
+                                                                                                                                                                                                         
+      @nxchgrate = @nxchgrate, @ndec = @ndec,
+                                                                                                                                                                                                                
+      @nretamt = @nretvalinctx output
+                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+    if @bfromfront = 1
+                                                                                                                                                                                                                                       
+        select lusespprice = @lusespprice, nretvalue = @nretvalue, nretvalinctx = @nretvalinctx   
+                                                                                                                                                           
+end
+                                                                                                                                                                                                                                                          
+

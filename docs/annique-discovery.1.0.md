@@ -497,7 +497,8 @@ Document numbering:
 | `POST /syncproducts.api?type=changes` | `sp_NOP_syncItemChanges` | **Every 15 min** (7am–5pm) | AM → NOP | Reads `changes` table (cfieldname='cstatus'), delta sync | 2024-09-03 |
 | `POST /syncorderstatus.api?instancing=single` | `sp_NOP_syncOrderStatus` | Every 20 min (NOP-side job) | AM → NOP | Reads `soportal` cStatus='S', updates NOP order status | 2024-10-28 |
 | `POST /SyncCancelOrders.api?instancing=single` | SQL Agent job (AM) | **Every 15 min** (8am–6pm) | NOP → AM | ⚠️ **Newly discovered** — cancels orders in AccountMate when cancelled in NopCommerce | — |
-| `POST /sendsms.api` | `sp_SendAdminSMS` | On-demand | AM → NOP | **Only call with a body**: `{'username':'...','message:':'...'}` | 2025-05-07 |
+| `POST /sendsms.api` | `sp_SendAdminSMS` (AM) + NopCommerce plugin | On-demand | AM → NOP / NOP → SMS | SMS gateway: used for admin alerts (AM-side) **and** password reset OTP (NopCommerce plugin setting: `passwordresetapi`) | 2025-05-07 |
+| `POST /api/api/ValidateNewRegistration/` | NopCommerce registration plugin | On new consultant registration | NOP → NOPINT | Validates new consultant registration details; NopCommerce setting: `registrationvalidationapiendpoint` | — |
 
 All calls use: `Authentication: BASIC 0123456789ABCDEF0123456789ABCDEF` (hardcoded, header name typo'd).
 
@@ -509,6 +510,7 @@ All calls use: `Authentication: BASIC 0123456789ABCDEF0123456789ABCDEF` (hardcod
 |---|---|---|---|---|---|
 | `POST /syncstaff.api` | `sp_NOP_syncStaff` | **1st of month**, 9am | AM → ShopAPI | Sync `arcust` consultant accounts to webstore | 2023-03-20 |
 | `POST /NotifyVouchers.api?instancing=single` | SQL Agent job (NopIntegration DB) | **Every 4 hours** (8am–midnight) | NOP → ShopAPI | Send voucher availability notifications to consultants | — |
+| `POST /otpGenerate.api` | NopCommerce plugin (OTP setting) | On login / OTP trigger | NOP → ShopAPI | Generate and dispatch OTP codes; NopCommerce setting: `otpapiurl` | — |
 
 ### 5.3 `backofficenam.annique.com` — Namibia Backoffice ⚠️ SECURITY ISSUE
 
@@ -684,7 +686,7 @@ These jobs run **on the NopCommerce SQL Server** (`20.87.212.38,63000`, database
             ▼                   ▼                      ▼
 ┌──────────────────────────────────────────────────────────────────┐
 │              NEW MIDDLEWARE (replaces nopintegration)            │
-│         e.g. Node.js / .NET 8  —  VPS or Azure App Service      │
+│     platform TBD — see G5 / Q14 / Q15 for hosting constraints   │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  WEBHOOK RECEIVERS                                        │   │
@@ -754,7 +756,7 @@ These jobs run **on the NopCommerce SQL Server** (`20.87.212.38,63000`, database
 | Component | Recommendation | Rationale |
 |---|---|---|
 | **Storefront** | Shopify (Liquid or Hydrogen + Oxygen) | Hosted, PCI compliant, purpose-built |
-| **Middleware** | Node.js (Express) or .NET 8 | Low-latency SQL Server access; ERP-adjacent skillset |
+| **Middleware** | **TBD** — .NET 8 (ASP.NET Core) or Node.js (Express) | ⚠️ Platform decision blocked on G5 / Q14 / Q15 — hosting topology must be confirmed first; direct SQL access to `172.19.16.100` is a hard requirement |
 | **Message queue** | Azure Service Bus or Redis | Decouple Shopify webhooks from ERP writes |
 | **API logging** | Seq or Azure Application Insights | Currently zero visibility on sync failures |
 | **Campaign pages** | Shopify Metaobjects + theme | No separate CMS needed |
@@ -964,9 +966,9 @@ These must be resolved before a migration can be properly scoped or priced.
 | **D3** | Confirm whether `amanniquenam` (Namibia ERP) is actively used by Namibia staff | Annique management | 🔴 Blocker |
 | **D4** | Decide: Shopify Plus (B2B) or Shopify Advanced / standard? | Business stakeholder | 🔴 Blocker |
 | **D5** | Identify source / owner of `shopapi.annique.com` | Annique IT | 🟠 High — partially resolved: now known to handle voucher notifications + staff sync |
-| **D6** | Confirm `[WEBSTORE]` linked server presence on production; confirm if `anniquestore.co.za` is still live | Annique IT / DBA | 🟠 High |
+| **D6** | ~~Confirm `[WEBSTORE]` linked server presence on production; confirm if `anniquestore.co.za` is still live~~ | ✅ **PARTIALLY RESOLVED** | Staging NopCommerce server (`20.87.212.38,63000`) has `[WEBSTORE]` linked server → `stage.anniquestore.co.za,61023` (SQLNCLI). Production `.bak` contains no linked servers (instance-level objects not in backup). `anniquestore.co.za` staging endpoint confirmed live. |
 | **D7** | Obtain source of `SyncCancelOrders.api` and `sp_ws_invoicedtickets` | Annique IT | 🟠 High — both discovered via SQL Agent job list; no source reviewed yet |
-| **D8** | Confirm `NOP - Sync Affiliates` linked-server call (`Nop.Annique.[dbo].[ANQ_SyncAffiliate]`) — what does it do? | Annique IT / DBA | 🟠 High — this is a direct SQL call that will break when `[NOP]` is removed |
+| **D8** | ~~Confirm `NOP - Sync Affiliates` linked-server call (`Nop.Annique.[dbo].[ANQ_SyncAffiliate]`) — what does it do?~~ | ✅ **PARTIALLY RESOLVED** | SP is `ANQ_SyncAffiliates` (plural) — confirmed in production NopCommerce DB. It syncs NopCommerce affiliate/consultant linkage data. The AccountMate SQL Agent job description named it as `ANQ_SyncAffiliate` (singular) which does NOT exist — this may indicate the AM job calls a different path or the name was documented incorrectly. **Still need to confirm the exact AM→NOP mechanism in production.** |
 
 ### 9.2 Security Actions — Do Now, Not After Migration
 
@@ -1056,24 +1058,84 @@ These must be resolved before a migration can be properly scoped or priced.
 - `ANQ_CategoryIntegration` and `ANQ_ManufacturerIntegration` tables bridge AccountMate categories to NopCommerce categories/brands
 - New consultant registration validates via `ANQ_LocateRefSponsor` SP (finds sponsor by postal code); sends Brevo notification to sponsor
 
+### ✅ Confirmed via Production DB Backup (`AnniqueNOP.bak` — restored 2026-03-06)
+
+**Production data volumes (as of backup date):**
+- Orders: **128,722** in 2024; **118,554** in 2025 YTD (March) — approximately 10,000 orders/month
+- Customers: **71,097** total (non-deleted); **29,285** active in 2025
+- Published products: **135** SKUs on live storefront (vs 227 DRP-planned / ~800 `icitem` active in AM)
+- Exclusive items: **21,682** rows in `ANQ_ExclusiveItems` — heavily used
+- New registrations pipeline: **6,332** rows in `ANQ_NewRegistrations`
+
+**Feature liveness confirmed from production:**
+- **Awards**: ✅ **LIVE** — 843 awards issued; 3 types: `FS1` R800 (290 issued), `FS2` R1,600 (310 issued), `FS3` R2,300 (243 issued); ~60-day expiry; these are consultant first-set incentive vouchers
+- **Bookings**: ✅ **LIVE** — 940 booking records in `ANQ_Booking`
+- **Events**: ⚠️ **MINIMAL** — only 5 events configured total; not a primary feature
+- **Gift promotions** (`ANQ_Gift`): ✅ **CONFIGURED, PERIODICALLY ACTIVE** — 12 records total; 0 active at backup date; used for campaign gifts (time-limited)
+- **Exclusive items** (`ANQ_ExclusiveItems`): ✅ **HEAVILY USED** — 21,682 rows
+- **Chatbot**: ❌ **DISABLED** — `ischatbotenable = False`; OpenAI API key is empty — was being built, not live
+- **Stripe**: ❌ **DISABLED** — `istripenable = False`; PayU only
+- **Email verification**: ❌ **DISABLED** — `isemailverification = False`
+- **OTP**: ✅ **LIVE** — `isotp = True`; via `shopapi.annique.com/otpGenerate.api`
+- **Pickup/Click-and-collect**: ✅ **LIVE** — `ispickupcollection = True`; enabled for consultant role IDs 10, 11
+- **Meta Conversions API (CAPI)**: ✅ **HEAVILY USED** — `ANQ_MetaCapiQueue` has **81,228 queued events**; Facebook server-side event tracking is a core integration
+
+**Payment methods (production active):**
+- `Atluz.PayUSouthAfrica` — PayU (credit card, EFT, PayFlex)
+- `Payments.CheckMoneyOrder` — EFT / manual bank transfer
+- `Payments.CashOnDelivery` — account/COD
+- `Payments.Manual` — manual payment
+
+**Shipping (production active):**
+- Rate calculation: `Shipping.FixedByWeightByTotal` only (standard NopCommerce fixed-rate table)
+- Click-and-collect: `Pickup.PickupInStore`
+- Address validation: Fastway suburb lookup API (`https://ecommerce.fastway.co.za/api/suburbfinder/`)
+- **Carrier tracking SPs are POST-DISPATCH only** — Aramex, FastWay, SkyNet, PostNet, PEP are order-tracking integrations, NOT rate calculation
+
+**Additional confirmed endpoints (from NopCommerce settings):**
+- `POST https://shopapi.annique.com/otpGenerate.api` — OTP generation
+- `POST https://nopintegration.annique.com/sendsms.api` — also used for password reset SMS (not just admin alerts)
+- `POST https://nopintegration.annique.com/api/api/ValidateNewRegistration/` — consultant registration validation
+
+**Trip/competition feature confirmed:**
+- Mediterranean Cruise Competition (May 14 – June 30, 2025) — qualifying spend R600 minimum; message template managed in settings
+
+**Production NopCommerce DB — custom object counts:**
+- 73 custom stored procedures (`ANQ_*` namespace)
+- 40 custom tables (`ANQ_*` namespace)
+- 4 custom views (`ANQ_vw_*`)
+- 8 lookup categories in `ANQ_Lookups` (BANK 22, REGSTATUS 9, ETHNICITY 6, TITLE 6, CALLTIME 4, ACCOUNTTYPE 2, LANGUAGE 2, NATIONALITY 2)
+
+**Notable SP groups discovered (not previously documented):**
+- `ANQ_MetaCapi_*` (4 SPs) — Meta CAPI event queue and processing
+- `ANQ_Brevo_*` (3 SPs) + `ANQ_BrevoSync` — Brevo email sync
+- `ANQ_AramexTrack`, `ANQ_FastWayTrack`, `ANQ_SkyNetTrack`, `ANQ_SyncPostnet`, `ANQ_SyncPep` — 5 carrier post-dispatch tracking integrations
+- `ANQ_SyncEvents` — events sync from AccountMate
+- `ANQ_HTTP` — generic HTTP helper SP used internally
+- `ANQ_Payu_MarkOrderAsPaidViaApi` — PayU manual reconciliation helper
+- `ANQ_UpdateACL`, `ANQ_UpdateActivationDate` — ACL and consultant activation management
+
+**Production linked servers (staging instance — not from backup, backup is DB-only):**
+- `AMSERVER-V9` → `away2.annique.com,62111` (AccountMate staging) — SQLNCLI
+- `WEBSTORE` → `stage.anniquestore.co.za,61023` (old webstore staging) — SQLNCLI
+
 ### 🔲 Still Unknown — Requires Further Access
 
 - Production `wsSetting.ws.url` value
-- Production linked server configuration (`[NOP]`, `[WEBSTORE]`, `[Portal]`)
-- `shopapi.annique.com` source code and full owner — *function partially known: staff sync + voucher notifications*
+- Production linked server configuration (`[NOP]`, `[WEBSTORE]`, `[Portal]`) — linked servers are instance-level, not in DB backup; staging has `AMSERVER-V9` → `away2.annique.com,62111` and `WEBSTORE` → `stage.anniquestore.co.za,61023`
+- `shopapi.annique.com` source code and full owner — *function partially known: staff sync + voucher notifications + OTP*
 - Whether `amanniquenam` is actively operational on production
 - Whether `arcust.cbankacct` is plaintext or encrypted
 - Whether `compplanlive` is accessible with current credentials
-- What `[AMSERVER-V9]` linked server hosts
-- Whether event registrations via `anniquestore.co.za` are still in use
+- Whether event registrations via `anniquestore.co.za` (stage) are still in active use by real users
 - Shopify Plus vs. standard plan decision
 - Namibia store scope (shared vs separate)
-- Which NopCommerce features (Awards, Events, Gifts, Bookings, Donation, Spin and Win) are currently live vs WIP vs planned
 - Source code for `SyncCancelOrders.api` and `sp_ws_invoicedtickets`
-- What `ANQ_SyncAffiliate` does (linked-server call from AccountMate — no source reviewed)
-- Which SMS provider handles OTP and password reset delivery
+- Exact AM→NOP mechanism for `NOP - Sync Affiliates` job (SP name mismatch: job says `ANQ_SyncAffiliate` singular, NOP DB only has `ANQ_SyncAffiliates` plural)
+- Which SMS provider handles OTP and password reset delivery (via `shopapi.annique.com/otpGenerate.api` and `nopintegration.annique.com/sendsms.api`)
 - Whether guest checkout or PayU-without-redirect are live or still WIP
 - What the Skin Care Analysis tool integrates with (custom vs third-party)
+- Whether Skin Care, Donation at checkout, Spin and Win are live — no corresponding custom tables found in production DB
 
 ---
 

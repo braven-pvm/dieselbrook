@@ -1,0 +1,61 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                                                                                                                                             
+CREATE  PROCEDURE sp_NOP_OfferINS 
+                                                                                                                                                                                                                           
+	@Id int = NULL OUTPUT,
+                                                                                                                                                                                                                                      
+	@DiscountID int ,
+                                                                                                                                                                                                                                           
+	@ANQ_ID int =NULL,
+                                                                                                                                                                                                                                          
+	@ANQ_DiscountID int =NULL,
+                                                                                                                                                                                                                                  
+	@RuleType varchar(50)= NULL, @MinQty INT= NULL,
+                                                                                                                                                                                                             
+	@MaxQty INT =NULL,@MinValue Decimal(19,5)= NULL,@MaxValue Decimal(19,5)=NULL
+                                                                                                                                                                                
+
+                                                                                                                                                                                                                                                             
+AS
+                                                                                                                                                                                                                                                           
+BEGIN
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+IF @ID IS NOT NULL RETURN;
+                                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+INSERT NOP_Offers
+                                                                                                                                                                                                                                            
+	  ([DiscountId]
+                                                                                                                                                                                                                                             
+      ,[ANQ_ID]
+                                                                                                                                                                                                                                              
+      ,[ANQ_DiscountID]
+                                                                                                                                                                                                                                      
+      ,[RuleType]
+                                                                                                                                                                                                                                            
+      ,[MinQty]
+                                                                                                                                                                                                                                              
+      ,[MaxQty]
+                                                                                                                                                                                                                                              
+      ,[MinValue]
+                                                                                                                                                                                                                                            
+      ,[MaxValue])
+                                                                                                                                                                                                                                           
+	  VALUES (
+                                                                                                                                                                                                                                                  
+	  @DiscountID ,	@ANQ_ID ,@ANQ_DiscountID ,
+                                                                                                                                                                                                                  
+	@RuleType, @MinQty,	@MaxQty,@MinValue,@MaxValue 
+                                                                                                                                                                                                            
+	  )
+                                                                                                                                                                                                                                                         
+SET @id=@@IDENTITY
+                                                                                                                                                                                                                                           
+END
+                                                                                                                                                                                                                                                          
+

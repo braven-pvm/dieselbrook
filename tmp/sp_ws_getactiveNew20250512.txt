@@ -1,0 +1,149 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[sp_ws_getactiveNew20250512] @ldate DATETIME,@cItemno CHAR(20)=NULL
+                                                                                                                                                                   
+AS  
+                                                                                                                                                                                                                                                         
+begin
+                                                                                                                                                                                                                                                        
+--sp_ws_getactiveNEW @lDate='2022-07-13',@citemno ='BCMTB19014'
+                                                                                                                                                                                              
+
+                                                                                                                                                                                                                                                             
+DECLARE  @dfrom datetime, @dto datetime,@cId INT
+                                                                                                                                                                                                             
+select @cId=ID, @dfrom=dfrom, @dto=dto  from Campaign 
+                                                                                                                                                                                                       
+	where  @ldate BETWEEN dfrom and dto 
+                                                                                                                                                                                                                        
+print @cID
+                                                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+IF OBJECT_ID('tempdb..#tmpStock') IS NOT NULL DROP TABLE #tmpStock; 
+                                                                                                                                                                                         
+CREATE TABLE #tmpStock (cuid char(15),citemno CHAR(20),minstockQuantity INT,
+                                                                                                                                                                                 
+StockQuantity INT,lUpdateonhand INT,nfrcsqty INT,nQtyLimit INT,
+                                                                                                                                                                                              
+cSponcat CHAR(10),cSponType CHAR(10),nOrdQty INT,nAvailable INT,
+                                                                                                                                                                                             
+	ForcastAvail INT,AvailPercent NUMERIC(10,2),cStatus CHAR(20),dDate DATETIME)
+                                                                                                                                                                                
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+IF @citemno IS  NOT NULL
+                                                                                                                                                                                                                                     
+begin
+                                                                                                                                                                                                                                                        
+	INSERT #tmpStock
+                                                                                                                                                                                                                                            
+	exec sp_ws_getAvailability_CodeNEW20250512 @ddate=@ldate,@citemno=@citemno
+                                                                                                                                                                                  
+end
+                                                                                                                                                                                                                                                          
+else
+                                                                                                                                                                                                                                                         
+begin
+                                                                                                                                                                                                                                                        
+	INSERT #tmpStock
+                                                                                                                                                                                                                                            
+	EXEC sp_ws_getavailabilityNEW20250512 @ddate=@ldate;
+                                                                                                                                                                                                        
+end
+                                                                                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+	
+                                                                                                                                                                                                                                                            
+SELECT   0 AS ID,a.cuid,i.citemno,i.cdescript,i.cstatus,i.lioitem,i.lUpdonhand,
+                                                                                                                                                                              
+		 CAST(ISNULL(d.lonstore,0) AS INT) lportal,i.nweight,
+                                                                                                                                                                                                      
+		 ROUND(i.nprcinctx/1.15,4) nprice,i.nprcinctx,
+                                                                                                                                                                                                             
+		 i.ldscntble,ndiscrate=CASE WHEN i.ndiscrate<>0 then 20 ELSE 0 END, 
+                                                                                                                                                                                       
+		 i.lkititem,
+                                                                                                                                                                                                                                               
+		 ISNULL(dfrom,@dfrom) dfrom,ISNULL(dto,@dto) dto,
+                                                                                                                                                                                                          
+		 ISNULL(nPprice,i.nprice) npprice, ISNULL(nPdiscount,i.ndiscrate) npDiscount,
+                                                                                                                                                                              
+		 ISNULL(d.nfrcsqty,0) AS nfrcsqty,d.nQtylimit,d.lfree,a.cstatus StockStatus,
+                                                                                                                                                                               
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+		 --CTYPE CCLASS CSPONCAT CTYPE2 CSPONTYPE LCUSXITM
+                                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+		 -------------ATTRIBUTES --------------------------
+                                                                                                                                                                                                        
+		 i.ctype,i.cclass,d.csponcat,i.ctype2,
+                                                                                                                                                                                                                     
+		 ISNULL(d.cspontype,'') AS cspontype,
+                                                                                                                                                                                                                      
+		 i.lcusxitm 
+                                                                                                                                                                                                                                               
+		 ,a.minstockQuantity,a.StockQuantity,
+                                                                                                                                                                                                                      
+		 (select top 1 csubitemno from iciSub where icisub.citemno=i.cItemNo) cSubItemno
+                                                                                                                                                                           
+		 
+                                                                                                                                                                                                                                                          
+		 FROM  icitem i WITH (NOLOCK)
+                                                                                                                                                                                                                              
+		  LEFT OUTER JOIN 
+                                                                                                                                                                                                                                         
+			 (SELECT d.citemno,
+                                                                                                                                                                                                                                       
+			  d.nprice as nPprice,
+                                                                                                                                                                                                                                    
+			  s.ndiscrate as nPdiscount,
+                                                                                                                                                                                                                              
+			  s.lonstore,nQtylimit,
+                                                                                                                                                                                                                                   
+			   lfree=IIF(ISNULL(s.lcanbuy,1)=0,1,0),
+                                                                                                                                                                                                                  
+			  --cmajorcat,
+                                                                                                                                                                                                                                            
+			  d.dfrom,d.dto,d.nforecast nfrcsqty ,
+                                                                                                                                                                                                                    
+			  d.cspontype,d.csponcat
+                                                                                                                                                                                                                                  
+			  FROM campdetail d WITH (NOLOCK) 
+                                                                                                                                                                                                                        
+				  join Campsku s on d.campskuid=s.id 
+                                                                                                                                                                                                                    
+				  where d.CampaignID=@cID 
+                                                                                                                                                                                                                               
+				 AND	@ldate BETWEEN d.dfrom and d.dto 
+                                                                                                                                                                                                                   
+				AND d.linactive=0 and s.lonstore=1  ) as d
+                                                                                                                                                                                                               
+			ON i.citemno=d.citemno
+                                                                                                                                                                                                                                    
+		   JOIN #tmpStock a on i.citemno=a.citemno
+                                                                                                                                                                                                                 
+		   WHERE i.cSTatus='A' and  ISNULL(d.lonstore,0)=1
+                                                                                                                                                                                                         
+		   ORDER BY i.citemno
+                                                                                                                                                                                                                                      
+
+                                                                                                                                                                                                                                                             
+IF OBJECT_ID('tempdb..#tmpStock') IS NOT NULL DROP TABLE #tmpStock; 
+                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+end
+                                                                                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+
