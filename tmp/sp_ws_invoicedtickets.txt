@@ -1,0 +1,124 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[sp_ws_invoicedtickets]
+                                                                                                                                                                                                               
+AS
+                                                                                                                                                                                                                                                           
+begin
+                                                                                                                                                                                                                                                        
+	declare @cSono char(10),@cinvno CHAR(10),@citemno nvarchar(20)
+                                                                                                                                                                                              
+    declare curSync scroll cursor for
+                                                                                                                                                                                                                        
+	select csono,ticketcode
+                                                                                                                                                                                                                                     
+	FROM  [NOP].annique.dbo.ANQ_Booking R
+                                                                                                                                                                                                                       
+	JOIN  [NOP].annique.dbo.ANQ_Events e on r.eventid=e.id
+                                                                                                                                                                                                      
+	WHERE OrderID<>0 and cSono<>'' and cInvno IS NULL
+                                                                                                                                                                                                           
+	GROUP BY csono,ticketcode
+                                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+	Open curSync 
+                                                                                                                                                                                                                                               
+	fetch next from curSync into @cSono,@cItemno
+                                                                                                                                                                                                                
+	while @@fetch_status = 0
+                                                                                                                                                                                                                                    
+	begin	
+                                                                                                                                                                                                                                                      
+
+                                                                                                                                                                                                                                                             
+		
+                                                                                                                                                                                                                                                           
+		SET @cinvno=NULL
+                                                                                                                                                                                                                                           
+		SELECT @cinvno=i.cinvno FROM aritrs i WITH (NOLOCK) join sostrs o WITH (NOLOCK) 
+                                                                                                                                                                           
+		on i.csono=i.csono and( i.csolineitm=o.clineitem 
+                                                                                                                                                                                                          
+		OR  i.clineitem=o.clineitem) 
+                                                                                                                                                                                                                              
+		WHERE (i.cSono=@cSono OR o.cSoref=@cSono) and i.citemno=@cItemno
+                                                                                                                                                                                           
+		if @cinvno IS NOT NULL
+                                                                                                                                                                                                                                     
+		begin
+                                                                                                                                                                                                                                                      
+		
+                                                                                                                                                                                                                                                           
+		UPDATE [NOP].annique.dbo.ANQ_Booking 
+                                                                                                                                                                                                                      
+			SET cinvno=@cinvno where csono=@cSono
+                                                                                                                                                                                                                     
+		end
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+		else
+                                                                                                                                                                                                                                                       
+		begin
+                                                                                                                                                                                                                                                      
+			SELECT @cinvno=i.cinvno FROM aritrs i WITH (NOLOCK) join sostrs o WITH (NOLOCK) 
+                                                                                                                                                                          
+			on i.csono=i.csono and (  i.csolineitm=o.clineitem ) --i.csolineitm=o.clineitem OR
+                                                                                                                                                                        
+			WHERE (i.cSono=@cSono OR o.cSoref=@cSono) and i.csolineitm<>''
+                                                                                                                                                                                            
+			if @cinvno IS NOT NULL
+                                                                                                                                                                                                                                    
+			begin
+                                                                                                                                                                                                                                                     
+				UPDATE [NOP].annique.dbo.ANQ_Booking
+                                                                                                                                                                                                                     
+				SET cinvno=@cinvno where csono=@cSono
+                                                                                                                                                                                                                    
+			end
+                                                                                                                                                                                                                                                       
+		end
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+			
+                                                                                                                                                                                                                                                          
+		fetch next from curSync into @cSono,@cItemno
+                                                                                                                                                                                                               
+	end
+                                                                                                                                                                                                                                                         
+	deallocate curSync
+                                                                                                                                                                                                                                          
+end
+                                                                                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+-- EXEC sp_ws_invoicedtickets
+                                                                                                                                                                                                                                
+/*
+                                                                                                                                                                                                                                                           
+select * 
+                                                                                                                                                                                                                                                    
+FROM aritrs i WITH (NOLOCK) join sostrs o WITH (NOLOCK) 
+                                                                                                                                                                                                     
+		on i.csono=i.csono and i.csolineitm=o.clineitem 
+                                                                                                                                                                                                           
+		WHERE i.cSono='   A839928' and i.cdescript like '%ticket%'
+                                                                                                                                                                                                 
+
+                                                                                                                                                                                                                                                             
+ select * from sosord where cSono='   A839928'
+                                                                                                                                                                                                               
+ select * from sostrs where cSono='   A839928' --and citemno='SASAI23015          '
+                                                                                                                                                                          
+ select * from aritrs where cSono='   A839928' --and citemno='SASAI23015          '
+                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+ UPDATE sosord SET cFob='tickets' where cSono='   A851934'
+                                                                                                                                                                                                   
+ select * from sostrs where cSono='   A841280'
+                                                                                                                                                                                                               
+ */                                                                                                                                                                                                                                                            
+

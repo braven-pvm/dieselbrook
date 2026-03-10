@@ -78,6 +78,24 @@ THEN READ:
    ├─ Critical Process 1: MLM Commission Calculation
    │  └─ sp_ct_Rebates — Multi-level rebate distribution (13KB logic)
    ├─ Critical Process 2: Downline & Rank Advancement
+
+5. 07_hosting_certainty_matrix.md — HOSTING / NETWORK CERTAINTY
+  ├─ Separates confirmed topology facts from assumptions
+  ├─ Covers AccountMate, nopintegration, and NopCommerce hosting certainty
+  ├─ Identifies what is proven vs. still unknown
+  └─ Lists the exact infrastructure checks needed to close remaining gaps
+
+  USE THIS FOR: Confirming hosting assumptions before committing to middleware
+            deployment topology and connectivity design
+
+6. 08_hosting_questions_email_draft.md — HOSTING VERIFICATION EMAIL
+  ├─ Ready-to-send email requesting infrastructure confirmation
+  ├─ Focused on AccountMate, middleware, and private network topology
+  ├─ Includes explicit questions on hosting model, instance layout, and connectivity
+  └─ Includes a short reply template for faster turnaround from IT
+
+  USE THIS FOR: Sending to Annique IT or infrastructure support to close the
+            remaining hosting and topology unknowns
    │  └─ sp_ct_downlinebuild — Consultant hierarchy management
    ├─ Critical Process 3: Order Processing Flow
    │  └─ sosord → soskit → soship → arinvc → rebate calculation

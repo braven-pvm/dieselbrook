@@ -1,0 +1,43 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[sp_NOP_syncOrderStatus] AS
+                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+BEGIN
+                                                                                                                                                                                                                                                        
+DECLARE @cItemno CHAR(20),@cUrl nVarChar(max),@ID INT
+                                                                                                                                                                                                        
+SELECT @cUrl=LTRIM(RTRIM(Value)) FROM wsSetting WHERE Name='ws.url'
+                                                                                                                                                                                          
+if @cUrl IS NULL return
+                                                                                                                                                                                                                                      
+DECLARE	@return_value int,
+                                                                                                                                                                                                                                   
+		@cretvalue char(32),
+                                                                                                                                                                                                                                       
+		@cresponse nvarchar(4000),@JSON nVarChar(max)
+                                                                                                                                                                                                              
+SET @cUrl='https://nopintegration.annique.com/'
+                                                                                                                                                                                                              
+SET @cUrl=@cUrl+'syncorderstatus.api?instancing=single'
+                                                                                                                                                                                                      
+EXEC	@return_value = [dbo].[sp_ws_HTTP]
+                                                                                                                                                                                                                      
+		@cURL = @curl,
+                                                                                                                                                                                                                                             
+		@cretvalue = @cretvalue OUTPUT,
+                                                                                                                                                                                                                            
+		@cresponse = @cresponse OUTPUT
+                                                                                                                                                                                                                             
+END
+                                                                                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+--EXEC sp_NOP_syncOrders
+                                                                                                                                                                                                                                     
+
+                                                                                                                                                                                                                                                             
+

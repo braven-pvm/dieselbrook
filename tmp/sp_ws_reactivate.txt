@@ -1,0 +1,103 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                                                                                                                                             
+CREATE PROCEDURE [dbo].[sp_ws_reactivate]  @ccustno CHAR(10)
+                                                                                                                                                                                                 
+--select top 100 * from compplanlive..deactivations where ccustno='617878'
+                                                                                                                                                                                   
+--select * from arcust where ccustno='617878'
+                                                                                                                                                                                                                
+AS
+                                                                                                                                                                                                                                                           
+BEGIN
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+declare @cSponsor CHAR(10),@gen nvarchar(max),@newNOte nVarchar(30),@cEmail varChar(100)
+                                                                                                                                                                     
+declare @tbl table (i int identity,ccustno CHAR(10))
+                                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+select @gen=gen FROM compplanlive..deactivations WHERE ccustno=@ccustno
+                                                                                                                                                                                      
+IF @gen IS NULL
+                                                                                                                                                                                                                                              
+	THROW 50005,'No Deactivation record.',  1;
+                                                                                                                                                                                                                  
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+INSERT @tbl
+                                                                                                                                                                                                                                                  
+select data FROM 
+                                                                                                                                                                                                                                            
+compplanlive.dbo.fn_splitstring_to_table(@gen,',') t
+                                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+IF @@ROWCOUNT<1
+                                                                                                                                                                                                                                              
+	THROW 50005,'Invalid Generation Data.',  2;
+                                                                                                                                                                                                                 
+
+                                                                                                                                                                                                                                                             
+select TOP 1  @cSponsor=u.ccustno,@cEmail =c.cEmail  from @tbl u join amanniquelive..arcust c on u.ccustno=c.ccustno
+                                                                                                                                         
+WHERE c.cStatus='A' AND (c.dstarter IS NOT NULL and c.dstarter>'1908-01-01')
+                                                                                                                                                                                 
+order by u.i desc
+                                                                                                                                                                                                                                            
+IF @cSponsor IS NULL
+                                                                                                                                                                                                                                         
+	THROW 50005,'No Upline.',  3;
+                                                                                                                                                                                                                               
+
+                                                                                                                                                                                                                                                             
+UPDATE arCust SET cStatus='A',cSponsor=@cSponsor,dstarter=
+                                                                                                                                                                                                   
+CASE When dlSales IS NOT NULL aND DATEDIFF(month,dlSales,GETDATE())>=18 then GETDATE()
+                                                                                                                                                                       
+	When dlSales IS NULL THEN GETDATE()
+                                                                                                                                                                                                                         
+	else dstarter 
+                                                                                                                                                                                                                                              
+	END  WHERE cCustno=@cCustno
+                                                                                                                                                                                                                                 
+SET @newNOte ='REACTIVATED '+CONVERT(CHAR(20),GETDATE(),102)+CHAR(13)+CHAR(10)
+                                                                                                                                                                               
+UPDATE arcnot SET mnotepad=CONCAT(@newNOte,mnotepad)
+                                                                                                                                                                                                         
+WHERE cCustno=@cCustno
+                                                                                                                                                                                                                                       
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+select @cEmail =c.cEmail  from amanniquelive..arcust c 
+                                                                                                                                                                                                      
+WHERE cCustno=@cCustno
+                                                                                                                                                                                                                                       
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+INSERT NopIntegration..Brevolog 
+                                                                                                                                                                                                                             
+(CampaignID,ddate,ccustno,cEmail,Action)
+                                                                                                                                                                                                                     
+VALUES (20,GETDATE(),@ccustno,@cEmail,'List')
+                                                                                                                                                                                                                
+
+                                                                                                                                                                                                                                                             
+END
+                                                                                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
