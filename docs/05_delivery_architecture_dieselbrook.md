@@ -185,6 +185,7 @@ Why:
 - direct SQL access for reads and controlled procedure/table writes
 - stored procedure calls where current operational logic already depends on them
 - carefully scoped SQL login with least privilege
+- this includes replacing current `NISource` dependencies on same-instance support databases such as `compplanlive` and `compsys`, not only the core `amanniquelive` database
 
 #### AccountMate to middleware
 
@@ -220,16 +221,18 @@ Core components:
 11. `ExclusiveItemsSyncService`
 12. `CampaignPriceSyncService`
 13. `PricingParityService`
-14. `PayUReconciliationService`
-15. `SmsService`
-16. `OtpService`
-17. `RegistrationValidationService`
-18. `BrevoSyncService`
-19. `MetaCapiService`
-20. `VoucherNotificationService`
-21. `AuditLogService`
-22. `JobOrchestrationService`
-23. `ReconciliationDashboardService`
+14. `ConsultantHierarchyAndMLMAccessService`
+15. `ConsultantReportingDataService`
+16. `PayUReconciliationService`
+17. `SmsService`
+18. `OtpService`
+19. `RegistrationValidationService`
+20. `BrevoSyncService`
+21. `MetaCapiService`
+22. `VoucherNotificationService`
+23. `AuditLogService`
+24. `JobOrchestrationService`
+25. `ReconciliationDashboardService`
 
 ### 5.2 Shopify custom app
 

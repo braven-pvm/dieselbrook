@@ -96,6 +96,48 @@ THEN READ:
 
   USE THIS FOR: Sending to Annique IT or infrastructure support to close the
             remaining hosting and topology unknowns
+
+7. 09_environment_access_inventory.md — ENVIRONMENT / ACCESS INVENTORY
+  ├─ Records what file artifacts, SQL servers, and databases are directly accessible
+  ├─ Confirms staging SQL access to `AMSERVER-V9`
+  ├─ Lists confirmed presence of `compplanLive`, `compsys`, and `NopIntegration`
+  └─ Clarifies what is accessible locally vs only via staging SQL
+
+  USE THIS FOR: Avoiding repeated access confusion and grounding discovery in
+            confirmed environment facts
+
+8. 10_accessible_estate_and_replacement_surface.md — REPLACEMENT SURFACE MAP
+  ├─ Consolidates the accessible local and staging estate in one place
+  ├─ Maps the real runtime footprint of `NISource` and the custom Nop plugin
+  ├─ Identifies the SQL support databases and operational tables that are truly in scope
+  └─ Frames the highest-risk replacement zones before implementation starts
+
+  USE THIS FOR: Framing the full replacement scope for NopCommerce plus
+            `NISource` before detailed implementation planning
+
+9. 11_nisource_process_parity_matrix.md — NISOURCE PARITY MATRIX
+  ├─ Breaks the FoxPro middleware into concrete runtime processes
+  ├─ Maps each process to inputs, outputs, side effects, and replacement owner
+  ├─ Highlights the shared runtime concerns that must be replaced with the code
+  └─ Prioritizes the highest-risk parity targets
+
+  USE THIS FOR: Turning `NISource` replacement into explicit service work items
+
+10. 12_nop_customization_domain_classification.md — NOP PLUGIN DOMAIN SPLIT
+  ├─ Splits the custom Nop plugin into replace, retire, and preserve buckets
+  ├─ Grounds each bucket in concrete controllers, services, and domain models
+  ├─ Calls out overridden services, action filters, and events as risk areas
+  └─ Helps force business decisions on non-core legacy features
+
+  USE THIS FOR: Scoping what the Shopify build must recreate versus challenge
+
+11. 13_phase1_sql_contract.md — PHASE 1 SQL CONTRACT
+  ├─ Defines the minimum expected SQL read/write contract across the confirmed databases
+  ├─ Distinguishes proven needs from validation-required paths
+  ├─ Recommends least-privilege access boundaries for phase 1
+  └─ Identifies the early SQL access decisions Dieselbrook should force
+
+  USE THIS FOR: Designing credentials, permissions, and middleware data-access boundaries
    │  └─ sp_ct_downlinebuild — Consultant hierarchy management
    ├─ Critical Process 3: Order Processing Flow
    │  └─ sosord → soskit → soship → arinvc → rebate calculation

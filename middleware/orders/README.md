@@ -11,6 +11,8 @@ This folder breaks the order domain into the parts Dieselbrook will need to desi
 | `03_order_data_models.md` | The key AccountMate tables, a proposed canonical middleware order model, and the minimum middleware persistence layer |
 | `04_shopify_order_interface.md` | Shopify-side integration surface, event flows, field translation, and order-status synchronization |
 | `05_order_business_rules.md` | The current business rules that materially affect order import, financial posting, fulfillment, and side effects |
+| `06_staging_order_inventory.md` | Confirmed order-side and middleware-support objects directly verified on staging |
+| `07_order_replacement_touchpoint_map.md` | Concrete mapping from current order touchpoints to Dieselbrook replacement responsibilities |
 
 ## Current Working View
 
