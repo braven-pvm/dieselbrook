@@ -162,6 +162,17 @@ THEN READ:
   └─ Focuses specifically on the gaps exposed by the campaign module
 
   USE THIS FOR: Asking Annique for the remaining web-facing nopintegration source in one pass
+
+15. analysis/ — SYNTHESIS AND ANALYSIS FRAMEWORK
+  ├─ Starts the post-discovery synthesis phase
+  ├─ Contains the programme baseline, open decisions register, workstream structure, and reusable analysis template
+  ├─ Includes a future-agent onboarding document and an explicit synthesis execution plan
+  ├─ Stage 2 domain packs now exist for orders, consultants/MLM, and pricing/campaigns/exclusives
+  ├─ Stage 3 domain packs now exist for products/inventory, communications, reporting, identity/SSO, and admin/back-office
+  ├─ Stage 4/6 roll-up docs now exist for runtime/hosting, SQL contract, auditability/reconciliation, and phase-1 boundary summary
+  └─ Becomes the control layer that later requirements/specifications should build on
+
+  USE THIS FOR: Organizing the large documentation set into a stable analysis programme before detailed specs are written
    │  └─ sp_ct_downlinebuild — Consultant hierarchy management
    ├─ Critical Process 3: Order Processing Flow
    │  └─ sosord → soskit → soship → arinvc → rebate calculation

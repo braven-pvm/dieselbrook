@@ -234,7 +234,7 @@ It gives us direct evidence of:
 - the campaign administration use cases the legacy system supported
 - the shape of campaign summary, category split, sponsor split, reward budget, and SKU exposure workflows
 - the stored procedures and data families the admin UI relied on
-- stage publishing and Namibia copy actions that matter to migration scope
+- stage publishing actions that matter to migration scope (Namibia copy action is present in legacy source but Namibia is out of scope)
 
 That means it is highly relevant to replacement analysis even if it is not deployable as-is.
 

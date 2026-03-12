@@ -39,7 +39,7 @@ What makes it relevant:
 
 - it calls ERP campaign stored procedures such as `sp_Camp_CatSummary`, `sp_Camp_SkuByMonthvert`, `sp_Camp_BrandByMonth`, `sp_Camp_GetCamp`, and `sp_Camp_GetSponTypes`
 - it operates over campaign entities such as `Campaign`, `CampCat`, `CampSku`, `CampDetail`, `CampBrand`, and `CampSponSum`
-- it exposes actions such as campaign editing, SKU assignment, publish-to-stage, and copy-to-Namibia
+- it exposes actions such as campaign editing, SKU assignment, and publish-to-stage (copy-to-Namibia action is present in legacy source but Namibia is out of scope)
 
 Important caveat:
 
