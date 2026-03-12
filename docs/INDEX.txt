@@ -138,6 +138,30 @@ THEN READ:
   └─ Identifies the early SQL access decisions Dieselbrook should force
 
   USE THIS FOR: Designing credentials, permissions, and middleware data-access boundaries
+
+12. 14_campaign_module_missing_dependencies.md — CAMPAIGN MODULE GAP ANALYSIS
+  ├─ Lists what the supplied campaign module contains and what it still depends on
+  ├─ Separates present files from clearly missing layouts, scripts, helpers, and data classes
+  ├─ Explains why the module is relevant but not standalone
+  └─ Produces a concrete list of missing assets to request next
+
+  USE THIS FOR: Assessing whether the new campaign source is complete enough to trust
+
+13. 15_nisource_source_completeness_matrix.md — NISOURCE COMPLETENESS MATRIX
+  ├─ Rates how complete the current `NISource` snapshot appears by layer and domain
+  ├─ Distinguishes core middleware logic from missing web-app shell pieces
+  ├─ Identifies where source is present, partial, compiled-only, or clearly missing
+  └─ Gives a practical working assumption for future discovery
+
+  USE THIS FOR: Judging how much confidence to place in the current nopintegration source snapshot
+
+14. 16_annique_followup_request_missing_web_assets.md — FOLLOW-UP REQUEST DRAFT
+  ├─ Ready-to-send request for the missing web shell, scripts, data classes, and callback wiring
+  ├─ Structured to minimize another partial source drop
+  ├─ Includes both a detailed email and a shorter checklist version
+  └─ Focuses specifically on the gaps exposed by the campaign module
+
+  USE THIS FOR: Asking Annique for the remaining web-facing nopintegration source in one pass
    │  └─ sp_ct_downlinebuild — Consultant hierarchy management
    ├─ Critical Process 3: Order Processing Flow
    │  └─ sosord → soskit → soship → arinvc → rebate calculation
