@@ -1,0 +1,1128 @@
+<% pcPageTitle = "Campaign / Product Exposure Summary" %>
+<% Layout = "~/views/_layoutpageVue.wcs" %>
+
+<div id="app" v-cloak>
+    <div v-if="isBusy" class="d-flex justify-content-center mb-3">
+        <b-spinner label="Loading..."></b-spinner>
+    </div>
+
+    <div v-if="updateErrors.length > 0" class="alert alert-warning danger-color">
+        <ul>
+            <li v-for="error in updateErrors">{{ error }}</li>
+        </ul>
+    </div>
+
+    <b-container fluid class="m-0 p-0">
+
+
+        <b-navbar toggleable="lg" type="dark" variant="dark">
+            <b-navbar-brand href="default.ann">Home</b-navbar-brand>
+
+            <b-navbar-nav class="ml-auto">
+                <b-nav-item-dropdown right>
+                    <template #button-content>
+                        <em><%= Process.cAuthenticatedName %></em>
+                    </template>
+
+                    <b-dropdown-item href="logout.ann" style="color: #C86154">
+                        <i class="fa fa-unlock"></i>
+                        Sign out
+                    </b-dropdown-item>
+                </b-nav-item-dropdown>
+            </b-navbar-nav>
+        </b-navbar>
+    </b-container>
+
+    <b-tabs v-model="tabIndex" pills card class="ann_green">
+        <b-tab title="Campaign Summary" active>
+            <b-row class="m-2 w-100">
+                <b-table
+                    id="my-table"
+                    ref="table"
+                    v-model="visibleRows"
+                    :items="odata.campaigns"
+                    :fields="linefields"
+                    :tbody-tr-class="campRowClass"
+                    hover
+                    sticky-header
+                    bordered
+                    striped
+                    show-empty
+                    small
+                    class="table-vsm"
+                    @row-clicked="camp_onRowSelected"
+                >
+                    <template #cell(month)="row">
+                        {{ row.item.iyear + "-" + row.item.cmonthname.substr(0, 3) }}
+                    </template>
+
+                    <template #cell(nactualgpp)="row">
+                        <div v-if="row.item.cstatus == 'C' || row.item.cstatus == 'H'">
+                            {{
+                                gppactual(
+                                    row.item.nactualsales,
+                                    row.item.nactualcost,
+                                    row.item.nactualdisc,
+                                    row.item.nactualmlm
+                                )
+                            }}
+                        </div>
+
+                        <div v-else>
+                            {{
+                                gppactual(
+                                    totalTarget(row.item),
+                                    totalCost(row.item),
+                                    totalDisc(row.item),
+                                    0
+                                )
+                            }}
+                        </div>
+                    </template>
+
+                    <template #thead-top="data">
+                        <b-tr>
+                            <b-th></b-th>
+                            <b-th colspan="4" class="text-center">Targets</b-th>
+                            <b-th colspan="6" class="text-center">Category Split %</b-th>
+                            <b-th colspan="4" class="text-center">Spon Split %</b-th>
+                            <b-th colspan="2" class="text-center">Actuals (Plan)</b-th>
+                        </b-tr>
+                    </template>
+
+                    <template #cell(actions)="row">
+                        <b-button
+                            v-if="(
+                                (settings.edit === true && (row.item.cstatus === '' || row.item.cstatus === 'G')) ||
+                                (settings.editinlive === true && row.item.cstatus === 'C') ||
+                                (settings.editinfrozen === true && row.item.cstatus === 'F')
+                            )"
+                            size="sm"
+                            variant="primary"
+                            class="p-1 m-1"
+                            @click="camp_edit(row.item, row.index, $event.target)"
+                        >
+                            <i class="fa fa-edit"></i>
+                        </b-button>
+
+                        {{ settings.editinlive }}{{ row.item.cstatus }}
+
+                        <b-button
+                            size="sm"
+                            variant="success"
+                            class="p-1 m-1"
+                            @click="row.toggleDetails"
+                        >
+                            <i class="fa fa-bars"></i>
+                        </b-button>
+                    </template>
+
+                    <template #row-details="row">
+                        <b-table
+                            :items="row.item.odash"
+                            :fields="dashfields"
+                            :tbody-tr-class="dashRowClass"
+                            hover
+                            bordered
+                            show-empty
+                            small
+                            class="table-sm"
+                        >
+                        </b-table>
+                    </template>
+                </b-table>
+            </b-row>
+        </b-tab>
+
+        <b-tab title="Categories">
+            <b-container fluid>
+                <b-form inline class="mb-1">
+                    <b-form-row>
+                        <b-col>
+                            <b-form-select
+                                id="category-selection"
+                                v-model="category"
+                                :options="settings.categories"
+                                :value="null"
+                                size="sm"
+                                plain
+                                class="mr2-1 form-control"
+                            >
+                            </b-form-select>
+                        </b-col>
+
+                        <b-col>
+                            <label for="daterange">Date Range</label>
+                        </b-col>
+
+                        <b-col>
+                            <b-input
+                                v-model="dfrom"
+                                name="daterange"
+                                type="date"
+                                size="sm"
+                                locale="en-gb"
+                            >
+                            </b-input>
+                        </b-col>
+
+                        -
+
+                        <b-col>
+                            <b-input
+                                v-model="dto"
+                                type="date"
+                                size="sm"
+                                locale="en-gb"
+                            >
+                            </b-input>
+                        </b-col>
+
+                        <b-col>
+                            <b-button
+                                size="sm"
+                                class="text-small"
+                                @click="getSkus(category, dfrom, dto)"
+                            >
+                                Get Campaigns
+                            </b-button>
+                        </b-col>
+                    </b-form-row>
+                </b-form>
+
+                <b-form-row v-if="odata.skus.length > 0" class="my-1">
+                    <b-col sm="2">
+                        <b-form-group class="mb-0">
+                            <b-input-group size="sm">
+                                <b-form-input
+                                    id="filter-input"
+                                    v-model="filter"
+                                    type="search"
+                                    placeholder="Filter"
+                                ></b-form-input>
+
+                                <b-input-group-append>
+                                    <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                                </b-input-group-append>
+                            </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                </b-form-row>
+            </b-container>
+
+            <b-row>
+                <b-table
+                    v-model="visibleRows"
+                    :items="odata.skus"
+                    :fields="skufields"
+                    :filter="filter"
+                    :filter-included-fields="filterOn"
+                    hover
+                    sticky-header
+                    bordered
+                    striped
+                    show-empty
+                    small
+                    class="table-vsm"
+                    @row-clicked="detail_edit"
+                >
+                    <template #cell(ntarget)="data">
+                        {{ Math.round(data.item.nforecast * data.item.nprice) }}
+                    </template>
+
+                    <template #cell(actions)="row">
+                        <b-button
+                            v-if="!settings.viewonly && settings.additems && ((row.item.cstatus == '') || (settings.editinfrozen && row.item.cstatus == 'F'))"
+                            size="sm"
+                            variant="danger"
+                            class="ml-auto"
+                            @click="item_removeRowHandler(row)"
+                        >
+                            <i class="fa fa-trash"></i>
+                        </b-button>
+
+                        <b-button
+                            v-if="settings.viewonly || !settings.additems"
+                            size="sm"
+                            class="text-small"
+                            @click="row.toggleDetails"
+                        >
+                            {{ row.detailsShowing ? 'Hide' : 'Details' }}
+                        </b-button>
+                    </template>
+
+                    <template #cell(usedin)="row">
+                        <ul class="text-vsmall p-0">
+                            <li v-for="value in row.item.ousedin" class="text-vsmall p-0">
+                                <b-button
+                                    v-b-tooltip.hover.left
+                                    size="sm"
+                                    variant="outline-info"
+                                    class="p-0 m-0"
+                                    @click="jumpto(value.campskuid)"
+                                >
+                                    {{ value.ckitcode }}
+                                </b-button>
+                            </li>
+                        </ul>
+                    </template>
+
+                    <template #cell(lkititem)="row">
+                        <ul v-if="row.item.lkititem" class="text-vsmall p-0">
+                            <li v-for="value in row.item.okit" class="text-vsmall p-0">
+                                {{ value.citemno }}-{{ value.compdescript }}
+                            </li>
+                        </ul>
+                    </template>
+
+                    <template #cell(ngp)="row">
+                        {{ gpp(row.item.nprice, row.item.ncost, row.item.ndrate, row.item.nmlmrate) }}
+                    </template>
+
+                    <template #head(actions)>
+                        <b-button
+                            v-if="!settings.viewonly && settings.additems"
+                            v-b-tooltip.hover.left
+                            title="Add a new item to Campaigns"
+                            size="sm"
+                            variant="success"
+                            class="ml-auto"
+                            @click="item_addsku()"
+                        >
+                            <i class="fa fa-plus-circle"></i>
+                        </b-button>
+                    </template>
+
+                    <template #row-details="row">
+                        <b-table
+                            :items="row.item.odetail"
+                            :fields="detailfieldsview"
+                            hover
+                            bordered
+                            show-empty
+                            small
+                            class="table-vsm"
+                        >
+                            <template #cell(ngp)="row">
+                                {{ gpp(row.item.nprice, row.item.ncost, row.item.ndrate, row.item.nmlmrate) }}
+                            </template>
+                        </b-table>
+                    </template>
+                </b-table>
+            </b-row>
+        </b-tab>
+
+        <b-tab title="Offers"></b-tab>
+
+        <template #tabs-end>
+            <b-link
+                v-if="settings.createitem"
+                href="itemadd.ann"
+                class="nav-item align-self-center nav-link"
+                target="_parent"
+            >
+                New Item
+            </b-link>
+        </template>
+    </b-tabs>
+
+    <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
+        <label v-if="infoModal.item.lgwp">Qty Limit</label>
+        <b-form-input
+            v-model.number="infoModal.item.ngqtylimit"
+            :value="infoModal.item.ngqtylimit"
+            type="number"
+            size="sm"
+            class="text-small form-control"
+        >
+        </b-form-input>
+        <pre>{{ infoModal.content }}</pre>
+    </b-modal>
+
+    <b-modal
+        id="campaign"
+        title="Campaign"
+        size="xl"
+        ok-only
+        no-close-on-backdrop
+        no-close-on-esc
+        class="ann_green"
+        @ok="camp_handleOk"
+        @close="camp_handleClose"
+    >
+        <b-container>
+            <div v-if="camp_updateErrors.length > 0" class="alert alert-warning danger-color">
+                <ul>
+                    <li v-for="error in camp_updateErrors">{{ error }}</li>
+                </ul>
+            </div>
+
+            <form ref="form" @submit.stop.prevent="camp_handleSave">
+                <b-row>
+                    <b-col sm="6">
+                        <b-row>
+                            <b-col sm="5">
+                                <b-form-group label="Start Date" label-for="camp_dfrom">
+                                    <b-form-input
+                                        id="camp_dfrom"
+                                        v-model="odata.campaign.dfrom"
+                                        name="camp_dfrom"
+                                        type="date"
+                                        plain
+                                    >
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="5">
+                                <b-form-group label="End Date" label-for="camp_dto">
+                                    <b-form-input
+                                        id="camp_dto"
+                                        v-model="odata.campaign.dto"
+                                        name="camp_dtom"
+                                        type="date"
+                                        plain
+                                    >
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+
+                        <b-row>
+                            <b-col sm="5">
+                                <b-form-group label="Marketing Target" label-for="camp_ntarget">
+                                    <b-form-input
+                                        id="camp_ntarget"
+                                        v-model.number="odata.campaign.ntarget"
+                                        name="camp_ntarget"
+                                        plain
+                                    >
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="5">
+                                <b-form-group label="GP % Target" label-for="camp_ngptarget">
+                                    <b-form-input
+                                        id="camp_ngptarget"
+                                        v-model.number="odata.campaign.ngptarget"
+                                        name="camp_ngptarget"
+                                        plain
+                                    >
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                    </b-col>
+
+                    <b-col>
+                        <b-row>
+                            <b-col sm="5">
+                                <b-form-group label="Discount %" label-for="camp_ndiscrate">
+                                    <b-form-input
+                                        id="camp_ndiscrate"
+                                        v-model.number="odata.campaign.ndiscrate"
+                                        name="camp_ndiscrate"
+                                        plain
+                                    >
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="5">
+                                <b-form-group label="MLM %" label-for="camp_nmlmrate">
+                                    <b-form-input
+                                        id="camp_nmlmrate"
+                                        v-model.number="odata.campaign.nmlmrate"
+                                        name="camp_nmlmrate"
+                                        plain
+                                    >
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+
+                        <b-form-group label="Campaign Status" label-for="status-selection" class="row">
+                            <b-col>
+                                <b-form-select
+                                    id="status-selection"
+                                    v-model="odata.campaign.cstatus"
+                                    :disabled="!settings.freeze"
+                                    size="sm"
+                                    plain
+                                    class="mr2-1 form-control"
+                                    :options="[
+                                        { value: 'H', text: 'Historic', disabled: true },
+                                        { value: 'C', text: 'Current', disabled: true },
+                                        { value: 'F', text: 'Frozen' },
+                                        { value: '', text: 'Future' }
+                                    ]"
+                                >
+                                </b-form-select>
+                            </b-col>
+                        </b-form-group>
+
+                        <b-button
+                            v-if="settings.tostage"
+                            variant="info"
+                            @click="camp_synctostage(odata.campaign.id)"
+                        >
+                            Publish to Stage
+                        </b-button>
+
+                        <b-button
+                            v-if="settings.tonamiba"
+                            variant="success"
+                            @click="camp_synctonam(odata.campaign.id)"
+                        >
+                            Copy to Namibia
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+                <b-row>
+                    <b-col sm="12">
+                        <b-table
+                            v-model="visibleRowsCat"
+                            :items="odata.campaign.ocat"
+                            :fields="catfields"
+                            hover
+                            bordered
+                            show-empty
+                            class="table-vsm"
+                        >
+                            <template #cell(nptargetsplit)="row">
+                                {{ (row.item.nptarget / totalCatPlan * 100).toFixed(2) }}
+                            </template>
+
+                            <template #cell(npvariance)="row">
+                                {{ ((row.item.ntarget - row.item.nptarget) / row.item.nptarget * 100).toFixed(2) }}
+                            </template>
+
+                            <template #cell(ngpp)="row">
+                                {{ row.item.npgp.toFixed(2) }}
+                            </template>
+
+                            <template #cell(ngppvariance)="row">
+                                {{ (row.item.npgp - row.item.ngptarget).toFixed(2) }}
+                            </template>
+
+                            <template #cell(ntargetsplit)="row">
+                                <b-input-group>
+                                    <b-form-input
+                                        v-model.number="row.item.ntargetsplit"
+                                        :value="row.item.ntargetsplit"
+                                        type="number"
+                                        plain
+                                        sm="3"
+                                        class="text-small"
+                                        @change="changeCatForecast"
+                                    >
+                                    </b-form-input>
+                                </b-input-group>
+                            </template>
+
+                            <template #cell(ngptarget)="row">
+                                <b-input-group>
+                                    <b-form-input
+                                        v-model.number="row.item.ngptarget"
+                                        :value="row.item.ngptarget"
+                                        type="number"
+                                        plain
+                                        sm="5"
+                                        class="text-small"
+                                    >
+                                    </b-form-input>
+                                </b-input-group>
+                            </template>
+
+                            <template slot="bottom-row">
+                                <td>Total</td>
+                                <td>
+                                    {{ totalCat.toFixed(2) }}
+                                    <div v-if="totalCat != 100">({{ (100 - totalCat).toFixed(2) }})</div>
+                                </td>
+                                <td class="text-right">{{ formatter_com(odata.campaign.ntarget) }}</td>
+                                <td class="text-right">{{ formatter_com(totalCatPlan) }}</td>
+                            </template>
+                        </b-table>
+                    </b-col>
+
+                    <b-col sm="12">
+                        <b-table
+                            v-model="visibleRowsSpon"
+                            :items="odata.campaign.ospon"
+                            :fields="sponfields"
+                            hover
+                            bordered
+                            show-empty
+                            responsive
+                            class="table-vsm"
+                        >
+                            <template #cell(ntargetsplit)="row">
+                                <b-input-group>
+                                    <b-form-input
+                                        v-model.number="row.item.ntargetsplit"
+                                        :value="row.item.ntargetsplit"
+                                        type="number"
+                                        size="sm"
+                                        class="text-small"
+                                        @change="changeSponForecast"
+                                    >
+                                    </b-form-input>
+                                </b-input-group>
+                            </template>
+
+                            <template #cell(ngptarget)="row">
+                                <b-input-group>
+                                    <b-form-input
+                                        v-model.number="row.item.ngptarget"
+                                        :value="row.item.ngptarget"
+                                        type="number"
+                                        size="sm"
+                                        class="text-small"
+                                    >
+                                    </b-form-input>
+                                </b-input-group>
+                            </template>
+
+                            <template #cell(nptargetsplit)="row">
+                                {{ (row.item.nptarget / totalCatPlan * 100).toFixed(2) }}
+                            </template>
+
+                            <template #cell(npvariance)="row">
+                                {{ ((row.item.ntarget - row.item.nptarget) / row.item.nptarget * 100).toFixed(2) }}
+                            </template>
+
+                            <template #cell(ngpp)="row">
+                                {{ row.item.npgp.toFixed(2) }}
+                            </template>
+
+                            <template #cell(ngppvariance)="row">
+                                {{ row.item.npgp.toFixed(2) }}
+                            </template>
+
+                            <template slot="bottom-row">
+                                <td>Total</td>
+                                <td>
+                                    {{ totalSpon.toFixed(2) }}
+                                    <div v-if="totalSpon != 100">({{ (100 - totalSpon).toFixed(2) }})</div>
+                                </td>
+                                <td class="text-right">{{ formatter_com(odata.campaign.ntarget) }}</td>
+                                <td class="text-right">{{ formatter_com(totalCatPlan) }}</td>
+                            </template>
+                        </b-table>
+                    </b-col>
+
+                    <b-col sm="12">
+                        <b-table
+                            v-model="visibleRowsBrand"
+                            :items="odata.campaign.obrand"
+                            :fields="brandfields"
+                            caption="Rewards Budget"
+                            hover
+                            bordered
+                            show-empty
+                            responsive
+                            class="table-vsm"
+                        >
+                            <template #head(actions)>
+                                <b-button size="sm" variant="success" class="ml-auto" @click="brand_addRowHandler()">
+                                    <i class="fa fa-plus-circle"></i>
+                                </b-button>
+                            </template>
+
+                            <template #cell(actions)="row">
+                                <b-button
+                                    size="sm"
+                                    variant="danger"
+                                    class="ml-auto"
+                                    @click="brand_removeRowHandler(row.index)"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </b-button>
+                            </template>
+
+                            <template #cell(category)="row">
+                                <b-form-select
+                                    v-model="row.item.category"
+                                    :options="settings.categories"
+                                    size="sm"
+                                    plain
+                                    class="text-small form-control"
+                                >
+                                </b-form-select>
+                            </template>
+
+                            <template #cell(cclass)="row">
+                                <b-form-select
+                                    v-model="row.item.cclass"
+                                    :options="itemlookups.brands"
+                                    size="sm"
+                                    plain
+                                    class="text-small form-control"
+                                >
+                                </b-form-select>
+                            </template>
+
+                            <template #cell(nrrbudget)="row">
+                                <b-form-input
+                                    v-model.number="row.item.nrrbudget"
+                                    :value="row.item.nrrbudget"
+                                    type="number"
+                                    size="sm"
+                                    class="text-small form-control"
+                                >
+                                </b-form-input>
+                            </template>
+                        </b-table>
+                    </b-col>
+                </b-row>
+            </form>
+        </b-container>
+    </b-modal>
+
+    <b-modal
+        id="detail"
+        v-bind:title="codedesc"
+        size="xl"
+        ok-only
+        no-close-on-backdrop
+        no-close-on-esc
+        @ok="detail_handleOk"
+        @close="detail_handleClose"
+    >
+        <b-container>
+            <div v-if="detail_updateErrors.length > 0" class="alert alert-warning danger-color">
+                <ul>
+                    <li v-for="error in detail_updateErrors">{{ error }}</li>
+                </ul>
+            </div>
+
+            <b-row class="mb-0 ann_green">
+                <b-col sm="2">
+                    Forecast: {{ odata.sku.nforecast }}
+                </b-col>
+                <b-col sm="3">
+                    Avg Price Ex: {{ odata.sku.nprice }}
+                </b-col>
+                <b-col sm="2">
+                    Avg RSP {{ formatter_2dec(odata.sku.nrsp) }}
+                </b-col>
+                <b-col sm="2">
+                    Cost: {{ odata.sku.ncost }}
+                </b-col>
+                <b-col sm="2">
+                    GP %
+                    {{
+                        odata.sku.ncost > 0
+                            ? gpp(odata.sku.nprice, odata.sku.ncost, odata.sku.ndrate, odata.sku.nmlmrate)
+                            : "**"
+                    }}
+                </b-col>
+            </b-row>
+
+            <b-row class="mb-1 ann_green">
+                <b-col sm="2">
+                    DRP Tot: {{ totaldrp }}
+                </b-col>
+                <b-col sm="3">
+                    <b-form-checkbox v-model="odata.sku.lonstore">On Store</b-form-checkbox>
+                </b-col>
+                <b-col sm="3">
+                    <b-form-checkbox v-model="odata.sku.lcanbuy">Can Buy</b-form-checkbox>
+                </b-col>
+                <b-col sm="4">
+                    Disc %
+                    <b-form-select v-model.number="odata.sku.ndiscrate" class="col-3" size="sm">
+                        <b-form-select-option value="20">20%</b-form-select-option>
+                        <b-form-select-option value="15">15%</b-form-select-option>
+                        <b-form-select-option value="10">10%</b-form-select-option>
+                        <b-form-select-option value="5">5%</b-form-select-option>
+                        <b-form-select-option value="1">1%</b-form-select-option>
+                        <b-form-select-option value="0">0%</b-form-select-option>
+                    </b-form-select>
+                </b-col>
+            </b-row>
+
+            <b-table
+                v-model="visibleRowsDetail"
+                :items="odata.sku.odetail"
+                :fields="detailfields"
+                hover
+                bordered
+                show-empty
+                small
+                class="table-vsm"
+            >
+                <template #head(actions)>
+                    <b-button size="sm" variant="success" class="ml-auto" @click="detail_addRowHandler()">
+                        <i class="fa fa-plus-circle"></i>
+                    </b-button>
+                </template>
+
+                <template #cell(actions)="row">
+                    <b-button
+                        v-if="odata.sku.odetail.length > 1"
+                        size="sm"
+                        variant="danger"
+                        class="ml-auto"
+                        @click="detail_removeRowHandler(row)"
+                    >
+                        <i class="fa fa-trash"></i>
+                    </b-button>
+                </template>
+
+                <template #cell(cspontype)="row">
+                    <b-form-select
+                        v-model="row.item.cspontype"
+                        :options="spontypes"
+                        size="sm"
+                        plain
+                        class="text-small form-control"
+                        @change="detail_updatesponcat(row.item)"
+                    >
+                    </b-form-select>
+                </template>
+
+                <template #cell(dfrom)="row">
+                    <b-input
+                        v-model="row.item.dfrom"
+                        :value="row.item.dfrom"
+                        type="date"
+                        size="sm"
+                        locale="en-gb"
+                        class="text-small form-control"
+                    >
+                    </b-input>
+                </template>
+
+                <template #cell(dto)="row">
+                    <b-input
+                        v-model="row.item.dto"
+                        :value="row.item.dto"
+                        type="date"
+                        size="sm"
+                        locale="en-gb"
+                        class="text-small form-control"
+                    >
+                    </b-input>
+                </template>
+
+                <template #cell(nforecast)="row">
+                    <b-form-input
+                        v-model.number="row.item.nforecast"
+                        :value="row.item.nforecast"
+                        type="number"
+                        size="sm"
+                        class="text-small form-control"
+                    >
+                    </b-form-input>
+                </template>
+
+                <template #cell(nqtylimit)="row">
+                    <b-form-input
+                        v-model.number="row.item.nqtylimit"
+                        :value="row.item.nqtylimit"
+                        type="number"
+                        size="sm"
+                        class="text-small form-control"
+                    >
+                    </b-form-input>
+                </template>
+
+                <template #cell(nrsp)="row">
+                    <b-form-input
+                        v-model.number="row.item.nrsp"
+                        :value="row.item.nrsp.toFixed(2)"
+                        type="number"
+                        size="sm"
+                        class="text-small form-control"
+                    >
+                    </b-form-input>
+                </template>
+
+                <template #cell(coffer)="row">
+                    <b-form-input
+                        v-model="row.item.coffer"
+                        :value="row.item.coffer"
+                        size="sm"
+                        class="text-small form-control"
+                    >
+                    </b-form-input>
+                </template>
+
+                <template #cell(cpageno)="row">
+                    <b-form-input
+                        v-model="row.item.cpageno"
+                        :value="row.item.cpageno"
+                        size="sm"
+                        class="text-small form-control"
+                    >
+                    </b-form-input>
+                </template>
+
+                <template #cell(ngp)="row">
+                    <b-form-input
+                        :value="gpp(row.item.nrsp / 1.15, row.item.ncost, row.item.ndrate, row.item.nmlmrate) || 0"
+                        type="text"
+                        size="sm"
+                        readonly
+                    />
+                </template>
+
+                <template #cell(linactive)="row">
+                    <b-form-checkbox
+                        v-model="row.item.linactive"
+                        :disabled="row.item.cspontype == 'OFFER'"
+                    ></b-form-checkbox>
+                </template>
+
+                <template #cell(lgwp)="row">
+                    <b-button size="sm" variant="light" @click="gift_edit(row.item, row.index)">
+                        <i v-if="row.item.lgwp" class="fa fa-gift"></i>
+                    </b-button>
+                </template>
+            </b-table>
+
+            <b-table
+                v-show="visibleRowsUsedin.length > 0"
+                v-model="visibleRowsUsedin"
+                :items="odata.sku.ousedin"
+                :fields="usedinfields"
+                caption="Used In"
+                caption-top
+                hover
+                bordered
+                small
+                class="table-sm"
+            >
+            </b-table>
+
+            <b-table
+                v-if="odata.sku.okit"
+                v-show="visibleRowsKit.length > 0"
+                v-model="visibleRowsKit"
+                :items="odata.sku.okit"
+                :fields="kititemfields"
+                caption="Components"
+                caption-top
+                hover
+                bordered
+                small
+                class="table-sm"
+            >
+            </b-table>
+        </b-container>
+    </b-modal>
+
+    <b-modal
+        id="new-item"
+        title="Add an item to Campaign"
+        size="xl"
+        ok-only
+        :ok-disabled="!newsku.citemno || !newsku.cdescript || newsku.selected.length == 0"
+        @ok="item_handleOk"
+        @close="item_handleClose"
+    >
+        <b-container>
+            <div v-if="item_updateErrors.length > 0" class="alert alert-warning danger-color">
+                <ul>
+                    <li v-for="error in item_updateErrors">{{ error }}</li>
+                </ul>
+            </div>
+
+            <b-row>
+                <b-input-group class="m-1">
+                    <b-input-group-prepend class="col-sm-2 p-0">
+                        <b-input-group-text>Code</b-input-group-text>
+                    </b-input-group-prepend>
+
+                    <div class="col-sm-10 p-0">
+                        <vue-bootstrap-typeahead
+                            id="citemno"
+                            v-model="newsku.citemno"
+                            :data="vmlookup.items"
+                            :serializer="s => s.citemno"
+                            :min-matching-chars="3"
+                            @input="lookupItem(newsku.citemno)"
+                            @hit="newsku.citemno = $event.citemno; newsku.cdescript = $event.cdescript; newsku.lpending = $event.lpending;"
+                        >
+                            <template slot="suggestion" slot-scope="{ data, htmlText }">
+                                <span v-html="htmlText"></span>&nbsp;
+                                <small>{{ data.cdescript }}</small>
+                            </template>
+                        </vue-bootstrap-typeahead>
+                    </div>
+                </b-input-group>
+
+                {{ newsku.cdescript }}
+
+                <b-form-group label="Add to Campaigns" v-slot="{ ariaDescribedby }">
+                    <b-form-checkbox-group
+                        id="campaign-selected"
+                        v-model="newsku.selected"
+                        :options="campaignlookup"
+                        :aria-describedby="ariaDescribedby"
+                        name="campaign-selected"
+                    ></b-form-checkbox-group>
+                </b-form-group>
+            </b-row>
+
+            <div class="mx-3">
+                <pre>{{ updateErrors[0] }}</pre>
+            </div>
+        </b-container>
+    </b-modal>
+
+    <b-modal
+        id="gift-item"
+        title="Gift Item"
+        size="sm"
+        ok-only
+        @ok="gift_handleOk"
+        @close="gift_handleClose"
+    >
+        <b-form-checkbox v-model="giftitem.lgwp">
+            Gift or Forced Item
+        </b-form-checkbox>
+
+        <b-container v-if="giftitem.lgwp">
+            <label for="giftitem_ngqtylimit">Qty Limit</label>
+            <b-form-input
+                id="giftitem_ngqtylimit"
+                v-model.number="giftitem.ngqtylimit"
+                :value="giftitem.ngqtylimit"
+                type="number"
+                size="sm"
+                class="text-small form-control"
+            >
+            </b-form-input>
+
+            <label for="giftitem_nminsales">Min Sales</label>
+            <b-form-input
+                id="giftitem_nminsales"
+                v-model.number="giftitem.nminsales"
+                :value="giftitem.nminsales"
+                type="number"
+                size="sm"
+                class="text-small form-control"
+            >
+            </b-form-input>
+
+            <label for="giftitem_cgfttype">Type</label>
+            <b-form-select
+                id="giftitem_cgfttype"
+                v-model="giftitem.cgfttype"
+                :options="['', 'FORCE', 'STARTER', 'DONATION']"
+                size="sm"
+                plain
+                class="text-small form-control"
+            >
+            </b-form-select>
+        </b-container>
+    </b-modal>
+</div>
+
+<% section = "headers" %>
+
+<style>
+    .sr-only {
+        display: none !important;
+    }
+
+    .input-group-text {
+        display: block;
+        width: 100%;
+        text-align: right;
+        border-radius: 0 !important;
+    }
+
+    .input-group-prepend {
+        width: 25%;
+    }
+
+    .input-group-append > .btn,
+    .input-group .form-control {
+        border-radius: 0 !important;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-small {
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .text-vsmall {
+        font-size: 0.7em;
+        font-weight: 500;
+    }
+
+    [v-cloak] {
+        display: none;
+    }
+
+    .b-table-sticky-header {
+        max-height: 90vh;
+    }
+
+    .table-sm {
+        padding: 0;
+        font-size: 0.9em !important;
+        font-weight: 500 !important;
+        background-color: whitesmoke;
+    }
+
+    .table-vsm {
+        padding: 0;
+        font-size: 0.75em !important;
+        font-weight: 300 !important;
+        background-color: whitesmoke;
+    }
+
+    .ann_green {
+        background-color: #CFE189 !important;
+    }
+
+    .ann_pink {
+        background-color: #F3C7BA !important;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+        color: white;
+        background-color: #D84519;
+    }
+
+    .nav-link {
+        color: #D84519;
+    }
+
+    .form-control {
+        height: auto;
+        padding: 2px;
+    }
+
+    .footer {
+        margin: 0;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    .col-10perc {
+        width: 10%;
+    }
+</style>
+
+<% endsection %>
+
+<% section = "scripts" %>
+
+<script src="scripts/campaign.js?v=1"></script>
+
+<% endsection %>

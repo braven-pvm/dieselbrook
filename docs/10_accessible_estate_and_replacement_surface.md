@@ -16,12 +16,41 @@ It is meant to answer two questions at once:
 Confirmed accessible in the workspace:
 
 - `NISource/`
+- `NISource/campaign/` newly received as a separate folder drop inside the legacy FoxPro estate
 - `NopCommerce - Annique/`
 - `AnqIntegrationApiSource/`
 - `docs/`
 - `database/`
 - `middleware/`
 - `tmp/`
+
+### Newly received `NISource/campaign` module
+
+The workspace now also contains a newly added `NISource/campaign/` folder with:
+
+- `campaign.prg`
+- `Campaign.html`
+- `campaigns.js`
+- `Campaign_class.prg`
+
+This appears to be a legacy campaign-management UI module built in the same Web Connection and FoxPro style as the rest of `NISource`, not a random external technology stack.
+
+What makes it relevant:
+
+- it calls ERP campaign stored procedures such as `sp_Camp_CatSummary`, `sp_Camp_SkuByMonthvert`, `sp_Camp_BrandByMonth`, `sp_Camp_GetCamp`, and `sp_Camp_GetSponTypes`
+- it operates over campaign entities such as `Campaign`, `CampCat`, `CampSku`, `CampDetail`, `CampBrand`, and `CampSponSum`
+- it exposes actions such as campaign editing, SKU assignment, publish-to-stage, and copy-to-Namibia
+
+Important caveat:
+
+- in the current repo snapshot this module looks newly dropped and likely incomplete, because the callback wiring and `CampData` class definitions it expects are not yet visible elsewhere in the repository
+- git state currently shows `NISource/campaign/` and `docs/campaign.zip` as new untracked additions rather than long-standing tracked files
+
+Working interpretation:
+
+- it belongs to the broader legacy `NISource` application estate
+- it is relevant mainly to campaign pricing, product exposure, and campaign administration
+- it is not the main nopintegration sync engine, but it is still part of the legacy business surface that Dieselbrook may need to replace or consciously retire
 
 ### Direct staging SQL estate
 
@@ -78,6 +107,7 @@ The current middleware owns or coordinates:
 - API and process routing
 - product and inventory synchronization
 - order import and reverse order-status synchronization
+- campaign administration and campaign product-exposure management in the newly received `NISource/campaign/` module
 - consultant synchronization and new consultant registration intake
 - sponsor and downline lookups against MLM data
 - consultant and operational reporting

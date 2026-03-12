@@ -28,6 +28,7 @@ Each legacy process should be replaced as an explicit service boundary with clea
 | `syncstaff.prg` | staff sync into storefront identity model | ERP customer/staff classification, Nop customer API | creates or updates staff identities and roles | `StaffProvisioningService` |
 | `nopnewregistrations.prg` | new consultant registration intake and validation | registration payloads, duplicate checks, sponsor/referral checks | creates registration records, triggers consultant onboarding path | `ConsultantRegistrationService` |
 | `reports.prg` | dynamic report metadata and report rendering support | `NopReports`, report parameter metadata, MLM/ERP report tables | report definitions, field metadata, public/admin report outputs | `ConsultantReportingDataService` and `OperationalReportingService` |
+| `campaign/campaign.prg`, `campaign/Campaign.html`, `campaign/campaigns.js`, `campaign/Campaign_class.prg` | campaign administration and product-exposure UI module | Web Connection page rendering, campaign callbacks, ERP campaign procedures, `Campaign` / `CampDetail` / `CampSku` family objects | campaign summary UI, SKU-to-campaign editing, publish-to-stage and Namibia copy actions | `CampaignAdministrationService` plus `CampaignPricingAdminUi` |
 | `amdata.prg` | ERP and support database data-access wrapper | `amanniquelive`, `compplanLive`, `compsys`, procedures, table models | reads/writes SQL-backed business entities, document numbers, queued communications | `LegacySqlAccessGateway` |
 | `nopdata.prg` | Nop data-access wrapper | Nop DB structures and related stored procedures | reads/writes Nop-side entities used by middleware | replace with Shopify/Admin API integration plus app data store |
 | `nopapi.prg` | Nop API client wrapper | Nop API endpoints, auth credentials, JSON payload templates | remote commerce API calls, serialized responses, error capture | replace with `ShopifyAdminClient` and middleware API adapters |
@@ -93,5 +94,21 @@ Dieselbrook replacement:
 5. `reports.prg`
 6. `communicationsapi.prg`
 7. `brevoprocess.prg`
+
+## Newly Received Partial Module Note
+
+The `NISource/campaign/` folder appears to be part of the same FoxPro application family, but it was not present in the earlier repository snapshot used during initial discovery.
+
+Current repository state shows it as a new untracked addition, alongside `docs/campaign.zip`.
+
+That explains why it did not appear in the earlier `NISource` inventory.
+
+The code is relevant, but the current drop also looks incomplete because the expected callback wiring and `CampData` definitions are not visible elsewhere in the repo yet.
+
+So the right interpretation is:
+
+- yes, it belongs with the legacy `NISource` estate
+- yes, it is relevant to campaign pricing and administration
+- no, we should not yet assume this snapshot alone is the full runnable implementation of that module
 
 These are the files most likely to create business regressions if their behavior is only partially replaced.
