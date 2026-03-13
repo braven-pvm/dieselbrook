@@ -18,7 +18,7 @@ It keeps temporary beliefs explicit so they do not silently harden into unchalle
 | A-06 | `NISource/campaign` belongs to the legacy estate and matters to pricing/admin scope | code style and database/procedure usage strongly support this | low | evidence shows it was an abandoned or unrelated module |
 | A-07 | ~~Namibia awareness should remain in the analysis~~ | **SUPERSEDED** — Dieselbrook has confirmed Namibia is out of scope entirely. All A-07 references in domain packs are retired. | — | — |
 | A-08 | Phase-1 middleware will have private network connectivity to AccountMate SQL estate | all high-risk domains (orders, consultants, pricing, products, inventory) require direct SQL access to ERP; this is a hard delivery constraint exposed by the platform hosting cross-cut | high | infrastructure verification shows no reliable private path to ERP SQL, forcing a different architecture |
-| A-09 | Azure-compatible middleware deployment is the working default hosting assumption | delivery architecture framing and public-tier evidence point toward Azure; private SQL reachability governs whether this is viable or must fall back to LAN-adjacent placement | medium | Dieselbrook confirms a different hosting platform or a co-located on-premise deployment |
+| A-09 | ~~Azure-compatible middleware deployment is the working default hosting assumption~~ | **CONFIRMED 2026-03-11** — Annique-supplied topology diagram confirms the current middleware and commerce tier is Azure-hosted; AccountMate ERP (`AMSERVER-v9`) is on-premises with private routing from the Azure tier. Assumption promoted to confirmed fact. | — | superseded by topology confirmation |
 
 ## External Dependencies Register
 
@@ -29,7 +29,7 @@ It keeps temporary beliefs explicit so they do not silently harden into unchalle
 | X-DEP-03 | Continued staging SQL access | verification dependency | needed for targeted schema/object validation | Current project team |
 | X-DEP-04 | Confirmation of operationally used reports | business validation dependency | affects reporting replacement scope | Annique + Dieselbrook |
 | X-DEP-05 | Confirmation of back-office tools required for phase 1 | scope dependency | determines whether admin UI must be rebuilt | Dieselbrook |
-| X-DEP-06 | Hosting and infrastructure topology confirmation | infrastructure verification dependency | determines whether Azure + private-SQL path is viable or LAN-adjacent/on-premise placement is required; private SQL reachability to AccountMate is a hard delivery constraint | Dieselbrook project delivery team |
+| X-DEP-06 | ~~Hosting and infrastructure topology confirmation~~ | **RESOLVED 2026-03-11** — Annique supplied a topology diagram confirming: (1) middleware and NopCommerce tier is Azure-hosted; (2) AccountMate (`AMSERVER-v9`) and related DBs are on-premises; (3) existing private routing connects the Azure tier to the on-premises ERP tier. Architecture decision is unblocked. Remaining follow-up: confirm exact VPN/private-link mechanism so Dieselbrook middleware can join same routing path. | infrastructure verification dependency | resolved |
 
 ## Usage Rule
 

@@ -6,10 +6,12 @@ This document consolidates the platform-runtime and hosting implications that cu
 
 ## Current Working Position
 
-- the legacy estate is a split architecture, not a single-host storefront application
-- public middleware and commerce components are strongly evidenced as Microsoft-hosted and likely Azure-hosted
-- ERP/data systems remain on a privately reachable SQL boundary
+- the legacy estate is a confirmed split architecture, not a single-host storefront application
+- middleware and commerce tier is **confirmed Azure-hosted** — Annique topology diagram (2026-03-11) shows NopCommerce, Nop SQL Server, AnniqueAPI, and Nopintegration all running in an Azure cloud tier
+- AccountMate ERP is **confirmed on-premises** — topology diagram shows `AMSERVER-v9` on the private/on-premises side, with `AccountMate DB`, `Related DB`, data warehouse, and a `Remote SQL Server (IP Restricted)` co-located
+- existing private routing connects the Azure middleware tier to the on-premises ERP/data tier; this routing path is what current middleware uses to reach `172.19.16.100`
 - private SQL reachability is a hard delivery constraint, not a deployment preference
+- Dieselbrook middleware goes in Azure; joining the existing private routing to `AMSERVER-v9` is the connectivity action required before build
 
 ## What Is Already Strongly Established
 
@@ -47,22 +49,23 @@ This document consolidates the platform-runtime and hosting implications that cu
 
 ## What Must Not Be Assumed Prematurely
 
-- exact live AccountMate hosting class is still not proven
-- exact Azure resource layout is still not proven
-- same-server or same-SQL-instance assumptions are unsafe without infrastructure confirmation
+- the exact Azure resource layout (VM count, App Services vs. VMs, NSG configuration) is not yet specified
+- the exact private-routing mechanism between the Azure tier and `AMSERVER-v9` (site-to-site VPN, Azure Hybrid Connection, VNet peering, or another path) has not been technically verified — it is shown in the topology diagram but the configuration has not been independently confirmed
+- same-SQL-instance assumptions for any live database other than what is confirmed on staging remain unsafe without further verification
 
 ## Phase-1 Recommendation
 
-- proceed assuming an Azure-compatible middleware deployment with private SQL reachability to ERP/data systems
-- keep a fallback option for LAN-adjacent or privately hosted runtime placement if latency or connectivity evidence contradicts the default assumption
+- deploy Dieselbrook middleware in Azure, consistent with the confirmed current architecture
+- engage Annique IT to confirm the exact VPN/private-link configuration used by the current middleware, and ensure Dieselbrook middleware is added to the same routing path to reach `AMSERVER-v9`
+- do not design for LAN-adjacent or on-premises middleware placement unless the private routing path proves non-joinable
 
 ## Primary Dependencies And Decisions
 
 - `A-08` middleware will have private network connectivity to AccountMate SQL estate
-- `A-09` Azure-compatible middleware deployment is the working default hosting assumption
+- `A-09` **CONFIRMED** Azure-compatible middleware deployment — topology diagram (2026-03-11) confirms Azure is the current and target platform for the middleware and commerce tier
 - `X-DEP-01` Dieselbrook final Shopify solution intent
-- `X-DEP-06` hosting and infrastructure topology confirmation
-- hosting verification items already documented in `docs/07_hosting_certainty_matrix.md`
+- `X-DEP-02` Annique response on missing web shell/assets
+- `X-DEP-06` **RESOLVED** hosting and infrastructure topology confirmed by Annique-supplied diagram (2026-03-11)
 
 ## Evidence Base
 

@@ -75,21 +75,27 @@ Cross-cutting synthesis and boundary docs now created:
 - `18_auditability_idempotency_and_reconciliation_crosscut.md`
 - `19_phase1_replacement_boundary_summary.md`
 
+Pricing and decision supplements (moved from notion-updates):
+
+- `20_pricing_engine_deep_dive.md`
+- `21_pricing_access_supplement.md`
+- `22_decision_gates_supplement.md`
+
 ### Micro level
 
 Detailed capability-level parity work should continue to live close to the relevant domain docs, but this folder should always be the place that explains why that capability matters and how it fits into the replacement picture.
 
 ## Current Source Inputs Feeding This Folder
 
-- `docs/05_delivery_architecture_dieselbrook.md`
-- `docs/06_orders_deep_dive.md`
-- `docs/09_environment_access_inventory.md`
-- `docs/10_accessible_estate_and_replacement_surface.md`
-- `docs/11_nisource_process_parity_matrix.md`
-- `docs/12_nop_customization_domain_classification.md`
-- `docs/13_phase1_sql_contract.md`
-- `docs/14_campaign_module_missing_dependencies.md`
-- `docs/15_nisource_source_completeness_matrix.md`
+- `../discovery/05_delivery_architecture_dieselbrook.md`
+- `../discovery/06_orders_deep_dive.md`
+- `../discovery/09_environment_access_inventory.md`
+- `../discovery/10_accessible_estate_and_replacement_surface.md`
+- `../discovery/11_nisource_process_parity_matrix.md`
+- `../discovery/12_nop_customization_domain_classification.md`
+- `../discovery/13_phase1_sql_contract.md`
+- `../discovery/14_campaign_module_missing_dependencies.md`
+- `../discovery/15_nisource_source_completeness_matrix.md`
 - `middleware/orders/`
 - `middleware/consultants/`
 
