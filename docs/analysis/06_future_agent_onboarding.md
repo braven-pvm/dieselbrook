@@ -81,13 +81,18 @@ Do not resume with open-ended archaeology unless a targeted gap is explicitly bl
 
 ## Memory Pointers
 
-Relevant repo memory files already exist under `/memories/repo/` for:
+Portable memory files are committed to the repo at `docs/.agent-memory/`. Read all files in that directory before beginning any new work. They cover:
 
-- environment access
-- order flow
-- pricing risks
+- `analysis-phase-notes.md` — synthesis phase status, doc inventory, sequencing rules
+- `environment-access-notes.md` — staging SQL access facts and confirmed row counts
+- `hosting-topology-notes.md` — confirmed Azure+on-prem split topology
+- `notion-page-ids.md` — Notion page IDs for all maintained programme pages
+- `order-flow-notes.md` — confirmed order lifecycle and idempotency facts
+- `pricing-risk-notes.md` — pricing archaeology findings and recommended architecture
 
-Future agents should consult those before repeating environment validation.
+Session logs (one per working session) are under `docs/.agent-memory/sessions/`. Read the most recent session log to understand what was done immediately before the current restart.
+
+Equivalent notes also exist under `/memories/repo/` for agents that can read VS Code workspace memory directly — but the `docs/.agent-memory/` copies are the portable source of record and are always up to date.
 
 ## Restart Rule
 

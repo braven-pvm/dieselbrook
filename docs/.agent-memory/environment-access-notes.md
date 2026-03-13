@@ -1,0 +1,21 @@
+# Environment Access Notes
+
+- Confirmed local SQL CLI available: sqlcmd.
+- Confirmed staging SQL endpoint accessible: 196.3.178.122,62111.
+- Confirmed staging @@SERVERNAME: AMSERVER-V9.
+- Confirmed staging databases present: amanniquelive, amanniquenam, compplanLive, compplanNam, compsys, NopIntegration, Annique_Reports, BackOffice, BackOfficeNam.
+- Confirmed compplanLive tables present on staging: CTcomph, CTcomp, CTconsv, CTRunData, CTstatement, CTstatementh, deactivations, CTdownline, CTdownlineh.
+- Captured staging row counts: CTcomph 8623539; CTcomp 11574; CTconsv 1779211; CTRunData 3702636; CTstatement 52511; CTstatementh 4481557; deactivations 35702; CTdownline 0; CTdownlineh 1491507.
+- Confirmed compsys objects on staging: MAILMESSAGE table, sp_Sendmail procedure; MAILMESSAGE row count 752963.
+- Confirmed NopIntegration object on staging: BrevoLog table; row count 124726.
+- Local workspace database artifacts do not currently include full compplanLive/compsys backups; local visibility is mainly via docs/DB Structure cross-database references plus direct staging SQL access.
+- Access inventory doc created: docs/09_environment_access_inventory.md.
+- Consultant staging docs created: middleware/consultants/11_staging_mlm_inventory.md and middleware/consultants/12_phase1_staging_object_trace.md.
+- Confirmed amanniquelive order objects on staging: sosord 63842; soship 63377; soskit 5909681; sostrs 333607; arinvc 308340; arcash 89321; arcust 120320; SOPortal 653961; be_waybill 339774; changes 533788; soxitems 21086; Campaign 77; CampDetail 18571; wsSetting 2.
+- Confirmed additional NopIntegration support objects on staging: NopReports 52; ApiClients 8; NopSettings 19; NopSSO 10260; wwrequestlog 1640737.
+- Consolidated replacement-surface doc created: docs/10_accessible_estate_and_replacement_surface.md.
+- Additional replacement-planning docs created: docs/11_nisource_process_parity_matrix.md, docs/12_nop_customization_domain_classification.md, docs/13_phase1_sql_contract.md.
+- Newly received folder NISource/campaign appears to be a FoxPro/Web Connection campaign administration submodule inside the broader NISource estate; current git state shows it and docs/campaign.zip as new untracked additions, which explains why it was absent from earlier inventories.
+- docs/campaign.zip contains only 4 source files under campaign/: Campaign.html, campaign.prg, campaigns.js, Campaign_class.prg. This confirms Annique supplied a narrow campaign feature module, not a full Web Connection/Vue asset tree.
+- Detailed docs created for the new campaign source drop: docs/14_campaign_module_missing_dependencies.md, docs/15_nisource_source_completeness_matrix.md, docs/16_annique_followup_request_missing_web_assets.md.
+- Analysis synthesis framework created under docs/analysis/: README.md, 01_program_analysis_baseline.md, 02_open_decisions_register.md, 03_workstream_decomposition.md, 04_assumptions_and_dependencies_register.md, 05_domain_analysis_template.md, 06_future_agent_onboarding.md.
