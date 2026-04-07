@@ -3,7 +3,19 @@
 **Project:** Annique Cosmetics MLM platform → Shopify Plus migration  
 **Client:** Annique / Delivered by: Dieselbrook  
 **Doc layer:** Navigation index — start here  
-**Last updated:** 2026-03-13
+**Last updated:** 2026-04-07
+
+---
+
+## ⭐ New Agents: Start Here
+
+The `docs/onboarding/` folder contains a complete 5-document onboarding sequence created April 2026. Read it before anything else:
+
+1. [`onboarding/00_START_HERE.md`](onboarding/00_START_HERE.md) — Primary briefing
+2. [`onboarding/01_project_context.md`](onboarding/01_project_context.md) — Programme background
+3. [`onboarding/02_technical_architecture.md`](onboarding/02_technical_architecture.md) — Systems map
+4. [`onboarding/03_workspace_guide.md`](onboarding/03_workspace_guide.md) — Doc/folder guide
+5. [`onboarding/04_session_state_april_2026.md`](onboarding/04_session_state_april_2026.md) — Current state + next steps
 
 ---
 
@@ -11,15 +23,25 @@
 
 ```
 docs/
+  onboarding/  ← START HERE — agent briefing (April 2026)
   discovery/   ← What we found (DB archaeology, current-state analysis)
   analysis/    ← What it means (synthesis, domain packs, decisions, registers)
-  spec/        ← What we'll build (spec phase — scaffolded, not yet written)
+  delivery/    ← Commercial documents (management overview, costing/timing)
+  spec/        ← What we'll build (spec phase — in progress)
   reference/   ← Raw client artifacts (requirements docs, workshop notes, SQL jobs)
   DB Structure/ ← Raw SQL schema export CSVs (~12 MB, primary evidence base)
   middleware/  ← (workspace root) Implementation design docs for the replacement
 ```
 
 Use the sections below to find the right document for your need.
+
+---
+
+## Layer 0 — Onboarding: Start Here
+
+**Location:** `onboarding/`
+
+Created April 2026. Complete programme context for any agent or contributor starting fresh.
 
 ---
 

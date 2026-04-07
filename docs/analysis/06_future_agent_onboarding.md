@@ -1,5 +1,17 @@
 # Future Agent Onboarding
 
+## ⚠️ This Document Is Superseded
+
+As of April 2026, the canonical agent onboarding is located at:
+
+**`docs/onboarding/00_START_HERE.md`**
+
+Read all five documents in `docs/onboarding/` in order (00 → 01 → 02 → 03 → 04).
+
+The information below remains valid as historical context but the `docs/onboarding/` sequence is more complete and current.
+
+---
+
 ## Purpose
 
 This document is the restart point for future agents or contributors if work is interrupted.

@@ -20,7 +20,10 @@ Individual session summaries are stored under `sessions/`. Each file covers the 
 ## Usage Rule
 
 A new agent starting work on this repository should:
-1. Read `docs/analysis/06_future_agent_onboarding.md` first
-2. Then read all files in this directory
-3. Then read `docs/analysis/02_open_decisions_register.md` for current open decisions
-4. Then read the relevant domain pack(s) for the area of work
+1. Read `docs/onboarding/00_START_HERE.md` first (primary onboarding — as of April 2026)
+2. Then read `docs/onboarding/01_project_context.md` through `04_session_state_april_2026.md`
+3. Then read all files in this directory for deeper historical context
+4. Then read `docs/analysis/02_open_decisions_register.md` for current open decisions
+5. Then read the relevant domain pack(s) for the area of work
+
+> **Note:** `docs/analysis/06_future_agent_onboarding.md` is the legacy restart point. The new canonical onboarding is `docs/onboarding/`.
