@@ -214,14 +214,26 @@ Connection string:
 
 This is NopCommerce **4.60** on .NET 7. The site runs but hasn't been significantly updated since initial deployment. Database `Annique` (17 GB) on the local Azure SQL Server.
 
-**Backup directory — `__BACKUP__\Staging\`** (found on Azure VM) contains `Annique.Customization` SQL scripts from Sep 2023:
+**Notable appsettings.json findings:**
+- `AzureBlobConfig` — all nulls. NopCommerce does NOT use Azure Blob Storage; all images and files are stored locally on disk.
+- `DistributedCacheConfig` — Redis configured (`127.0.0.1:6379`) but `"Enabled": false`. No Redis instance running.
+- `WebOptimizer.EnableDiskCache = false` — bundled assets served from memory only.
+- Connection pool: `Min Pool Size=100, Max Pool Size=30240` — unusually large ceiling; not a concern for DBM but indicates high-concurrency usage pattern.
+
+**Backup directories on Azure VM — two snapshots of `Annique.Customization`:**
+
+`__BACKUP__\Staging\Annique.Customization\SqlScript\` (Sep 2023) — 7 SQL migration scripts:
 - `AlterExclusiveItemsSchema.sql` — custom schema for exclusive/consultant-only products
 - `AlterProductSchema.sql` — custom product schema extensions
 - `AlterSpGetFilterPickUpStores.sql` / `DropSpGetFilterPickUpStore.sql` / `DropSpGetPickUpStoreById.sql` — pick-up store stored procs
 - `AlterUserProfileSchema.sql` — user profile extensions
 - `CreateSpGetPickUpStoreById.sql` — new pick-up store SP
 
-These scripts document the custom schema additions to the `Annique` (NopCommerce) database. DBM does not interact with this database directly, but the exclusive items schema is relevant to the product catalogue domain.
+`__BACKUP__\Live\10-June-2024\Annique.Customization\` (Jun 2024) — compiled plugin build:
+- `Annique.Plugins.Nop.Customization.dll` (926 KB, built May 2024) — the actual running NopCommerce plugin
+- Full plugin structure: `Content/`, `Localization/`, `SqlScript/`, `Themes/`, `Views/`
+
+The Jun 2024 Live backup contains the compiled DLL; the Sep 2023 Staging backup contains only the schema migration scripts. Both document the NopCommerce customisation layer. DBM does not interact with the `Annique` NopCommerce database directly, but the exclusive items schema (`AlterExclusiveItemsSchema.sql`) is relevant to the product catalogue domain.
 
 ### 3.8 AnqIntegrationApi is .NET 9 — the reference implementation
 
