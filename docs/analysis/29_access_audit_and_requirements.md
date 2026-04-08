@@ -92,24 +92,48 @@ Until Azure subscription access is granted, **DBM infrastructure provisioning ca
 ### Confirmed servers and services
 
 ```
-ANNIQUE INFRASTRUCTURE — CONFIRMED AS OF 2026-04-08
+ANNIQUE INFRASTRUCTURE — CONFIRMED AS OF 2026-04-08 (post-VPN session)
 
-ON-PREMISES (Irene, Pretoria)
-  ├── AMSERVER-v9 (172.19.16.100)         PRODUCTION AM SQL Server
-  │   └── Port 1433: NOT exposed externally
-  │   └── All AM databases live here (amanniquelive, etc.)
-  │   └── Physical server — RAID Web Console 2 on desktop
+ON-PREMISES LAN: 172.19.16.0/24 (Irene, Pretoria)
+
+  ├── 172.19.16.100   PRODUCTION AMSERVER-v9
+  │   └── SQL Server (1433): TCP reachable via VPN ✅ — Windows Firewall blocks TDS connections
+  │   └── RDP (3389): TCP reachable via VPN ✅ — no credentials provided for prod
+  │   └── Physical server (RAID Web Console 2 on desktop)
+  │   └── IIS running on port 80 (default IIS page — probably AM web services)
   │
-  ├── AMSERVER-v9 clone (172.19.16.101)   TEST/STAGING AM SQL Server
-  │   └── Port 62111: NOT tested internally (VPN needed)
-  │   └── VPN + RDP access provided by Marcel ✅
-  │   └── AccountMate 9.3 confirmed running (login dialog visible)
+  ├── 172.19.16.101   TEST / CLONE AM SERVER
+  │   └── RDP (3389): ✅ ACCESSIBLE — annique\Dieselbrook / Diesel@2026#7
+  │   └── AccountMate 9.3 confirmed running
+  │   └── SQL Server port NOT confirmed open (TCP not tested internally yet)
+  │   └── Account is STANDARD USER ONLY — no admin privileges ❌
+  │   └── Cannot run firewall rules, install software, run elevated commands
   │
-  ├── FortiGate firewall                   NETWORK BOUNDARY
+  ├── 172.19.16.16    UNKNOWN WINDOWS SERVER
+  │   └── SMB (445), HTTP (80), RDP (3389) all open
+  │   └── HTTP returns 403 Forbidden — IIS with access control
+  │   └── Purpose unknown — not investigated
+  │
+  ├── 172.19.16.27    UNKNOWN SQL SERVER ⚠️ NEW DISCOVERY
+  │   └── SQL Server (1433): TCP open via VPN
+  │   └── RDP (3389): TCP open via VPN
+  │   └── Not the AM server — different IP
+  │   └── Could be: NopCommerce SQL, AnqIntegrationApi DB, or other internal system
+  │   └── No credentials to access — requires investigation
+  │
+  ├── 172.19.16.63    UNKNOWN WINDOWS MACHINE
+  │   └── SMB (445) only — likely a workstation or NAS
+  │
+  ├── 172.19.16.12/15/18/19/24/25   CANON PRINTERS/COPIERS
+  │   └── HTTP admin interfaces on port 80 (Canon HTTP Server)
+  │   └── Not relevant to programme
+  │
+  ├── FortiGate firewall              NETWORK BOUNDARY
   │   └── Public IP: 41.193.227.190
-  │   └── SSL-VPN gateway: away1.annique.com:10443 — PORT OPEN ✅
-  │   └── VPN credentials provided: Dieselbrook / Diesel@2026#7 ✅
-  │   └── Also: 41.193.227.190:443 open (admin interface?)
+  │   └── SSL-VPN: away1.annique.com:10443 ✅ CONFIRMED WORKING
+  │   └── VPN credentials: Dieselbrook / Diesel@2026#7 ✅
+  │   └── Assigns VPN IP 10.212.134.200, routes 172.19.16.0/24 via VPN
+  │   └── Port 443 also open on 41.193.227.190 (FortiGate admin interface?)
 
 SEPARATE HOSTING (NOT Azure) — 129.232.215.87
   ├── shopapi.annique.com                  NISource VFP PRODUCTION SERVER
@@ -121,35 +145,35 @@ SEPARATE HOSTING (NOT Azure) — 129.232.215.87
   │   └── NOT Azure — separate hosting provider
   │   └── Location unknown — Annique IT has not identified the host
 
-STAGING SQL (196.3.178.122)                UNKNOWN HOST
-  └── Port 62111: OPEN (this is the staging AM SQL instance)
-  └── All other ports: CLOSED
-  └── This is the existing staging AM connection from our earlier analysis
-  └── NOT the same IP as any Azure server we know about
+STAGING SQL (196.3.178.122)                UNKNOWN HOST — NOT ON ANNIQUE LAN
+  └── Port 62111: OPEN from internet (no VPN needed — security risk)
+  └── NOT reachable via FortiClient VPN (not on 172.19.16.0/24)
+  └── Unknown what machine/hosting this is — separate IP range entirely
+  └── Could be a legacy external staging server — Annique IT has not explained it
 
-AZURE (20.87.212.38)                       AZURE — SOUTH AFRICA NORTH
-  ├── nopintegration.annique.com → 20.87.212.38
-  ├── CONFIRMED: This is the NopCommerce production web server
-  │   └── Port 80: OPEN — IIS default page (bare IP, not hosted domain)
-  │   └── Port 443: OPEN — TLS cert: CN=annique.com (Let's Encrypt, exp June 2026)
-  │   └── Port 1433: CLOSED — SQL Server NOT exposed
-  │   └── Port 3389: CLOSED — RDP NOT accessible ❌
-  │   └── Redirects annique.com/www.annique.com requests to HTTPS
-  │
-  └── annique.com (Cloudflare-proxied, IPv6 address)
-      └── The live Annique website — hosted behind Cloudflare CDN
+AZURE (20.87.212.38)                       AZURE SOUTH AFRICA NORTH
+  ├── nopintegration.annique.com → 20.87.212.38 (DNS confirmed)
+  ├── This is the NopCommerce production web server
+  │   └── Port 80: OPEN — bare IIS default page (no domain routing on IP)
+  │   └── Port 443: OPEN — TLS cert CN=annique.com (Let's Encrypt, expires June 2026)
+  │   └── Port 1433: CLOSED — SQL Server not on this VM or not exposed
+  │   └── Port 3389: CLOSED — RDP blocked by NSG ❌
+  │   └── Marcel whitelisted our IP for RDP but port remains closed — wrong server or wrong rule
+  └── annique.com / www.annique.com → Cloudflare CDN → this VM
+      └── NopCommerce confirmed (meta generator tag in HTML)
+      └── stage.annique.com → NopCommerce staging (also Cloudflare)
 
-LIVE WEBSITE (annique.com)
-  └── Cloudflare proxy → likely the Azure VM (20.87.212.38)
-  └── NopCommerce confirmed (HTML: "nopCommerce" generator meta tag)
-  └── stage.annique.com → ALSO NopCommerce staging store (Cloudflare)
+AZURE — UNKNOWN
+  ├── NopCommerce SQL Server — location unknown (port 1433 closed on 20.87.212.38)
+  ├── AnqIntegrationApi host — could be same VM or separate App Service
+  ├── Azure subscription ID / tenant ID — not provided
+  └── No Azure Portal access granted — cannot see any of this
 
-UNKNOWN / NOT PROVIDED
-  ├── Azure SQL Server for NopCommerce (not the on-prem AM — a separate DB)
-  ├── Azure SQL Server for AnqIntegrationApi / Brevo
-  ├── Azure App Service or IIS site for AnqIntegrationApi (annique.com/api-backend/)
-  ├── Azure subscription details (subscription ID, tenant ID)
-  └── shopapi.annique.com hosting provider details
+EXTERNAL HOSTING (NOT Azure, NOT on-prem)
+  └── shopapi.annique.com (129.232.215.87) — NISource VFP Web Connection server
+      └── Hosting provider unknown — Annique IT has not identified it
+      └── Live production server — handles OTP, SyncCancelOrders, other APIs
+      └── No access provided
 ```
 
 ---
@@ -232,18 +256,24 @@ UNKNOWN / NOT PROVIDED
 
 ## Part 3 — Access Inventory: What Has Been Provided
 
-| # | Access | Provided by | Status | Verdict |
+*Last updated: 2026-04-08 after active VPN + RDP session*
+
+| # | Access | Provided by | Verified | Verdict |
 |---|---|---|---|---|
-| 1 | FortiClient VPN credentials | Marcel Truter | `away1.annique.com:10443` · port is OPEN | **✅ Valid — gateway reachable. Needs FortiClient installed to test auth.** |
-| 2 | RDP to test AM server | Marcel Truter | `172.19.16.101` · `annique\Dieselbrook` | **⚠️ Valid but VPN-only.** Must connect VPN first. Then test. |
-| 3 | AccountMate 9.3 login | Via email screenshot | `DieselB` user shown in AM login dialog | **⚠️ Partial.** Shows we have AM application access on the test server. No AM admin (sa) access. |
-| 4 | RDP to "main Azure server" | Marcel Truter | `20.87.212.38` · `azuread\DieselBrook` | **❌ Wrong server. Port 3389 CLOSED.** `20.87.212.38` is the NopCommerce web server. RDP is blocked. Even if it weren't, this is the wrong access model entirely. |
-| 5 | Azure subscription access | Requested by Deon | Not provided | **❌ Not provided. Blocking everything.** |
-| 6 | NopCommerce admin access | Not requested | Not provided | **❌ Not provided.** |
-| 7 | AnqIntegrationApi production config | Not requested | Not provided | **❌ Not provided.** |
-| 8 | shopapi.annique.com server access | Not requested | Not provided | **❌ Not provided.** |
-| 9 | Source control repository | Does not exist | N/A | **❌ No source control exists anywhere.** |
-| 10 | Shopify store access | Not yet requested | Not provided | **❌ Not provided.** |
+| 1 | FortiClient VPN · `away1.annique.com:10443` | Marcel | ✅ **CONFIRMED WORKING** | VPN connects. Assigns IP `10.212.134.200`. Routes `172.19.16.0/24`. |
+| 2 | RDP to test AM server `172.19.16.101` · `annique\Dieselbrook` | Marcel | ✅ **CONFIRMED WORKING** | RDP connects. Desktop accessible. |
+| 3 | Administrator access on `172.19.16.101` | Marcel | ❌ **NOT PROVIDED** | Account is standard user. Firewall rules fail. Cannot install software. Cannot run elevated commands. Cannot take backups. Useless for technical work. |
+| 4 | SQL Server access on `172.19.16.101` (port 1433) | Marcel | ❌ **NOT PROVIDED** | Windows Firewall blocks SQL connections from VPN. Requires admin to fix. |
+| 5 | AccountMate 9.3 app login (`DieselB`) | Via screenshot | ⚠️ **PARTIAL** | AM application opens. No SQL-level access. No AM admin. |
+| 6 | RDP to Azure server `20.87.212.38` · `azuread\DieselBrook` | Marcel | ❌ **WRONG SERVER + PORT CLOSED** | This is the NopCommerce web server. Port 3389 is blocked. Marcel added firewall rule to wrong machine. |
+| 7 | Azure subscription / Portal access | Deon requested | ❌ **NOT PROVIDED** | Not provided. Blocking all infrastructure work. |
+| 8 | Azure Entra ID / app registration | Not yet requested | ❌ **NOT PROVIDED** | Not provided. |
+| 9 | NopCommerce admin panel (`stage.annique.com/admin`) | Not requested | ❌ **NOT PROVIDED** | Not provided. |
+| 10 | AnqIntegrationApi live config (`appsettings.json`) | Not requested | ❌ **NOT PROVIDED** | Real connection strings not in source we received. |
+| 11 | `shopapi.annique.com` server access | Not requested | ❌ **NOT PROVIDED** | Hosting provider unknown. No credentials. |
+| 12 | Source control repository (any system) | Does not exist | ❌ **DOES NOT EXIST** | No git, SVN, or TFS on any system. Code on developer machines only. |
+| 13 | Shopify Plus store access | Not yet requested | ❌ **NOT PROVIDED** | Not provided. |
+| 14 | `172.19.16.27` SQL Server access | Not requested | ❌ **NOT PROVIDED** | Newly discovered server with SQL. Purpose unknown. |
 
 ---
 
@@ -567,23 +597,25 @@ This is a recommendation, not a requirement for DBM go-live.
 
 ## Summary — Priority Table
 
-| Priority | Item | Who at Annique | Status | Days blocking |
-|---|---|---|---|---|
-| 🔴 1 | Azure subscription Owner access | Marcel / Melinda | **NOT PROVIDED** | Every day |
-| 🔴 2 | Azure Entra ID app registration access | Marcel / Melinda | **NOT PROVIDED** | Every day |
-| 🟠 3 | NopCommerce admin access (stage + prod) | Marcel | **NOT PROVIDED** | Blocking integration |
-| 🟠 4 | AnqIntegrationApi live config (`appsettings.json`) | Marcel | **NOT PROVIDED** | Blocking architecture |
-| 🟠 5 | `shopapi.annique.com` server access or hosting details | Marcel / unknown | **NOT PROVIDED** | Blocking comms spec |
-| 🟠 6 | Live NISource source from `shopapi.annique.com` | Marcel | **NOT PROVIDED** | Blocking OTP spec |
-| 🟡 7 | Shopify Plus store collaborator access | Adele / management | **NOT PROVIDED** | ~3 weeks |
-| 🟡 8 | Production AM SQL read-only login | Marcel | **NOT PROVIDED** | AM migration spec |
-| 🟡 9 | NopCommerce SQL Server name/IP | Marcel | **NOT PROVIDED** | Data migration spec |
-| ✅ — | FortiClient VPN credentials | Marcel | **PROVIDED — WORKS** | — |
-| ⚠️ — | RDP to test AM server (172.19.16.101) | Marcel | **PROVIDED but standard user only — no admin** | — |
-| ❌ — | Local Administrator on test server (172.19.16.101) | Marcel | **NOT PROVIDED — blocks all diagnostic work** | — |
-| ❌ — | Local Administrator on prod server (172.19.16.100) | Marcel | **NOT PROVIDED** | — |
-| ❌ — | SQL Server firewall open to VPN IP on test server | Marcel | **NOT PROVIDED — Windows Firewall blocking SQL** | — |
-| ❌ — | "Azure server RDP" (20.87.212.38) | Marcel | **WRONG SERVER, PORT CLOSED** | — |
+*Last updated: 2026-04-08 after active VPN + RDP session*
+
+| Priority | Item | Who | Status |
+|---|---|---|---|
+| 🔴 1 | **Azure subscription Owner access** | Marcel / Melinda | ❌ NOT PROVIDED — blocks everything |
+| 🔴 2 | **Local Administrator on `172.19.16.101`** | Marcel | ❌ NOT PROVIDED — account is standard user only |
+| 🔴 3 | **SQL Server firewall open on `172.19.16.101`** | Marcel | ❌ NOT PROVIDED — 2 netsh commands, needs admin |
+| 🟠 4 | Azure Entra ID app registration access | Marcel / Melinda | ❌ NOT PROVIDED |
+| 🟠 5 | NopCommerce admin panel access | Marcel | ❌ NOT PROVIDED |
+| 🟠 6 | AnqIntegrationApi live `appsettings.json` | Marcel | ❌ NOT PROVIDED |
+| 🟠 7 | `shopapi.annique.com` server access + hosting details | Marcel | ❌ NOT PROVIDED |
+| 🟠 8 | Live NISource source from `shopapi.annique.com` | Marcel | ❌ NOT PROVIDED |
+| 🟠 9 | Identity + purpose of `172.19.16.27` SQL Server | Marcel | ❌ NOT PROVIDED — newly discovered |
+| 🟡 10 | Shopify Plus store collaborator access | Adele | ❌ NOT PROVIDED — needed in ~3 weeks |
+| 🟡 11 | Production AM SQL read-only login | Marcel | ❌ NOT PROVIDED |
+| 🟡 12 | NopCommerce SQL Server name/IP | Marcel | ❌ NOT PROVIDED |
+| ✅ | FortiClient VPN (`away1.annique.com:10443`) | Marcel | ✅ WORKS — confirmed 2026-04-08 |
+| ⚠️ | RDP to `172.19.16.101` (`annique\Dieselbrook`) | Marcel | ⚠️ WORKS but **standard user only — useless without admin** |
+| ❌ | RDP to Azure server `20.87.212.38` (`azuread\DieselBrook`) | Marcel | ❌ WRONG SERVER — NopCommerce web VM, port 3389 closed |
 
 ---
 
