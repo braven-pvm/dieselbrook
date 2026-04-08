@@ -7,6 +7,27 @@
 
 ---
 
+## Confirmed Facts — Annique IT (2026-04-08)
+
+Received from Marcel Truter (IT Systems Administrator) via email. These close the critical unknowns.
+
+| Item | Confirmed |
+|---|---|
+| AM version | AccountMate **9.3** |
+| AM licence / support # | **ANNI619265** (needed for Azure licence transfer call) |
+| Production AM server | AMSERVER-v9 · `172.19.16.100:1433` (physical server) |
+| Test / clone AM server | `172.19.16.101` (confirmed staging, not live — Deon verified) |
+| Server type | **Physical server** — RAID Web Console 2 icon on desktop = hardware RAID controller |
+| Office firewall | **FortiGate** — SSL-VPN gateway at `away1.annique.com:10443` |
+| VPN credentials (our access) | Username: `Dieselbrook` · Password: `Diesel@2026#7` |
+| RDP to test server | `172.19.16.101` · Username: `annique\Dieselbrook` |
+| Azure current use | NopCommerce site hosting only — no AM in Azure yet |
+| IT contact | **Marcel Truter** — IT Systems Administrator · T 012 345 9800 |
+
+**Key implication:** FortiGate confirmed → S2S IPsec VPN to Azure is viable with no new hardware. **AM migration to Azure is no longer a blocker for go-live.**
+
+---
+
 ## High-Level Overview
 
 ```
@@ -33,15 +54,22 @@ PHASE 6 — Validate
 
 --- STAGING COMPLETE ---
 
-PHASE 7 — Production delta  (same Bicep, bigger SKUs, confirm AM connectivity model)
+PHASE 1.5 — S2S VPN to Annique FortiGate (production only)  ✅ CONFIRMED VIABLE
+  Azure VPN Gateway ↔ FortiGate IPsec tunnel → on-prem AMSERVER-v9
+  DBM goes live with AM on-prem — no migration needed for go-live
 
---- AM MIGRATION (parallel track, production blocker) ---
+PHASE 7 — Production delta  (same Bicep, bigger SKUs + VPN Gateway)
+
+--- STAGING COMPLETE + PRODUCTION LIVE ---
+
+--- AM MIGRATION (parallel track, non-blocking — can happen post go-live) ---
 
 PHASE A — Provision prod AM VM  (already in Bicep)
 PHASE B — Install AccountMate server on Azure VM
 PHASE C — Migrate databases  (backup/restore — identical to staging seed)
-PHASE D — Client connectivity  (S2S VPN recommended)
+PHASE D — Client connectivity  (✅ S2S VPN CONFIRMED — FortiGate already exists)
 PHASE E — Cutover  (freeze → final backup → restore → ODBC update → go)
+          [At cutover: update Key Vault secret am-connection-string → App Service restart]
 ```
 
 ---
@@ -302,13 +330,20 @@ Production uses the same Bicep with `production.bicepparam`. Key differences:
 | Azure Backup | Not configured | Recovery Services Vault (90d daily / 52w weekly / 12m monthly) |
 | Key Vault purge protection | Off | On |
 | Alert rules | Warning only | Full set (7 rules) |
-| AM connectivity | Staging VM (already in VNet) | Confirm with Annique IT — see below |
+| AM connectivity | Staging VM (already in VNet) | **✅ Confirmed: FortiGate S2S IPsec VPN** |
+| VPN Gateway | Not needed (staging) | **Add `vpn-gateway.bicep` — VpnGw1 ~$140/month** |
 
-**Production AM connectivity** must be confirmed before production deploy. Four options (Annique IT to confirm which applies):
-- **A — VNet Peering:** Annique already has Azure VNet with AM on it → peer DBM VNet to it
-- **B — Hybrid Connection:** On-prem AMSERVER-v9 stays on-prem → App Service Hybrid Connection Manager installed on LAN
-- **C — S2S VPN:** New VPN Gateway in DBM VNet + VPN device at Annique office
-- **D — AM migrated to Azure:** AM moves to `vm-am-prod` (our IaaS VM) — this is the preferred path and what Part 2 covers
+**Production AM connectivity — confirmed 2026-04-08:**
+
+FortiGate firewall confirmed at Annique office. Production path is **Option C — S2S IPsec VPN** (no new hardware needed):
+
+```
+DBM App Service → snet-app → Azure VPN Gateway (vgw-dbm-prod, VpnGw1)
+  ← IKEv2 IPsec tunnel →
+Annique FortiGate (away1.annique.com) → LAN → AMSERVER-v9 (172.19.16.100:1433)
+```
+
+Marcel Truter (IT Systems Admin) configures the FortiGate tunnel. Fortinet publishes an Azure-specific S2S guide. DBM connection string stays `172.19.16.100:1433` — no code changes required.
 
 ---
 
@@ -316,11 +351,15 @@ Production uses the same Bicep with `production.bicepparam`. Key differences:
 
 ## Part 2 — AccountMate Migration to Azure
 
-### Why this is the blocker
+### Why this is no longer a blocker for go-live
 
-DBM staging works today because we have a staging AM VM seeded from a production backup. That staging model **is** the production model — the production deployment is just that same VM pointed at the live traffic. The only remaining question is whether production AM lives on-prem (temporary, with VPN) or on Azure IaaS (permanent, preferred).
+**Updated 2026-04-08:** FortiGate firewall confirmed at Annique office. DBM production can go live with AM on-prem via S2S IPsec VPN. AM migration to Azure is a separate planned event — it can happen weeks or months after go-live, at Annique's own pace.
 
-Given the team is non-technical and already struggling with the on-prem setup, the right call is to get AM onto Azure IaaS now — while we're building — rather than as a later migration. Staging has already proven the model works.
+The two-track model:
+- **Track A (DBM go-live):** Deploy DBM to Azure → configure S2S VPN → connect to on-prem AMSERVER-v9. Done.
+- **Track B (AM Azure migration):** Parallel, non-blocking. Plan, execute, and cut over at a time that suits Annique IT.
+
+When Track B completes, the cutover is a single Key Vault secret update (`am-connection-string` from `172.19.16.100` to `10.3.2.x`) and an App Service restart. No code changes, no redeployment, no downtime beyond the restart.
 
 ### Why this is actually straightforward
 
@@ -341,20 +380,26 @@ No schema changes. No data transformation. No API migration. Backup → upload �
 ### What currently exists on-premises
 
 ```
-AMSERVER-v9  (physical server or on-prem VM — confirm with Annique IT)
-  └── Windows Server (version unknown — confirm)
-  └── SQL Server 2019 (compatibility level 150 confirmed from analysis)
+AMSERVER-v9  (✅ PHYSICAL SERVER — RAID Web Console 2 on desktop = hardware RAID)
+  └── Windows Server (version — confirm via RDP to 172.19.16.101 test server)
+  └── SQL Server 2019 compat (level 150 confirmed) — edition TBC
       ├── amanniquelive     (main transactional DB)
       ├── amanniquenam      (Namibia mirror DB)
       ├── compplanLive      (compensation/commission DB)
       └── compsys           (communications/system DB)
-  └── AccountMate application server (AM services layer)
+  └── AccountMate 9.3 (✅ CONFIRMED — support# ANNI619265)
   └── ODBC System DSN → localhost:1433
 
+TEST/CLONE SERVER: 172.19.16.101
+  └── Accessible via FortiClient VPN (away1.annique.com:10443, Dieselbrook / Diesel@2026#7)
+  └── RDP: annique\Dieselbrook
+
 AM client workstations (Annique office — count unknown)
-  └── AccountMate client app
-  └── ODBC DSN → AMSERVER-v9 (LAN hostname or IP 172.19.16.100)
+  └── AccountMate 9.3 client app
+  └── ODBC DSN → AMSERVER-v9 (172.19.16.100)
 ```
+
+> **Physical server confirmed** — VM export/Azure Migrate physical agent path, not VHDX export. Migration is backup/restore (same process already proven in staging).
 
 ---
 
@@ -450,20 +495,20 @@ This is the part that trips up non-technical teams. Clients currently connect to
 
 **Three options:**
 
-#### Option 1 — Site-to-Site VPN (Recommended)
+#### Option 1 — Site-to-Site VPN (✅ CONFIRMED — FortiGate already exists)
 
-A VPN tunnel between the Annique office network and the Azure VNet. Once configured, every machine on the LAN can reach the Azure VM as if it's a local server.
+A VPN tunnel between the Annique office FortiGate and the Azure VNet. Once configured, every machine on the LAN can reach the Azure VM as if it's a local server.
 
 ```
-Annique office LAN ←──VPN tunnel──→ Azure VNet (10.3.0.0/16)
-  All workstations                     vm-am-prod (10.3.2.x)
+Annique office LAN ←──FortiGate IPsec S2S──→ Azure VNet (10.3.0.0/16)
+  All workstations                              vm-am-prod (10.3.2.x)
   can reach 10.3.2.x directly
 ```
 
 **What's needed:**
-- Azure VPN Gateway provisioned in the DBM prod VNet (~$140/month Standard SKU)
-- A VPN-capable router/firewall at the Annique office (FortiGate 40F/60F, Cisco, Meraki, pfSense — ~R3,000–R15,000 if they don't have one)
-- One-time setup: configure IKEv2 tunnel with pre-shared key
+- Azure VPN Gateway in the DBM prod VNet (~$140/month VpnGw1 SKU) — already added to `vpn-gateway.bicep`
+- ~~A VPN-capable router/firewall~~ — **FortiGate confirmed at Annique office. No new hardware needed.**
+- Marcel Truter configures IPsec phase 1/2 tunnel on the FortiGate (Fortinet publish an Azure S2S guide)
 - Client machines: update ODBC DSN from `172.19.16.100` to the Azure VM's private IP (e.g. `10.3.2.4`)
 
 **How to update ODBC on Windows clients:**
@@ -474,7 +519,9 @@ Control Panel → Administrative Tools → ODBC Data Sources (64-bit)
 ```
 Or push via Group Policy if they have Active Directory.
 
-**Best for:** offices with managed networking equipment. One-time setup. Transparent to end users after ODBC update.
+**Note:** The same S2S VPN tunnel that connects DBM production to on-prem AM (Track A) also serves as the client connectivity path when AM moves to Azure (Track B). The VPN Gateway investment pays for both.
+
+**Best for:** ✅ This is the confirmed path.
 
 #### Option 2 — Azure Virtual Desktop (AVD)
 
@@ -512,7 +559,7 @@ Individual client machines install a VPN certificate and connect on demand. Simi
 | Annique has basic home-grade networking | Option 2 — Azure Virtual Desktop |
 | < 5 AM users, any networking | Option 3 — P2S VPN |
 
-**Action needed now:** Ask Annique IT what router/firewall brand is at the office. That single answer determines which option we use.
+**✅ Router confirmed: FortiGate.** Next action: Ask Marcel Truter to configure the IPsec S2S tunnel to the Azure prod VNet once `vgw-dbm-prod` is provisioned. Share the pre-shared key (`vpn-shared-key` from Key Vault) and the Azure VPN Gateway public IP (output from Bicep deploy).
 
 ---
 
