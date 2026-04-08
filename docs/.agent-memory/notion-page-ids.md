@@ -7,4 +7,6 @@
 - 07e Infrastructure spec (ANN-21): 33cc65e5d3c281ae9f7bd93930d6140b
 - 07f Environments spec (ANN-22): 33cc65e5d3c28192a974cf052a34449b
 - 07g Testing strategy (ANN-23): 33cc65e5d3c281058035e26817c4f871
+- 07h PRD (ANN-5): 33cc65e5d3c281da86cef94136cd5bb2
+- 07i Architecture spec (ANN-6): 33cc65e5d3c281f8acf6ccb8034a147b
 - Solution Overview & Delivery Documents: 324c65e5d3c281cb8035dcf5dc3c2f3a
