@@ -82,7 +82,7 @@ Gather these before running any provisioning scripts. They will be loaded into K
 | `brevo-api-key` | Brevo account (new dedicated DBM instance) | New Brevo account — not the legacy account |
 | `sms-provider-api-key` | SMS provider (TC-03 resolved — provider TBD) | |
 | `meta-capi-token` | Meta Business Manager | For Meta Conversions API event forwarding |
-| `vpn-shared-key` | Generate strong random string | Pre-shared key for FortiGate S2S IPsec tunnel (production only) — share with Marcel Truter |
+| `vpn-shared-key` | Generate strong random string | Pre-shared key for FortiGate S2S IPsec tunnel — **optional**, only needed if `vpn-gateway.bicep` is deployed |
 
 ---
 
@@ -231,42 +231,46 @@ az network bastion create \
   --public-ip-address pip-bas-dbm-staging
 ```
 
-### 3.5 Private connectivity to on-premises AMSERVER-v9
+### 3.5 Connectivity to AccountMate SQL Server
 
-> **✅ Confirmed 2026-04-08:** Annique office has a **FortiGate firewall** (IT contact: Marcel Truter). Production connectivity via **FortiGate S2S IPsec VPN** to Azure. No new hardware required. This resolves the production connectivity question — go-live is not blocked by AM migration.
+> **✅ Confirmed 2026-04-08 (discovery session):** AM SQL Server is **internet-accessible** at `196.3.178.122:62111` (`away2.annique.com`). No VPN required. DBM connects directly over the internet on this non-standard port.
 
-For the production environment, DBM's App Service reaches `AMSERVER-v9` (`172.19.16.100:1433`) via a site-to-site IPsec VPN tunnel between `vnet-dbm-prod` and the Annique office FortiGate.
+#### Confirmed architecture
+
+`[AMSERVER-V9]` is a **SQL Server linked server alias** defined on AZ-ANNIQUE-WEB — it points to `away2.annique.com:62111`, NOT to the machine at `172.19.16.100`. The AM application server at `172.19.16.100` is where staff run the AccountMate thick client; the SQL data lives entirely at `196.3.178.122`.
 
 ```
 DBM Core App Service (Azure)
-  → VNet Integration → snet-app (10.3.1.0/24)
-  → Azure VPN Gateway (vgw-dbm-prod)
-  ← IPsec S2S IKEv2 tunnel →
-  Annique FortiGate (away1.annique.com)
-  → Annique office LAN (172.19.x.x)
-  → AMSERVER-v9 (172.19.16.100:1433)
+  → outbound internet traffic
+  → 196.3.178.122:62111 (away2.annique.com)
+  → amanniquelive / compplanLive / NopIntegration databases
 ```
 
-DBM's connection string uses `172.19.16.100:1433` unchanged. No code changes are needed when the S2S tunnel is in place. The tunnel is transparent to the application.
+DBM connection string (secret stored in Key Vault as `am-connection-string`):
+```
+Server=196.3.178.122,62111;Database=amanniquelive;User Id=dbm_svc;Password=<from-keyvault>;TrustServerCertificate=True;
+```
 
-**Azure-side resources required (production only):**
+No VPN Gateway is required for go-live. No Bicep VPN modules are on the critical path.
+
+#### VPN Gateway (optional — admin access only)
+
+`vpn-gateway.bicep` remains in the Bicep module library for **optional** deployment. Use cases:
+- RDP admin access to the AM application server (`172.19.16.100`) from Azure
+- Pre-staging for AM migration to Azure (ANN-24 Track B)
+- Any future need to reach `172.19.16.x` LAN resources privately
 
 | Resource | Bicep module | SKU | Est. cost |
 |---|---|---|---|
-| Azure VPN Gateway | `vpn-gateway.bicep` | VpnGw1 (route-based IKEv2) | ~$140/month |
+| Azure VPN Gateway | `vpn-gateway.bicep` *(optional)* | VpnGw1 (route-based IKEv2) | ~$140/month |
 | Local Network Gateway | included in `vpn-gateway.bicep` | — | ~$0 |
 | VPN Connection | included in `vpn-gateway.bicep` | IKEv2, pre-shared key | ~$0 |
 
-**FortiGate-side configuration (Marcel Truter, Annique IT):**
-- Create a new IPsec phase 1/2 tunnel pointing at the Azure VPN Gateway public IP
-- Phase 1: IKEv2, AES-256, SHA-256, DH group 2 (Azure defaults)
-- Phase 2: AES-256, SHA-256, PFS group 2
-- Route `10.3.0.0/16` (DBM prod VNet) over the tunnel
-- Fortinet publish an Azure-specific S2S guide: search "FortiGate Azure VPN Gateway IPsec"
+The module is present but not deployed by default. Enable by passing `deployVpnGateway: true` to the production stack.
 
-> **For staging/parity:** Not applicable — these environments use a local Azure IaaS VM for AM. Connectivity is VNet-internal with no VPN required.
+> **For staging/parity:** Not applicable — these environments connect to `vm-am-staging`/`vm-am-parity` inside the same VNet.
 
-> **AM migration to Azure (ANN-24):** This is a parallel, non-blocking track. When AM eventually migrates to `vm-am-prod` inside the DBM prod VNet, the connection string changes from `172.19.16.100` to the VM's private IP (`10.3.2.x`) — one Key Vault secret update, App Service restart. The VPN tunnel can then be decommissioned.
+> **AM migration to Azure (ANN-24):** Parallel, non-blocking track. When AM migrates to `vm-am-prod` inside the DBM prod VNet, the connection string changes to the VM's private IP (`10.3.2.x`) — one Key Vault secret update, App Service restart.
 
 ---
 
@@ -954,7 +958,7 @@ infra/
       app-insights.bicep           # Application Insights
       storage.bicep                # Blob Storage account + containers
       recovery-vault.bicep         # Recovery Services Vault + backup policy
-      vpn-gateway.bicep            # Azure VPN Gateway + Local Network Gateway + Connection (production only)
+      vpn-gateway.bicep            # Azure VPN Gateway + Local Network Gateway + Connection (optional — on-prem admin access; not required for go-live)
   scripts/
     am/
       configure-sql-server.ps1     # SQL Server post-provisioning config
@@ -1011,8 +1015,10 @@ module amVm 'modules/am-vm.bicep' = {
   dependsOn: [networking]
 }
 
-// Module: VPN Gateway (production only — S2S IPsec to Annique FortiGate)
-module vpnGateway 'modules/vpn-gateway.bicep' = if (environment == 'production') {
+// Module: VPN Gateway (OPTIONAL — for on-prem admin access only; not required for go-live)
+// AM SQL is internet-accessible at 196.3.178.122:62111 — no VPN needed for DBM connectivity
+// Enable by passing deployVpnGateway: true; defaults to false
+module vpnGateway 'modules/vpn-gateway.bicep' = if (environment == 'production' && deployVpnGateway) {
   name: 'vpn-gateway-${environment}'
   params: {
     vnetName: networking.outputs.vnetName
@@ -1219,8 +1225,9 @@ Estimates in **South Africa North** pricing (USD/month). Actual costs depend on 
 | `stdbmbackupprd` — LRS | 100 GB/month | ~$2 |
 | `rsv-dbm-prod` — Backup | 1 VM + long-term | ~$30 |
 | `bas-dbm-prod` — Basic | | ~$140 |
-| `vgw-dbm-prod` — VPN Gateway VpnGw1 | S2S IPsec to Annique FortiGate | ~$140 |
-| **Subtotal** | | **~$2,127/month** |
+| `vgw-dbm-prod` — VPN Gateway VpnGw1 | *(optional — on-prem admin access only)* | ~$140 |
+| **Subtotal (without VPN Gateway)** | | **~$1,987/month** |
+| **Subtotal (with optional VPN Gateway)** | | **~$2,127/month** |
 
 > **Cost reduction levers:**
 > - Azure Hybrid Benefit (Windows + SQL Server): up to 40–70% off VM cost

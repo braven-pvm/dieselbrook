@@ -42,7 +42,7 @@
 │  └── [WEBSTORE]     → stage.anniquestore.co.za:61023 (old store)       │
 │                                                                         │
 │  IIS Applications (C:\inetpub\wwwroot\):                               │
-│  ├── Annique/           NopCommerce 4.x (.NET 7, last deploy Nov 2023) │
+│  ├── Annique/           NopCommerce 4.60 (.NET 7, last deploy Nov 2023) │
 │  ├── AnqIntegrationAPI/ AnqIntegrationApi (.NET 9, last deploy Mar 2026│
 │  ├── NopBlockPublisher/ Content publishing tool                        │
 │  ├── Quiz/              Product quiz app                                │
@@ -197,9 +197,31 @@ From `appsettings.json` — these are the exact production Brevo template IDs:
 - `65` (WhatsApp) / `59` (dev) — New registration WhatsApp
 - `774` — New template added to production (not in dev config) — unknown purpose
 
-### 3.7 NopCommerce is .NET 7, deployed November 2023
+### 3.7 NopCommerce 4.60 on .NET 7, deployed November 2023
 
-`C:\inetpub\wwwroot\Annique\` DLLs all dated `01/18/2023` with a last `Plugins` update `03/05/2026`. This is NopCommerce on .NET 7 (not .NET 9). The site runs but hasn't been significantly updated since initial deployment.
+`C:\inetpub\wwwroot\Annique\` DLLs all dated `01/18/2023` with a last `Plugins` update `03/05/2026`. Exact version confirmed via `appsettings.json`:
+
+```json
+"WebOptimizer": {
+  "CacheDirectory": "C:\\inetpub\\wwwroot\\nopCommerce_4.60.0\\wwwroot\\bundles"
+}
+```
+
+Connection string:
+```json
+"ConnectionString": "Data Source=AZ-ANNIQUE-WEB;Initial Catalog=Annique;...User ID=sa;Password=Difficult1;Trust Server Certificate=True;"
+```
+
+This is NopCommerce **4.60** on .NET 7. The site runs but hasn't been significantly updated since initial deployment. Database `Annique` (17 GB) on the local Azure SQL Server.
+
+**Backup directory — `__BACKUP__\Staging\`** (found on Azure VM) contains `Annique.Customization` SQL scripts from Sep 2023:
+- `AlterExclusiveItemsSchema.sql` — custom schema for exclusive/consultant-only products
+- `AlterProductSchema.sql` — custom product schema extensions
+- `AlterSpGetFilterPickUpStores.sql` / `DropSpGetFilterPickUpStore.sql` / `DropSpGetPickUpStoreById.sql` — pick-up store stored procs
+- `AlterUserProfileSchema.sql` — user profile extensions
+- `CreateSpGetPickUpStoreById.sql` — new pick-up store SP
+
+These scripts document the custom schema additions to the `Annique` (NopCommerce) database. DBM does not interact with this database directly, but the exclusive items schema is relevant to the product catalogue domain.
 
 ### 3.8 AnqIntegrationApi is .NET 9 — the reference implementation
 
