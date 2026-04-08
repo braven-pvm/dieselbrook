@@ -18,6 +18,70 @@ The CEO of Annique has authorised this programme and committed to providing all 
 - **The staging AM SQL instance (`196.3.178.122:62111`) is exposed on a non-standard port** with no VPN requirement — a security issue that needs flagging.
 - **`shopapi.annique.com` is confirmed live** and is the NISource VFP Web Connection server — it responds to API calls. This is the high-risk OTP server.
 - **`SyncCancelOrders.api` exists and returns HTTP 200** — TC-05 is partially answered.
+- **UPDATE 2026-04-08 (post-VPN session):** VPN connected successfully. RDP to test server `172.19.16.101` works. However, the account provided (`annique\Dieselbrook`) has **no administrator privileges** — `New-NetFirewallRule` and `netsh advfirewall` both fail with access denied. We cannot configure SQL Server firewall rules, install SSH, or run any privileged operations. **Standard user access to one test server is not the same as the administrative access required for this programme.**
+
+---
+
+## UPDATE — VPN Session Findings (2026-04-08)
+
+### What VPN access confirmed
+
+Connecting FortiClient SSL-VPN to `away1.annique.com:10443` with credentials `Dieselbrook / Diesel@2026#7` assigns VPN IP `10.212.134.200` and routes `172.19.16.0/24` through the tunnel.
+
+**Hosts confirmed reachable via VPN:**
+
+| Host | Ports open | Identity |
+|---|---|---|
+| `172.19.16.100` | 1433 (SQL), 3389 (RDP) | **Production AMSERVER-v9** |
+| `172.19.16.101` | 3389 (RDP) | **Test/clone AM server** (Marcel's provided server) |
+| `172.19.16.16` | 80, 445 (SMB), 3389 (RDP) | Unknown Windows server |
+| `172.19.16.27` | 1433 (SQL), 3389 (RDP) | **Unknown SQL Server** — not AM, purpose unknown |
+| `172.19.16.63` | 445 (SMB) | Unknown Windows machine |
+| `172.19.16.12/15/18/19/24/25` | 80 | Canon printers/copiers |
+
+**Not accessible via VPN:**
+- `20.87.212.38:3389` — Azure NopCommerce server RDP still closed
+- `196.3.178.122:62111` — staging AM SQL — not routed through this VPN
+
+**New discovery:** `172.19.16.27` has a SQL Server (port 1433) and RDP that we did not know about. This could be the NopCommerce SQL Server or another internal system. Requires investigation.
+
+### The privilege problem
+
+RDP to `172.19.16.101` (test server) works with `annique\Dieselbrook` / `Diesel@2026#7`.
+
+Once logged in, attempting to open SQL Server firewall rules failed:
+
+```
+New-NetFirewallRule : The term 'New-NetFirewallRule' is not recognized...
+  + CategoryInfo : ObjectNotFound
+  + FullyQualifiedErrorId : CommandNotFoundError
+```
+
+```
+netsh advfirewall firewall add rule ... 
+→ Access denied
+```
+
+**Root cause:** The `Dieselbrook` account is a **standard (non-administrator) domain user**. It has:
+- RDP access to the test server ✅
+- Desktop and basic application access ✅
+- No ability to modify firewall rules ❌
+- No ability to install software ❌
+- No ability to configure SQL Server ❌
+- No ability to run `sqlcmd` or SSMS with elevated privileges ❌
+- No ability to create SQL backups via PowerShell ❌
+
+**Additional finding:** `New-NetFirewallRule` not being recognised suggests this may be Windows Server 2008 R2 or 2012 (pre-NetSecurity module). This is relevant for the migration — older OS will need upgrade steps.
+
+### What we can do with the current access
+
+With a standard user RDP session on `172.19.16.101` we can:
+- See the desktop and installed applications
+- Open AccountMate 9.3 (user `DieselB` — confirmed from earlier screenshot)
+- Browse the filesystem (non-system folders)
+- Check what software is installed (`winver`, Programs list)
+
+We **cannot** do anything technically useful for the programme without elevated access.
 
 Until Azure subscription access is granted, **DBM infrastructure provisioning cannot begin**.
 
@@ -218,6 +282,45 @@ This is not optional. It is not negotiable. Every single piece of infrastructure
 10. Done. Marius will receive an email confirmation.
 
 If Marcel cannot find the subscription or is unsure: send a screenshot of `portal.azure.com` → "Subscriptions" page to Deon and we will guide step by step.
+
+---
+
+**NEED 1b: Local Administrator on the Test AM Server (172.19.16.101) — and SQL Firewall Open**
+
+**What:** The `Dieselbrook` account needs to be added to the **Local Administrators** group on `172.19.16.101`. Additionally, Marcel must open Windows Firewall on that server to allow SQL Server (TCP 1433) from our VPN IP (`10.212.134.200`).
+
+**Why:** We have RDP access to the test server. We cannot do anything useful with it. We cannot:
+- Configure the SQL Server firewall to allow remote connections
+- Install OpenSSH for shell access
+- Run `sqlcmd` with elevated privileges
+- Create database backups
+- Check SQL Agent jobs
+- Run any of the diagnostic queries that confirm the server is suitable for staging
+
+Every single diagnostic and setup task on this server requires local admin. Marcel gave us a user account, not an administrator account. These are not the same thing.
+
+**Severity:** 🔴 **Blocking all server-side diagnostic and setup work.**
+
+**How to provide (Marcel — 2 minutes, while logged in as his own admin account):**
+
+Step 1 — Add Dieselbrook to Local Administrators:
+```
+# Open PowerShell as Administrator (right-click → Run as Administrator)
+Add-LocalGroupMember -Group "Administrators" -Member "annique\Dieselbrook"
+```
+
+Or via GUI:
+1. Right-click "This PC" → Manage → Local Users and Groups → Groups
+2. Double-click "Administrators"
+3. Click "Add" → type `annique\Dieselbrook` → OK
+
+Step 2 — Open SQL Server firewall for our VPN IP:
+```
+netsh advfirewall firewall add rule name="SQL Server - Dieselbrook" dir=in action=allow protocol=TCP localport=1433 remoteip=10.212.134.200
+netsh advfirewall firewall add rule name="SQL Browser - Dieselbrook" dir=in action=allow protocol=UDP localport=1434 remoteip=10.212.134.200
+```
+
+That is all. Two PowerShell commands. Takes under 2 minutes.
 
 ---
 
@@ -475,8 +578,11 @@ This is a recommendation, not a requirement for DBM go-live.
 | 🟡 7 | Shopify Plus store collaborator access | Adele / management | **NOT PROVIDED** | ~3 weeks |
 | 🟡 8 | Production AM SQL read-only login | Marcel | **NOT PROVIDED** | AM migration spec |
 | 🟡 9 | NopCommerce SQL Server name/IP | Marcel | **NOT PROVIDED** | Data migration spec |
-| ✅ — | FortiClient VPN credentials | Marcel | **PROVIDED** | — |
-| ✅ — | RDP to test AM server (172.19.16.101) | Marcel | **PROVIDED** | — |
+| ✅ — | FortiClient VPN credentials | Marcel | **PROVIDED — WORKS** | — |
+| ⚠️ — | RDP to test AM server (172.19.16.101) | Marcel | **PROVIDED but standard user only — no admin** | — |
+| ❌ — | Local Administrator on test server (172.19.16.101) | Marcel | **NOT PROVIDED — blocks all diagnostic work** | — |
+| ❌ — | Local Administrator on prod server (172.19.16.100) | Marcel | **NOT PROVIDED** | — |
+| ❌ — | SQL Server firewall open to VPN IP on test server | Marcel | **NOT PROVIDED — Windows Firewall blocking SQL** | — |
 | ❌ — | "Azure server RDP" (20.87.212.38) | Marcel | **WRONG SERVER, PORT CLOSED** | — |
 
 ---
