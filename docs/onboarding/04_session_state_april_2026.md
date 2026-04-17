@@ -1,7 +1,7 @@
 # 04 — Session State, April 2026
 ## Where We Are, What Is Done, What Comes Next
 
-**Last updated:** 2026-04-07
+**Last updated:** 2026-04-14
 
 ---
 
@@ -124,8 +124,10 @@ These are facts, not assumptions. They must be treated as ground truth.
 | AccountMate = standard SQL Server tables + stored procs | Source code + EF Core mapping |
 | `sp_camp_getSPprice` is the authoritative pricing oracle | SQL archaeology |
 | Pricing: effective consultant price = CampDetail.nPrice (campaign) or icitem.nprice (20% fallback) | SQL archaeology |
-| `AMSERVER-v9` is the staging SQL server name | `@@SERVERNAME` confirmed via sqlcmd |
-| Staging is accessible at `196.3.178.122:62111` | Direct access confirmed |
+| `[AMSERVER-V9]` is a SQL Server **linked-server alias** (not a machine name) | Infrastructure discovery 2026-04-08 |
+| AM SQL Server (production) is at `196.3.178.122:62111` — internet-accessible, no VPN required | Infrastructure discovery 2026-04-08 |
+| `172.19.16.100` is the AM **application server** (thick client only — no SQL data) | Infrastructure discovery 2026-04-08 |
+| `172.19.16.101` is believed to be the **staging/clone AM server** — not yet confirmed | Marcel Truter verbal + RDP access Apr 2026 |
 | Shopify Function availability = Shopify Plus only (custom app) | Shopify documentation |
 | B2B native tooling is NOT the correct architecture | Analysis conclusion |
 | SQL Server 2025 installer is present in workspace | `database/sqlmedia/Express_ENU/SETUP.EXE` v17.0.1000.7 |
@@ -205,7 +207,39 @@ No formal migration plan document has been created yet. If needed, create `docs/
 
 ---
 
-## 9. Session Log Pointer
+## 9. Access State (as of 2026-04-14)
+
+### ✅ Azure subscription — full CLI access
+- **Tenant:** Annique Rooibos (`annique.com`) — tenant ID `2147b956-6a3b-4fb7-8a62-f42636dd5b37`
+- **Subscription:** Azure CSP Subscription — ID `355e7b0b-ead0-4fb3-96ba-914900c4f2c4`
+- **User:** `mariusbloemhof@gmail.com` — guest user, Owner-equivalent (effective permissions `["*"]`)
+- **CLI:** `az login` → interactive browser sign-in; `az account set --subscription 355e7b0b-ead0-4fb3-96ba-914900c4f2c4`
+- **Verified capabilities:** Create/delete resource groups, provision resources. Role assignments via CLI fail due to guest-user Graph API limitation — use `az rest` / ARM REST API as workaround.
+- **Existing resource groups (do NOT touch):** `Annique_Web_Server` (production NopCommerce + all Annique services on AZ-ANNIQUE-WEB VM), `NetworkWatcherRG`
+- **DBM RGs to create:** `rg-dbm-staging`, `rg-dbm-parity`, `rg-dbm-prod`
+
+### ✅ AM server RDP — staging (believed, unconfirmed)
+- **Path:** NordVPN (dedicated IP — required for FortiGate whitelist) → FortiClient SSL-VPN → RDP
+- **FortiClient VPN:** gateway `away1.annique.com:10443`, user `Dieselbrook`, password `Diesel@2026#7`
+- **RDP target:** `172.19.16.101` (on Annique LAN `172.19.16.0/24`)
+- **RDP credentials:** `annique\Dieselbrook` / `Diesel@2026#7`
+- **Permission level:** Standard user only — no local admin. Cannot install software, create firewall rules, or run as admin.
+- **Server role:** Believed to be staging/clone AM server per Marcel Truter, not yet verified. Production AM DB is separately accessible at `196.3.178.122:62111` over the internet.
+
+### ✅ AM production SQL — direct internet access
+- **Endpoint:** `196.3.178.122:62111` (`away2.annique.com`)
+- **Credentials:** `sa` / `AnniQu3S@` (plaintext in VFP source — must be rotated and replaced with `dbm_svc` least-privilege login before go-live)
+- **Databases:** `amanniquelive`, `compplanLive`, `compsys`, `NopIntegration`
+- **No VPN required** for DBM connectivity — direct TCP from Azure App Service will work.
+
+### 🟡 Remaining access gaps (not blocking)
+- **Admin on `172.19.16.101`** — nice-to-have for running diagnostic scripts, Windows Firewall changes, installing SSMS. Ask Marcel Truter.
+- **Rod's contact details** — active developer on production VM, should be in the loop on any cutover timing.
+- **Shopify store access** — not relevant yet; the Shopify store is controlled by Dieselbrook, not Annique.
+
+---
+
+## 10. Session Log Pointer
 
 A detailed session log covering work up to April 7, 2026, is available in the conversation summary maintained by the agent. Key session logs:
 - `docs/.agent-memory/sessions/2026-03-13.md` — March 13 session (topology confirmation, pricing reframe, D-06 rewrite)
