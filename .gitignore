@@ -9,3 +9,19 @@ database/
 # OS
 .DS_Store
 Thumbs.db
+
+# MCP / Claude local config — contain live API keys (Linear, Notion, etc.)
+.mcp.json
+.claude/
+
+# Scratch + ad-hoc work files
+scratch.md
+
+# Emails exported to PDF — may contain credentials in message body
+*.pdf
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
