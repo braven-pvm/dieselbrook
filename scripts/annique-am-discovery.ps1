@@ -92,7 +92,7 @@ Write-Line ('=' * 78)
 Write-Line "Generated      : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
 Write-Line "Host           : $env:COMPUTERNAME"
 Write-Line "Running as     : $env:USERDOMAIN\$env:USERNAME"
-Write-Line "Script version : 1.0 (2026-04-18)"
+Write-Line "Script version : 1.1 (2026-04-18)"
 Write-Line ''
 Write-Line 'This is a READ-ONLY discovery script. No changes are made to the system.'
 Write-Line 'Please review the output file before sending; it may contain plaintext'
@@ -728,11 +728,34 @@ ORDER BY login_time DESC;
 GO
 
 PRINT '';
-PRINT '=== DISTINCT LOGIN / HOST / PROGRAM COMBINATIONS CONNECTING TO THIS SQL ===';
-SELECT DISTINCT login_name, host_name, program_name, client_interface_name
+PRINT '=== DISTINCT LOGIN / HOST / PROGRAM COMBINATIONS CONNECTING TO THIS SQL (with counts) ===';
+-- This is the single most valuable view for understanding which external apps/machines
+-- are actually consuming this SQL instance. Look for: unknown host_name values, unexpected
+-- program_name values (custom apps), and consumer IPs that shouldn't be hitting prod.
+SELECT login_name, host_name, program_name, client_interface_name,
+       DB_NAME(database_id) AS DBName, COUNT(*) AS Conns
 FROM sys.dm_exec_sessions
 WHERE is_user_process = 1
-ORDER BY login_name, host_name, program_name;
+GROUP BY login_name, host_name, program_name, client_interface_name, database_id
+ORDER BY Conns DESC;
+GO
+
+PRINT '';
+PRINT '=== REMOTE IP ADDRESSES CURRENTLY CONNECTED (via sys.dm_exec_connections) ===';
+-- Maps each session to the actual remote IP address that opened it - critical for
+-- spotting inbound integration traffic and identifying machines by IP when the
+-- host_name is generic or spoofed.
+SELECT c.client_net_address AS RemoteIP,
+       COUNT(*) AS Conns,
+       MIN(c.connect_time) AS FirstConnect,
+       MAX(s.login_name) AS SampleLogin,
+       MAX(s.host_name) AS SampleHostName,
+       MAX(s.program_name) AS SampleProgram
+FROM sys.dm_exec_connections c
+JOIN sys.dm_exec_sessions s ON c.session_id = s.session_id
+WHERE s.is_user_process = 1 AND c.client_net_address IS NOT NULL
+GROUP BY c.client_net_address
+ORDER BY Conns DESC;
 GO
 
 PRINT '';
@@ -755,6 +778,54 @@ FROM sys.dm_exec_sessions
 WHERE is_user_process = 1 AND database_id > 0
 GROUP BY database_id
 ORDER BY ConnectionCount DESC;
+GO
+
+-- NopIntegration database exists on production AM SQL per Nopintegration.ini configuration.
+-- ANQ_SyncCustomerTOAM references [AMSERVER-V9].NopIntegration.dbo.NopFieldMapping.
+-- If this box hosts NopIntegration, enumerate its schema.
+IF DB_ID('NopIntegration') IS NOT NULL
+BEGIN
+    USE NopIntegration;
+    PRINT '';
+    PRINT '=== NopIntegration DB SCHEMA COUNTS ===';
+    SELECT 'Tables' AS ObjType, COUNT(*) AS Cnt FROM sys.tables WHERE is_ms_shipped = 0
+    UNION ALL SELECT 'Procedures', COUNT(*) FROM sys.procedures WHERE is_ms_shipped = 0
+    UNION ALL SELECT 'Views', COUNT(*) FROM sys.views WHERE is_ms_shipped = 0
+    UNION ALL SELECT 'Functions', COUNT(*) FROM sys.objects WHERE type IN ('FN','IF','TF') AND is_ms_shipped = 0
+    UNION ALL SELECT 'Triggers', COUNT(*) FROM sys.triggers WHERE is_ms_shipped = 0;
+
+    PRINT '';
+    PRINT '=== NopIntegration: TOP 30 TABLES BY ROW COUNT ===';
+    SELECT TOP 30 t.name AS TableName, SUM(p.rows) AS Rws, CAST(SUM(a.total_pages)*8.0/1024 AS DECIMAL(10,1)) AS SizeMB
+    FROM sys.tables t
+    JOIN sys.indexes i ON t.object_id = i.object_id
+    JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id
+    JOIN sys.allocation_units a ON p.partition_id = a.container_id
+    WHERE i.index_id IN (0,1) AND t.is_ms_shipped = 0
+    GROUP BY t.name
+    ORDER BY SUM(p.rows) DESC;
+
+    PRINT '';
+    PRINT '=== NopIntegration: ALL TABLES (names + modify dates) ===';
+    SELECT name, OBJECT_SCHEMA_NAME(object_id) AS SchemaName, create_date, modify_date
+    FROM sys.tables WHERE is_ms_shipped = 0 ORDER BY name;
+
+    PRINT '';
+    PRINT '=== NopIntegration: ALL PROCEDURES ===';
+    SELECT name, create_date, modify_date FROM sys.procedures WHERE is_ms_shipped = 0 ORDER BY name;
+
+    PRINT '';
+    PRINT '=== NopIntegration: TRIGGERS ===';
+    SELECT OBJECT_NAME(parent_id) AS TableName, name AS TriggerName, is_disabled, create_date, modify_date
+    FROM sys.triggers WHERE is_ms_shipped = 0 AND parent_class = 1
+    ORDER BY OBJECT_NAME(parent_id), name;
+
+    PRINT '';
+    PRINT '=== NopIntegration: NopFieldMapping contents (the field-name translation table) ===';
+    IF OBJECT_ID('dbo.NopFieldMapping') IS NOT NULL
+        SELECT TOP 200 * FROM dbo.NopFieldMapping;
+    ELSE PRINT '(NopFieldMapping table not found)';
+END
 GO
 '@
 
@@ -866,12 +937,57 @@ if (Test-Path $hostsPath) {
 }
 
 Write-Block 'Active DNS resolution: common Annique hostnames (from this box)' {
-    $hosts = @('AMSERVER-v9', 'away1.annique.com', 'away2.annique.com', 'nopintegration.annique.com', 'anniquestore.co.za', 'shopapi.annique.com', 'annique.com', 'ITREPORT-SERVER', 'andc.annique.local')
+    $hosts = @(
+        # AM / linked server hostnames
+        'AMSERVER-v9', 'AMSERVER-V9', 'AMSERVER-v9.annique.local',
+        'AMSERVER-TEST', 'AMSERVER-TEST.annique.local',
+        'ITREPORT-SERVER', 'ITREPORT-SERVER.annique.local', 'ITREPORT-SERVER\ANREPORTS',
+        'andc.annique.local',
+        # Public SA hosts
+        'away1.annique.com', 'away2.annique.com',
+        'nopintegration.annique.com', 'annique.com', 'www.annique.com',
+        'stage.annique.com', 'stage.annique.co.na',
+        'anniquestore.co.za', 'stage.anniquestore.co.za', 'shopapi.annique.com',
+        'quiz.annique.com', 'backoffice.annique.com', 'newregistration.annique.com',
+        'anniqueshop.com',
+        # Known internet IPs (reverse lookups for sanity)
+        '196.3.178.122', '196.3.178.123',
+        '20.87.212.38',
+        '41.193.227.190',
+        '172.19.16.100', '172.19.16.101', '172.19.16.16', '172.19.16.27', '172.19.16.63'
+    )
     foreach ($h in $hosts) {
         $result = nslookup $h 2>&1 | Out-String
         "=== $h ==="
         $result.TrimEnd()
         ''
+    }
+}
+
+Write-Block 'Reverse DNS of currently-ESTABLISHED outbound connections' {
+    # Each remote IP we are currently talking to - try to get the hostname.
+    # This surfaces integration endpoints we might not have thought of.
+    try {
+        $remoteIps = netstat -ano -p TCP 2>$null |
+            Select-String 'ESTABLISHED' |
+            ForEach-Object {
+                $parts = ($_ -split '\s+') | Where-Object { $_ -ne '' }
+                if ($parts.Count -ge 3) {
+                    $remote = $parts[2]
+                    # Strip port
+                    if ($remote -match '^(.+):(\d+)$') { $matches[1] }
+                }
+            } |
+            Where-Object { $_ -and $_ -notmatch '^(127\.|10\.|::1|0\.0\.0\.0)' -and $_ -notmatch '^(10\.)' } |
+            Sort-Object -Unique
+        foreach ($ip in $remoteIps) {
+            $ptr = nslookup $ip 2>$null | Out-String
+            $name = ''
+            if ($ptr -match 'Name:\s*(\S+)') { $name = $matches[1] }
+            "$ip -> $(if ($name) { $name } else { '(no PTR record)' })"
+        }
+    } catch {
+        "ERROR: $($_.Exception.Message)"
     }
 }
 
@@ -995,6 +1111,52 @@ for ($i = 1; $i -le 3; $i++) {
     }
 }
 
+# Integration-focused summary: group established connections by (process, remote IP)
+# This reveals who is talking to what - the central question for understanding
+# integration traffic. Inbound (someone connecting to our listening ports) and
+# outbound (we're connecting to someone) are shown separately.
+Write-Heading 'Connection summary: outbound (process -> remote IP) grouped'
+try {
+    $nsEst = netstat -ano -p TCP 2>$null | Select-String 'ESTABLISHED'
+    # Parse to structured objects
+    $connObjs = @()
+    foreach ($line in $nsEst) {
+        $parts = ($line -split '\s+') | Where-Object { $_ -ne '' }
+        if ($parts.Count -ge 5) {
+            $local = $parts[1]
+            $remote = $parts[2]
+            $procId = $parts[4]
+            $localIP = ''; $localPort = 0
+            $remoteIP = ''; $remotePort = 0
+            if ($local -match '^(.+):(\d+)$') { $localIP = $matches[1]; $localPort = [int]$matches[2] }
+            if ($remote -match '^(.+):(\d+)$') { $remoteIP = $matches[1]; $remotePort = [int]$matches[2] }
+            $connObjs += [PSCustomObject]@{ ProcId = [int]$procId; LocalIP = $localIP; LocalPort = $localPort; RemoteIP = $remoteIP; RemotePort = $remotePort }
+        }
+    }
+    # Get ProcId -> process name mapping once
+    $procMap = @{}
+    foreach ($p in (Get-WmiObject Win32_Process -ErrorAction SilentlyContinue)) { $procMap[[int]$p.ProcessId] = $p.Name }
+    # Heuristic: if LocalPort is a well-known service port (<10000) and RemotePort is high, it's likely INBOUND
+    # Otherwise (LocalPort high, RemotePort well-known), it's OUTBOUND.
+    $outbound = $connObjs | Where-Object { $_.RemotePort -lt 10000 -and $_.LocalPort -gt 10000 } | Where-Object { $_.RemoteIP -notmatch '^(127\.|0\.0\.0\.0|::1)$' }
+    $inbound = $connObjs | Where-Object { $_.LocalPort -lt 10000 -and $_.RemotePort -gt 10000 } | Where-Object { $_.RemoteIP -notmatch '^(127\.|0\.0\.0\.0|::1)$' }
+
+    'OUTBOUND (we connected OUT) grouped by process + remote endpoint:'
+    $outbound | Group-Object @{e={$procMap[$_.ProcId]}}, RemoteIP, RemotePort |
+        Sort-Object Count -Descending |
+        Select-Object @{n='Count';e={$_.Count}}, @{n='Process';e={$procMap[$_.Group[0].ProcId]}}, @{n='Remote';e={"$($_.Group[0].RemoteIP):$($_.Group[0].RemotePort)"}} |
+        Format-Table -AutoSize | Out-String | ForEach-Object { Write-Line $_ }
+
+    ''
+    'INBOUND (someone connected TO us) grouped by local port + remote IP:'
+    $inbound | Group-Object @{e={$_.LocalPort}}, RemoteIP |
+        Sort-Object Count -Descending |
+        Select-Object @{n='Count';e={$_.Count}}, @{n='LocalPort';e={$_.Group[0].LocalPort}}, @{n='RemoteIP';e={$_.Group[0].RemoteIP}}, @{n='Process';e={$procMap[$_.Group[0].ProcId]}} |
+        Format-Table -AutoSize | Out-String | ForEach-Object { Write-Line $_ }
+} catch {
+    Write-Line "ERROR: $($_.Exception.Message)"
+}
+
 # =============================================================================
 # 19. IIS LOG VOLUME SUMMARY (is IIS actually serving traffic?)
 # =============================================================================
@@ -1050,6 +1212,70 @@ if (Test-Path $iisLogPath) {
             '(no IIS log files found)'
         }
     }
+
+    # Per-site URL + source-IP analysis for the most recent log
+    # This is THE most valuable IIS analysis - tells us WHICH endpoints are being
+    # called and BY WHOM. Critical for identifying integration callers.
+    Get-ChildItem $iisLogPath -ErrorAction SilentlyContinue | Where-Object { $_.PSIsContainer } | ForEach-Object {
+        $siteFolder = $_
+        $mostRecent = Get-ChildItem $siteFolder.FullName -Filter '*.log' -ErrorAction SilentlyContinue |
+                      Sort-Object LastWriteTime -Descending |
+                      Select-Object -First 1
+        if ($mostRecent -and $mostRecent.Length -gt 0) {
+            Write-Heading "Site $($siteFolder.Name) - URL endpoint frequency (most recent log: $($mostRecent.Name))"
+            try {
+                # IIS W3C log format: typical fields are date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip ...
+                # Field index for cs-uri-stem varies; we find it from the #Fields header.
+                $logLines = Get-Content $mostRecent.FullName -ErrorAction SilentlyContinue
+                $fieldsLine = $logLines | Where-Object { $_ -match '^#Fields:' } | Select-Object -Last 1
+                if (-not $fieldsLine) {
+                    Write-Line '(no #Fields header in log; skipping structured analysis)'
+                } else {
+                    $fields = ($fieldsLine -replace '^#Fields:\s*', '') -split '\s+'
+                    $uriIdx = [array]::IndexOf($fields, 'cs-uri-stem')
+                    $queryIdx = [array]::IndexOf($fields, 'cs-uri-query')
+                    $cipIdx = [array]::IndexOf($fields, 'c-ip')
+                    $methodIdx = [array]::IndexOf($fields, 'cs-method')
+                    $statusIdx = [array]::IndexOf($fields, 'sc-status')
+                    $dataLines = $logLines | Where-Object { $_ -notmatch '^#' -and $_.Trim() -ne '' }
+
+                    # URL frequency
+                    "Top URL paths (by hit count):"
+                    $dataLines | ForEach-Object {
+                        $p = $_ -split '\s+'
+                        if ($p.Count -gt $uriIdx -and $uriIdx -ge 0) { $p[$uriIdx] }
+                    } | Group-Object | Sort-Object Count -Descending | Select-Object -First 20 |
+                        Select-Object Count, @{n='URL';e={$_.Name}} | Format-Table -AutoSize | Out-String | ForEach-Object { $_ }
+
+                    ''
+                    "Top source IPs (by hit count):"
+                    $dataLines | ForEach-Object {
+                        $p = $_ -split '\s+'
+                        if ($p.Count -gt $cipIdx -and $cipIdx -ge 0) { $p[$cipIdx] }
+                    } | Group-Object | Sort-Object Count -Descending | Select-Object -First 20 |
+                        Select-Object Count, @{n='SourceIP';e={$_.Name}} | Format-Table -AutoSize | Out-String | ForEach-Object { $_ }
+
+                    ''
+                    "Status code distribution:"
+                    $dataLines | ForEach-Object {
+                        $p = $_ -split '\s+'
+                        if ($p.Count -gt $statusIdx -and $statusIdx -ge 0) { $p[$statusIdx] }
+                    } | Group-Object | Sort-Object Count -Descending |
+                        Select-Object Count, @{n='Status';e={$_.Name}} | Format-Table -AutoSize | Out-String | ForEach-Object { $_ }
+
+                    ''
+                    "HTTP method distribution:"
+                    $dataLines | ForEach-Object {
+                        $p = $_ -split '\s+'
+                        if ($p.Count -gt $methodIdx -and $methodIdx -ge 0) { $p[$methodIdx] }
+                    } | Group-Object | Sort-Object Count -Descending |
+                        Select-Object Count, @{n='Method';e={$_.Name}} | Format-Table -AutoSize | Out-String | ForEach-Object { $_ }
+                }
+            } catch {
+                "ERROR analysing log: $($_.Exception.Message)"
+            }
+        }
+    }
 } else {
     Write-Line 'IIS log directory not found — IIS probably not installed or logging disabled'
 }
@@ -1078,6 +1304,108 @@ foreach ($p in $integrationPaths) {
             Select-Object Mode, LastWriteTime, Length, Name |
             Format-Table -AutoSize |
             Out-String | ForEach-Object { Write-Line $_ }
+    }
+}
+
+# =============================================================================
+# 21. INTEGRATION RUNTIME SCAN
+# =============================================================================
+# Find running processes that look like Annique integrations - daemons, sync
+# apps, or web-handler processes. Matches common patterns seen on AZ-ANNIQUE-WEB
+# and AMSERVER-TEST. Captures full command line + start time + working directory.
+Write-Section '21. Integration runtime scan (running processes)'
+
+Write-Block 'Processes matching integration patterns (name, path, or command line)' {
+    $integrationRegex = '(?i)(nopintegration|backoffice|anqimagesync|brevocontacts?sync|anq[a-z]+sync|imagesync|amsync|annique|accountmate|wconnect|webconnection|runasyncrequest)'
+    Get-WmiObject Win32_Process -ErrorAction SilentlyContinue |
+        Where-Object {
+            ($_.Name -match $integrationRegex) -or
+            ($_.ExecutablePath -and $_.ExecutablePath -match $integrationRegex) -or
+            ($_.CommandLine -and $_.CommandLine -match $integrationRegex) -or
+            ($_.ExecutablePath -and $_.ExecutablePath -match '(?i)\\Apps\\|\\NopIntegration\\|\\Backoffice\\|\\Email2SMS\\|\\CompPLan\\|\\Eft\\')
+        } |
+        Select-Object @{n='PID';e={$_.ProcessId}},
+                      @{n='Name';e={$_.Name}},
+                      @{n='Exe';e={$_.ExecutablePath}},
+                      @{n='CmdLine';e={if ($_.CommandLine -and $_.CommandLine.Length -gt 250) { $_.CommandLine.Substring(0,250) + '...' } else { $_.CommandLine }}},
+                      @{n='Parent';e={$_.ParentProcessId}} |
+        Format-Table -AutoSize -Wrap
+}
+
+Write-Block 'Known integration deployment folders - enumerate contents' {
+    $deployFolders = @(
+        'C:\NopIntegration', 'C:\NopIntegration\deploy', 'C:\NopIntegration\web',
+        'C:\Backoffice', 'C:\Backoffice\deploy', 'C:\Backoffice\web',
+        'C:\Apps', 'C:\Apps\BrevoContactSync', 'C:\Apps\ImageSync',
+        'C:\Email2SMS', 'C:\Eft', 'C:\CompPLan',
+        'D:\Apps', 'E:\Projects',
+        'C:\WebConnectionProjects',
+        'C:\AnqIntegrationAPI', 'C:\inetpub\wwwroot\AnqIntegrationAPI'
+    )
+    foreach ($folder in $deployFolders) {
+        if (Test-Path $folder) {
+            "=== $folder ==="
+            Get-ChildItem $folder -ErrorAction SilentlyContinue |
+                Sort-Object LastWriteTime -Descending |
+                Select-Object -First 25 |
+                Select-Object Mode, LastWriteTime, Length, Name |
+                Format-Table -AutoSize | Out-String | ForEach-Object { $_ }
+            ''
+        }
+    }
+}
+
+Write-Block 'Config / connection-string files inside integration folders' {
+    # Find .ini, .json, .config files inside the integration folder tree
+    # and report their path + size + last modified. Do NOT read contents here -
+    # section 10 already reads specific known files; this is for discovery of
+    # unknown config files.
+    $searchRoots = @('C:\NopIntegration','C:\Backoffice','C:\Apps','C:\CompPLan','C:\Email2SMS','C:\Eft','E:\Projects')
+    $allCfg = @()
+    foreach ($root in $searchRoots) {
+        if (Test-Path $root) {
+            $allCfg += Get-ChildItem $root -Recurse -Include '*.ini','*.json','*.config','*.fpw','appsettings.*' -ErrorAction SilentlyContinue |
+                Where-Object { -not $_.PSIsContainer }
+        }
+    }
+    $allCfg | Sort-Object FullName | Select-Object -First 100 |
+        Select-Object @{n='Path';e={$_.FullName}}, Length, LastWriteTime |
+        Format-Table -AutoSize
+}
+
+# =============================================================================
+# 22. INTEGRATION LOG TAILS (what syncs are happening RIGHT NOW)
+# =============================================================================
+# Find VFP/FoxPro and .NET integration logs in the usual folders; tail the most
+# recent files. This is how we confirm which syncs are actually running live.
+Write-Section '22. Integration log tails (live sync evidence)'
+
+Write-Block 'Most recently-written *.log files in integration folders (top 20)' {
+    $logRoots = @('C:\NopIntegration\deploy','C:\Backoffice\deploy','C:\Apps\BrevoContactSync','C:\Apps\ImageSync','C:\Email2SMS','C:\Eft','C:\CompPLan','E:\Projects')
+    $allLogs = @()
+    foreach ($root in $logRoots) {
+        if (Test-Path $root) {
+            $allLogs += Get-ChildItem $root -Recurse -Filter '*.log' -ErrorAction SilentlyContinue | Where-Object { -not $_.PSIsContainer }
+        }
+    }
+    $allLogs | Sort-Object LastWriteTime -Descending | Select-Object -First 20 |
+        Select-Object LastWriteTime, @{n='SizeKB';e={[math]::Round($_.Length/1KB,1)}}, FullName |
+        Format-Table -AutoSize -Wrap
+}
+
+Write-Block 'Tail of the 5 most recent log files (last 15 lines each)' {
+    $logRoots = @('C:\NopIntegration\deploy','C:\Backoffice\deploy','C:\Apps\BrevoContactSync','C:\Apps\ImageSync','C:\Email2SMS','C:\Eft','C:\CompPLan','E:\Projects')
+    $allLogs = @()
+    foreach ($root in $logRoots) {
+        if (Test-Path $root) {
+            $allLogs += Get-ChildItem $root -Recurse -Filter '*.log' -ErrorAction SilentlyContinue | Where-Object { -not $_.PSIsContainer -and $_.Length -gt 0 }
+        }
+    }
+    $recent = $allLogs | Sort-Object LastWriteTime -Descending | Select-Object -First 5
+    foreach ($log in $recent) {
+        "=== $($log.FullName) (last modified $($log.LastWriteTime), $([math]::Round($log.Length/1KB,1)) KB) ==="
+        Get-Content $log.FullName -ErrorAction SilentlyContinue | Select-Object -Last 15
+        ''
     }
 }
 
