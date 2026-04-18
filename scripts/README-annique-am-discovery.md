@@ -27,6 +27,8 @@ The script only issues `SELECT` statements against SQL Server (no `INSERT`,
 
 ## What it captures
 
+**Inventory sections (1-11)**
+
 1. Operating system, hardware, disk layout, domain membership
 2. Network configuration (IP, gateway, DNS, listening/established ports)
 3. Local admins, RDP users, current login sessions
@@ -35,12 +37,41 @@ The script only issues `SELECT` statements against SQL Server (no `INSERT`,
 6. AccountMate install location, version, licence files, config files
 7. Top-level folder structure on every drive
 8. IIS sites, applications, and bindings (if IIS is present)
-9. SQL Server version, databases, file sizes, linked servers, logins, roles,
+9. SQL Server: version, databases, file sizes, linked servers, logins, roles,
    Agent jobs, backup history, schema counts, row counts of key AM tables,
-   and source of two pricing procedures (`sp_camp_getSPprice` and
-   `vsp_ic_getcontractprice`)
+   pricing procedure source (`sp_camp_getSPprice`, `vsp_ic_getcontractprice`),
+   HTTP helper source (`sp_ws_HTTP`)
+
+   Also (for staging/migration planning):
+   - SQL Agent job **steps** (the actual commands that run, not just job names)
+   - SQL Agent alerts + operators + Database Mail profiles/accounts (SMTP relays)
+   - SQL CLR assemblies (custom .NET inside SQL)
+   - All DDL and DML **triggers** in `amanniquelive`
+   - Every proc/function/trigger that makes **external calls** (HTTP, OLE
+     automation, xp_cmdshell, OPENROWSET, OPENQUERY, linked servers,
+     sp_send_dbmail, BULK INSERT)
+   - Service Broker state per database + queues/services/routes
+   - Currently connected SQL sessions (who is talking to AM right now)
+   - Distinct login/host/program combinations (what apps connect to AM)
+   - Plan-cache queries referencing linked servers
 10. Common application config files that contain connection string metadata
 11. ODBC DSN inventory
+
+**Integration-graph sections (12-20)**
+
+12. **Hosts file** (DNS overrides — what does `AMSERVER-v9` actually resolve to?)
+    Plus `nslookup` on every known Annique hostname
+13. **SMB shares** (file-drop integration surface)
+14. **Windows Firewall rules** — every inbound rule (not just profile state)
+15. **COM+ registered applications** (NISource pattern — what else is registered?)
+16. **WMI event subscriptions** + legacy at-jobs (silent scheduled integrations)
+17. **Full process list with command lines** (reveals background services,
+    Python/Node/curl invocations, file watchers)
+18. **Netstat snapshots sampled 3 times over 30 seconds** (catches
+    periodic outbound connections — backups, syncs, pings)
+19. **IIS log volume summary** (is IIS actually serving traffic on prod, or
+    dormant?)
+20. **Integration file-drop folders** (EFT, imports, exports, inbox/outbox)
 
 ## A note on sensitive data
 

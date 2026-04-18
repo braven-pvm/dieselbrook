@@ -545,6 +545,217 @@ BEGIN
     ELSE PRINT '(vsp_ic_getcontractprice not found)';
 END
 GO
+
+-- =========================================================================
+-- INTEGRATION GRAPH: how production AM talks to the rest of the estate
+-- =========================================================================
+
+PRINT '';
+PRINT '=== SQL AGENT JOB STEPS (the actual commands that run) ===';
+-- Often reveals integration paths: CmdExec commands, PowerShell scripts, xp_cmdshell, linked-server queries
+SELECT j.name AS JobName, s.step_id, s.step_name, s.subsystem, s.database_name, LEFT(s.command, 2000) AS Command
+FROM msdb.dbo.sysjobs j
+JOIN msdb.dbo.sysjobsteps s ON j.job_id = s.job_id
+ORDER BY j.name, s.step_id;
+GO
+
+PRINT '';
+PRINT '=== SQL AGENT ALERTS ===';
+SELECT name, event_source, message_id, severity, enabled, has_notification, performance_condition
+FROM msdb.dbo.sysalerts
+ORDER BY name;
+GO
+
+PRINT '';
+PRINT '=== SQL AGENT OPERATORS (who gets notified) ===';
+SELECT name, enabled, email_address, pager_address, netsend_address
+FROM msdb.dbo.sysoperators
+ORDER BY name;
+GO
+
+PRINT '';
+PRINT '=== DATABASE MAIL PROFILES ===';
+IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'msdb')
+BEGIN
+    IF OBJECT_ID('msdb.dbo.sysmail_profile') IS NOT NULL
+        SELECT profile_id, name, description, last_mod_datetime FROM msdb.dbo.sysmail_profile ORDER BY name;
+END
+GO
+
+PRINT '';
+PRINT '=== DATABASE MAIL ACCOUNTS (SMTP servers and from-addresses) ===';
+IF OBJECT_ID('msdb.dbo.sysmail_account') IS NOT NULL
+    SELECT a.name AS AccountName, a.description, a.email_address AS FromAddress, a.replyto_address, s.servername AS SmtpServer, s.port, s.username, s.enable_ssl
+    FROM msdb.dbo.sysmail_account a
+    LEFT JOIN msdb.dbo.sysmail_server s ON a.account_id = s.account_id
+    ORDER BY a.name;
+GO
+
+PRINT '';
+PRINT '=== SQL CLR ASSEMBLIES (custom .NET loaded into SQL) ===';
+IF DB_ID('amanniquelive') IS NOT NULL
+BEGIN
+    USE amanniquelive;
+    SELECT name, clr_name, permission_set_desc, create_date, modify_date, is_user_defined
+    FROM sys.assemblies
+    WHERE is_user_defined = 1
+    ORDER BY name;
+END
+GO
+
+PRINT '';
+PRINT '=== DDL AND DML TRIGGERS IN AMANNIQUELIVE ===';
+IF DB_ID('amanniquelive') IS NOT NULL
+BEGIN
+    USE amanniquelive;
+    -- DML triggers (attached to tables)
+    SELECT
+        OBJECT_SCHEMA_NAME(parent_id) AS SchemaName,
+        OBJECT_NAME(parent_id) AS TableName,
+        name AS TriggerName,
+        is_disabled,
+        is_instead_of_trigger,
+        create_date,
+        modify_date
+    FROM sys.triggers
+    WHERE is_ms_shipped = 0 AND parent_class = 1
+    ORDER BY OBJECT_NAME(parent_id), name;
+
+    PRINT '';
+    PRINT '=== DATABASE-LEVEL DDL TRIGGERS IN AMANNIQUELIVE ===';
+    SELECT name, create_date, modify_date, is_disabled
+    FROM sys.triggers
+    WHERE is_ms_shipped = 0 AND parent_class = 0
+    ORDER BY name;
+END
+GO
+
+PRINT '';
+PRINT '=== SERVER-LEVEL DDL TRIGGERS ===';
+SELECT name, create_date, modify_date, is_disabled, parent_class_desc
+FROM sys.server_triggers
+WHERE is_ms_shipped = 0
+ORDER BY name;
+GO
+
+PRINT '';
+PRINT '=== PROCEDURES / FUNCTIONS / TRIGGERS THAT CALL EXTERNAL SYSTEMS ===';
+-- Finds every programmable object in amanniquelive whose body references
+-- external integration (HTTP calls, OLE automation, xp_cmdshell, linked servers, etc)
+IF DB_ID('amanniquelive') IS NOT NULL
+BEGIN
+    USE amanniquelive;
+    SELECT DISTINCT
+        o.name AS ObjectName,
+        o.type_desc AS ObjectType,
+        o.create_date,
+        o.modify_date,
+        CASE WHEN CHARINDEX('sp_ws_HTTP', m.definition) > 0 THEN 'Y' ELSE '' END AS CallsHTTP,
+        CASE WHEN CHARINDEX('sp_OACreate', m.definition) > 0 OR CHARINDEX('sp_OAMethod', m.definition) > 0 THEN 'Y' ELSE '' END AS OLEAutomation,
+        CASE WHEN CHARINDEX('xp_cmdshell', m.definition) > 0 THEN 'Y' ELSE '' END AS CmdShell,
+        CASE WHEN CHARINDEX('OPENROWSET', m.definition) > 0 THEN 'Y' ELSE '' END AS OpenRowset,
+        CASE WHEN CHARINDEX('OPENQUERY', m.definition) > 0 THEN 'Y' ELSE '' END AS OpenQuery,
+        CASE WHEN CHARINDEX('http://', m.definition) > 0 OR CHARINDEX('https://', m.definition) > 0 THEN 'Y' ELSE '' END AS LiteralURL,
+        CASE WHEN CHARINDEX('[AMSERVER-V9]', m.definition) > 0 THEN 'Y' ELSE '' END AS UsesAMServerV9,
+        CASE WHEN CHARINDEX('[WEBSTORE]', m.definition) > 0 THEN 'Y' ELSE '' END AS UsesWebstore,
+        CASE WHEN CHARINDEX('sp_send_dbmail', m.definition) > 0 THEN 'Y' ELSE '' END AS SendsDBMail,
+        CASE WHEN CHARINDEX('BULK INSERT', m.definition) > 0 THEN 'Y' ELSE '' END AS BulkInsert
+    FROM sys.sql_modules m
+    JOIN sys.objects o ON m.object_id = o.object_id
+    WHERE o.is_ms_shipped = 0
+      AND (
+            CHARINDEX('sp_ws_HTTP', m.definition) > 0
+         OR CHARINDEX('sp_OACreate', m.definition) > 0
+         OR CHARINDEX('sp_OAMethod', m.definition) > 0
+         OR CHARINDEX('xp_cmdshell', m.definition) > 0
+         OR CHARINDEX('http://', m.definition) > 0
+         OR CHARINDEX('https://', m.definition) > 0
+         OR CHARINDEX('OPENROWSET', m.definition) > 0
+         OR CHARINDEX('OPENQUERY', m.definition) > 0
+         OR CHARINDEX('[AMSERVER-V9]', m.definition) > 0
+         OR CHARINDEX('[WEBSTORE]', m.definition) > 0
+         OR CHARINDEX('sp_send_dbmail', m.definition) > 0
+         OR CHARINDEX('BULK INSERT', m.definition) > 0
+      )
+    ORDER BY o.name;
+END
+GO
+
+PRINT '';
+PRINT '=== sp_ws_HTTP SOURCE (the HTTP helper many procs call) ===';
+IF DB_ID('amanniquelive') IS NOT NULL
+BEGIN
+    USE amanniquelive;
+    IF OBJECT_ID('dbo.sp_ws_HTTP') IS NOT NULL
+        SELECT OBJECT_DEFINITION(OBJECT_ID('dbo.sp_ws_HTTP')) AS sp_ws_HTTP_Source;
+    ELSE PRINT '(sp_ws_HTTP not found)';
+END
+GO
+
+PRINT '';
+PRINT '=== SERVICE BROKER STATE PER DATABASE ===';
+SELECT name, is_broker_enabled, service_broker_guid, log_reuse_wait_desc
+FROM sys.databases
+WHERE database_id > 4
+ORDER BY name;
+GO
+
+PRINT '';
+PRINT '=== SERVICE BROKER QUEUES / SERVICES / ROUTES (amanniquelive) ===';
+IF DB_ID('amanniquelive') IS NOT NULL
+BEGIN
+    USE amanniquelive;
+    SELECT 'Queue' AS ObjType, name, activation_procedure AS Detail FROM sys.service_queues WHERE is_ms_shipped = 0
+    UNION ALL SELECT 'Service', name, CAST(broker_instance_identifier AS VARCHAR(50)) FROM sys.services WHERE is_ms_shipped = 0
+    UNION ALL SELECT 'Route', name, address FROM sys.routes WHERE is_ms_shipped = 0;
+END
+GO
+
+PRINT '';
+PRINT '=== CURRENTLY CONNECTED SQL SESSIONS (non-system) ===';
+SELECT TOP 100
+    session_id,
+    login_name,
+    host_name,
+    program_name,
+    client_interface_name,
+    login_time,
+    last_request_start_time,
+    CAST(host_process_id AS VARCHAR(20)) AS ClientPID
+FROM sys.dm_exec_sessions
+WHERE is_user_process = 1
+ORDER BY login_time DESC;
+GO
+
+PRINT '';
+PRINT '=== DISTINCT LOGIN / HOST / PROGRAM COMBINATIONS CONNECTING TO THIS SQL ===';
+SELECT DISTINCT login_name, host_name, program_name, client_interface_name
+FROM sys.dm_exec_sessions
+WHERE is_user_process = 1
+ORDER BY login_name, host_name, program_name;
+GO
+
+PRINT '';
+PRINT '=== RECENT QUERIES REFERENCING LINKED SERVERS (plan cache) ===';
+SELECT TOP 30
+    qs.execution_count,
+    qs.last_execution_time,
+    qs.creation_time,
+    LEFT(st.text, 500) AS QueryTextPreview
+FROM sys.dm_exec_query_stats qs
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) st
+WHERE st.text LIKE '%AMSERVER-V9%' OR st.text LIKE '%WEBSTORE%' OR st.text LIKE '%OPENQUERY%' OR st.text LIKE '%OPENROWSET%'
+ORDER BY qs.last_execution_time DESC;
+GO
+
+PRINT '';
+PRINT '=== CURRENT DATABASE CONNECTIONS COUNT PER DATABASE ===';
+SELECT DB_NAME(database_id) AS DatabaseName, COUNT(*) AS ConnectionCount
+FROM sys.dm_exec_sessions
+WHERE is_user_process = 1 AND database_id > 0
+GROUP BY database_id
+ORDER BY ConnectionCount DESC;
+GO
 '@
 
 Set-Content -Path $sqlFile -Value $sqlScript -Encoding ASCII
@@ -635,6 +846,239 @@ Write-Block 'System DSNs (32-bit / WOW6432)' {
                 Driver   = $props.Driver
             }
         } | Format-Table -AutoSize
+}
+
+# =============================================================================
+# 12. HOSTS FILE (DNS overrides — critical for linked-server hostname resolution)
+# =============================================================================
+Write-Section '12. Hosts file (DNS overrides)'
+
+$hostsPath = 'C:\Windows\System32\drivers\etc\hosts'
+if (Test-Path $hostsPath) {
+    Write-Heading 'Full hosts file'
+    Get-Content $hostsPath | ForEach-Object { Write-Line $_ }
+
+    Write-Heading 'Non-comment entries (the actual overrides)'
+    Get-Content $hostsPath | Where-Object { $_ -match '^\s*[^#\s]' -and $_ -match '\S+\s+\S+' } | ForEach-Object { Write-Line $_ }
+
+    Write-Heading 'Entries mentioning AMSERVER, annique, or v9'
+    Get-Content $hostsPath | Where-Object { $_ -match '(?i)amserver|annique|v9' } | ForEach-Object { Write-Line $_ }
+}
+
+Write-Block 'Active DNS resolution: common Annique hostnames (from this box)' {
+    $hosts = @('AMSERVER-v9', 'away1.annique.com', 'away2.annique.com', 'nopintegration.annique.com', 'anniquestore.co.za', 'shopapi.annique.com', 'annique.com', 'ITREPORT-SERVER', 'andc.annique.local')
+    foreach ($h in $hosts) {
+        $result = nslookup $h 2>&1 | Out-String
+        "=== $h ==="
+        $result.TrimEnd()
+        ''
+    }
+}
+
+# =============================================================================
+# 13. SMB SHARES
+# =============================================================================
+Write-Section '13. SMB shares'
+
+Write-Block 'net share (all shares)' { net share 2>&1 }
+Write-Block 'Share permissions (Win32_LogicalShareSecuritySetting)' {
+    Get-WmiObject Win32_Share -ErrorAction SilentlyContinue |
+        Where-Object { $_.Type -eq 0 } |
+        Select-Object Name, Path, Description, AllowMaximum |
+        Format-Table -AutoSize
+}
+
+# =============================================================================
+# 14. WINDOWS FIREWALL RULES (inbound surface)
+# =============================================================================
+Write-Section '14. Windows Firewall rules'
+
+Write-Block 'All firewall rules (verbose)' {
+    # netsh works back to Vista / 2008, unlike Get-NetFirewallRule which is 2012+
+    netsh advfirewall firewall show rule name=all verbose 2>&1
+}
+
+# =============================================================================
+# 15. COM+ REGISTERED APPLICATIONS (NISource pattern, other VFP integrations)
+# =============================================================================
+Write-Section '15. COM+ registered applications'
+
+Write-Block 'COM+ Applications' {
+    try {
+        $admin = New-Object -ComObject 'COMAdmin.COMAdminCatalog'
+        $apps = $admin.GetCollection('Applications')
+        $apps.Populate()
+        foreach ($app in $apps) {
+            $name = $app.Value('Name')
+            $id = $app.Value('ID')
+            $identity = $app.Value('Identity')
+            $activation = $app.Value('Activation')
+            Write-Host "  $name [$id] identity=$identity activation=$activation"
+            "  Name: $name"
+            "    ID       : $id"
+            "    Identity : $identity"
+            "    Activation: $activation"
+            # Enumerate components inside the application
+            try {
+                $comps = $admin.GetCollection('Components', $id)
+                $comps.Populate()
+                foreach ($c in $comps) {
+                    "      Component: $($c.Value('DisplayName')) (CLSID $($c.Value('CLSID')))  ProgId=$($c.Value('ProgID'))"
+                }
+            } catch {
+                "      (could not enumerate components: $($_.Exception.Message))"
+            }
+        }
+    } catch {
+        "ERROR: $($_.Exception.Message)"
+    }
+}
+
+# =============================================================================
+# 16. WMI EVENT SUBSCRIPTIONS + LEGACY AT-JOBS (silent scheduled integrations)
+# =============================================================================
+Write-Section '16. WMI event subscriptions and legacy at-jobs'
+
+Write-Block 'WMI permanent event filters (root\subscription)' {
+    Get-WmiObject -Namespace 'root\subscription' -Class __EventFilter -ErrorAction SilentlyContinue |
+        Select-Object Name, Query, QueryLanguage |
+        Format-List
+}
+Write-Block 'WMI permanent event consumers (root\subscription)' {
+    Get-WmiObject -Namespace 'root\subscription' -Class __EventConsumer -ErrorAction SilentlyContinue |
+        Select-Object Name, CommandLineTemplate, ExecutablePath |
+        Format-List
+}
+Write-Block 'WMI FilterToConsumerBindings (root\subscription)' {
+    Get-WmiObject -Namespace 'root\subscription' -Class __FilterToConsumerBinding -ErrorAction SilentlyContinue |
+        Select-Object Consumer, Filter |
+        Format-List
+}
+Write-Block 'Legacy at-jobs (Win32_ScheduledJob)' {
+    Get-WmiObject Win32_ScheduledJob -ErrorAction SilentlyContinue |
+        Select-Object JobId, Command, RunRepeatedly, StartTime |
+        Format-List
+}
+
+# =============================================================================
+# 17. FULL PROCESS LIST WITH COMMAND LINES
+# =============================================================================
+Write-Section '17. Process list with command lines'
+
+Write-Block 'All processes with executable path and command line' {
+    Get-WmiObject Win32_Process -ErrorAction SilentlyContinue |
+        Sort-Object Name |
+        Select-Object @{n='PID';e={$_.ProcessId}}, Name, @{n='ParentPID';e={$_.ParentProcessId}}, @{n='CmdLine';e={$_.CommandLine}} |
+        Format-Table -AutoSize -Wrap
+}
+
+# =============================================================================
+# 18. NETSTAT SNAPSHOTS (sampled 3x over 30s — catches periodic connections)
+# =============================================================================
+Write-Section '18. Netstat snapshots (periodic sampling)'
+
+for ($i = 1; $i -le 3; $i++) {
+    Write-Heading "Snapshot $i (established connections) at $(Get-Date -Format 'HH:mm:ss')"
+    try {
+        $ns = netstat -ano -p TCP 2>&1 | Select-String 'ESTABLISHED' | Out-String
+        if ($ns -and $ns.Trim() -ne '') {
+            Write-Line $ns.TrimEnd()
+        } else {
+            Write-Line '(no established TCP connections observed)'
+        }
+    } catch {
+        Write-Line "ERROR: $($_.Exception.Message)"
+    }
+    if ($i -lt 3) {
+        Write-Host "  waiting 10s for next snapshot..." -ForegroundColor DarkGray
+        Start-Sleep -Seconds 10
+    }
+}
+
+# =============================================================================
+# 19. IIS LOG VOLUME SUMMARY (is IIS actually serving traffic?)
+# =============================================================================
+Write-Section '19. IIS log volume summary'
+
+$iisLogPath = 'C:\inetpub\logs\LogFiles'
+if (Test-Path $iisLogPath) {
+    Write-Block 'IIS log sites and their most recent log files' {
+        Get-ChildItem $iisLogPath -ErrorAction SilentlyContinue |
+            Where-Object { $_.PSIsContainer } |
+            ForEach-Object {
+                $site = $_.Name
+                $latest = Get-ChildItem $_.FullName -Filter '*.log' -ErrorAction SilentlyContinue |
+                          Sort-Object LastWriteTime -Descending |
+                          Select-Object -First 3
+                foreach ($log in $latest) {
+                    [PSCustomObject]@{
+                        Site = $site
+                        LogFile = $log.Name
+                        SizeKB = [math]::Round($log.Length / 1KB, 1)
+                        LastWrite = $log.LastWriteTime
+                    }
+                }
+            } |
+            Format-Table -AutoSize
+    }
+
+    Write-Block 'IIS log total disk usage per site' {
+        Get-ChildItem $iisLogPath -ErrorAction SilentlyContinue |
+            Where-Object { $_.PSIsContainer } |
+            ForEach-Object {
+                $site = $_.Name
+                $total = (Get-ChildItem $_.FullName -Recurse -ErrorAction SilentlyContinue |
+                          Measure-Object -Property Length -Sum).Sum
+                [PSCustomObject]@{
+                    Site = $site
+                    TotalMB = [math]::Round($total / 1MB, 1)
+                }
+            } |
+            Format-Table -AutoSize
+    }
+
+    Write-Block 'Last 10 lines of the most recent IIS log (any site)' {
+        $latest = Get-ChildItem $iisLogPath -Recurse -Filter '*.log' -ErrorAction SilentlyContinue |
+                  Sort-Object LastWriteTime -Descending |
+                  Select-Object -First 1
+        if ($latest) {
+            "File: $($latest.FullName)"
+            "Last write: $($latest.LastWriteTime)"
+            ''
+            Get-Content $latest.FullName -ErrorAction SilentlyContinue | Select-Object -Last 10
+        } else {
+            '(no IIS log files found)'
+        }
+    }
+} else {
+    Write-Line 'IIS log directory not found — IIS probably not installed or logging disabled'
+}
+
+# =============================================================================
+# 20. FILE WATCHERS AND CONFIGURED INTEGRATION FOLDERS
+# =============================================================================
+Write-Section '20. Integration file-drop folders'
+
+$integrationPaths = @(
+    'C:\Eft', 'C:\Eft\in', 'C:\Eft\out', 'C:\Eft\processed',
+    'C:\Imports', 'C:\Exports', 'C:\Inbox', 'C:\Outbox',
+    'C:\FTP', 'C:\Files',
+    'D:\Eft', 'D:\Imports', 'D:\Exports',
+    'E:\Eft', 'E:\Imports', 'E:\Exports',
+    'C:\AMW\export', 'C:\AMW\import',
+    'C:\amsql\export', 'C:\amsql\import',
+    'C:\AnniqueFiles', 'C:\AnniqueData'
+)
+foreach ($p in $integrationPaths) {
+    if (Test-Path $p) {
+        Write-Heading "Folder: $p"
+        Get-ChildItem $p -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 20 |
+            Select-Object Mode, LastWriteTime, Length, Name |
+            Format-Table -AutoSize |
+            Out-String | ForEach-Object { Write-Line $_ }
+    }
 }
 
 # =============================================================================
