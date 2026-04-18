@@ -86,12 +86,47 @@ audit trail.
    ```
 
 7. **Review the output file** in Notepad. Check section 10 for any config
-   files with passwords you'd prefer to redact.
+   files with passwords you'd prefer to redact. **Note:** if you edit the
+   file, the integrity check below will flag the edit. This is by design —
+   Dieselbrook is not trying to stop you from redacting, we just want to know
+   that something was changed so we can ask what was redacted and why.
 
-8. **Send the file to Dieselbrook**:
+8. **Send the files to Dieselbrook**. The script produces two files:
+   - `Annique_AM_Discovery_<timestamp>.txt` — the main report
+   - `Annique_AM_Discovery_<timestamp>.txt.sha256` — a small text file with
+     the tamper-evidence hash
+
+   Please send **both** files:
    - Email to: `developer@pvm.co.za`
    - Or: attach to the Linear issue ANN-24, or to the shared Notion page
    - Or: any other channel that works for Annique
+
+   **Also helpful:** when the script finishes, it prints a SHA-256 hash to the
+   PowerShell window in a highlighted block. Copy that hash into the body of
+   your email (even though it's also inside the files). This gives us a
+   third, independent channel to confirm the file is the one you actually
+   generated.
+
+## Tamper-evidence (the SHA-256 hash)
+
+The script computes a SHA-256 hash over the report content and records it in
+three places:
+
+1. As a **signature block at the end of the `.txt` file itself**, following a
+   clearly marked line (`===== DIESELBROOK TAMPER-EVIDENCE SIGNATURE ... =====`).
+   The block includes the exact rule for recomputing the hash.
+2. In a **sidecar file** named `Annique_AM_Discovery_<timestamp>.txt.sha256`.
+3. **Printed to the PowerShell console** when the script finishes.
+
+Dieselbrook will verify the file on receipt. If the hash in the signature
+block matches the hash recomputed from the file content, the report is
+guaranteed to be exactly what your server produced. If they disagree, the
+file was modified after generation — in which case we'll come back and ask
+what changed and why, and we may ask you to re-run the script.
+
+**This is transparency, not a restriction.** You are always free to redact
+information you cannot share; the script does not try to prevent that. We
+just want an audit trail.
 
 ## Expected output
 
