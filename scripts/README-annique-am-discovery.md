@@ -3,23 +3,34 @@
 ## Purpose
 
 This PowerShell script captures a complete read-only inventory of the AM server
-(hardware, OS, SQL Server, databases, installed software, network configuration)
-into a single text file. Dieselbrook needs this information to plan the AM Azure
-migration and the DBM integration, without needing RDP or admin access to the
-production server.
+(hardware, OS, SQL Server, databases, installed software, network configuration,
+integration endpoints) into a single text file. Dieselbrook needs this
+information to plan the AM Azure migration and the DBM integration.
 
-## Safety statement — this script is READ-ONLY
+## Authorisation
+
+Dieselbrook has been engaged by Annique to plan and execute the AM migration
+and build the DBM integration. Annique's CEO has authorised Dieselbrook to
+have full access to all information needed to do this work — including, but
+not limited to, server configuration, SQL Server schema and stored procedure
+source, database connection strings, integration endpoint configuration, and
+credentials stored in application config files. This script collects exactly
+that information and nothing beyond it.
+
+If anything in the script appears outside the scope you were expecting, please
+raise it with Dieselbrook **before running the script**, not after. Do not
+modify the output file. See the tamper-evidence section below.
+
+## Safety statement — this script is READ-ONLY on your system
 
 The script:
 
-- **Does NOT modify any files**, databases, registry keys, or services
+- **Does NOT modify any files**, databases, registry keys, or services on
+  the target server
 - **Does NOT install anything**
 - **Does NOT change any configuration**
-- **Does NOT send any data over the network** — it only writes a text file to
-  `C:\Temp\` which you can review and forward to Dieselbrook at your discretion
-- **Does NOT capture live/production data** — only metadata (schema names, row
-  counts, table definitions, config file contents that are already in plaintext
-  on disk)
+- **Does NOT send any data over the network** — it only writes output files to
+  `C:\Temp\` on the server. You manually send those files to Dieselbrook.
 
 The script only issues `SELECT` statements against SQL Server (no `INSERT`,
 `UPDATE`, `DELETE`, `DROP`, `CREATE`, `ALTER`). You can review the entire
@@ -73,19 +84,24 @@ The script only issues `SELECT` statements against SQL Server (no `INSERT`,
     dormant?)
 20. **Integration file-drop folders** (EFT, imports, exports, inbox/outbox)
 
-## A note on sensitive data
+## Do not modify the output file
 
-The application config files in section 10 (e.g. `C:\CompPLan\Compplan.ini`)
-may contain plaintext SQL passwords. These passwords are already stored on disk
-in cleartext — this script does not expose anything that is not already
-accessible to anyone with local access to the server. However, before sending
-the output file to Dieselbrook, please **open it in a text editor and review
-section 10**. If you want to redact specific passwords, do so before sending.
+**The output file must be sent exactly as generated.** The script writes a
+SHA-256 hash signature into the file (and a sidecar `.sha256` file) so that
+Dieselbrook can verify on receipt that nothing has been added, removed, or
+changed since generation. If the hash does not verify, Dieselbrook will reject
+the file and ask Annique to re-run the script and send a fresh copy.
 
-We (Dieselbrook) already know the historic `sa` password `AnniQu3S@` from the
-VFP application source code, so the contents of these files are unlikely to
-reveal anything new — but the review step is still important for your own
-audit trail.
+This is not a technical barrier to editing — you can open the file in any
+text editor. It is an audit-trail requirement. A partial or edited report is
+not useful to us: we cannot know whether what is missing is sensitive
+information (which we are authorised to have anyway) or the exact integration
+detail that determines whether the migration plan works.
+
+If you have concerns about specific information the script captures
+(credentials, internal endpoints, etc.), raise them with Dieselbrook
+**before running the script**, not by editing the output afterwards. We will
+either confirm the authorisation, or agree an adjustment to the script.
 
 ## How to run
 
@@ -116,11 +132,9 @@ audit trail.
    C:\Temp\Annique_AM_Discovery_20260420_143022.txt
    ```
 
-7. **Review the output file** in Notepad. Check section 10 for any config
-   files with passwords you'd prefer to redact. **Note:** if you edit the
-   file, the integrity check below will flag the edit. This is by design —
-   Dieselbrook is not trying to stop you from redacting, we just want to know
-   that something was changed so we can ask what was redacted and why.
+7. **Do not edit the output file.** Open it in Notepad if you want to look
+   through it, but send it exactly as generated — see the "Do not modify
+   the output file" section above.
 
 8. **Send the files to Dieselbrook**. The script produces two files:
    - `Annique_AM_Discovery_<timestamp>.txt` — the main report
@@ -149,15 +163,17 @@ three places:
 2. In a **sidecar file** named `Annique_AM_Discovery_<timestamp>.txt.sha256`.
 3. **Printed to the PowerShell console** when the script finishes.
 
-Dieselbrook will verify the file on receipt. If the hash in the signature
+Dieselbrook verifies the file on receipt. If the hash in the signature
 block matches the hash recomputed from the file content, the report is
 guaranteed to be exactly what your server produced. If they disagree, the
-file was modified after generation — in which case we'll come back and ask
-what changed and why, and we may ask you to re-run the script.
+file will be **rejected** and we will ask Annique to re-run the script and
+send the fresh output, untouched.
 
-**This is transparency, not a restriction.** You are always free to redact
-information you cannot share; the script does not try to prevent that. We
-just want an audit trail.
+This is a straightforward audit-trail requirement: we need to know the
+content we are analysing is the content the server actually produced. A
+file that has been partially edited — for any reason — cannot be used as
+the basis for migration planning, because we have no way to know whether
+what was removed was incidental or exactly the integration detail we need.
 
 ## Expected output
 
