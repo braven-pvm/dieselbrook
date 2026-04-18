@@ -70,11 +70,11 @@ function Write-Heading($text) {
     Write-Line ''
     Write-Line "--- $text ---"
 }
-function Capture-Block($label, $block) {
+function Write-Block($label, $block) {
     Write-Heading $label
     try {
         $result = & $block 2>&1 | Out-String
-        if ([string]::IsNullOrWhiteSpace($result)) {
+        if ($null -eq $result -or ($result -replace '\s','') -eq '') {
             Write-Line '(no output)'
         } else {
             Write-Line $result.TrimEnd()
@@ -109,25 +109,25 @@ Write-Host ''
 # =============================================================================
 Write-Section '1. Host profile'
 
-Capture-Block 'Operating System' {
+Write-Block 'Operating System' {
     Get-WmiObject Win32_OperatingSystem |
         Select-Object Caption, Version, BuildNumber, OSArchitecture, InstallDate, LastBootUpTime, FreePhysicalMemory, TotalVirtualMemorySize |
         Format-List
 }
 
-Capture-Block 'Computer and Memory' {
+Write-Block 'Computer and Memory' {
     Get-WmiObject Win32_ComputerSystem |
         Select-Object Manufacturer, Model, TotalPhysicalMemory, NumberOfProcessors, NumberOfLogicalProcessors, Domain, DnsHostName, DomainRole |
         Format-List
 }
 
-Capture-Block 'CPU' {
+Write-Block 'CPU' {
     Get-WmiObject Win32_Processor |
         Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed, L2CacheSize, SocketDesignation |
         Format-List
 }
 
-Capture-Block 'Disks (local drives)' {
+Write-Block 'Disks (local drives)' {
     Get-WmiObject Win32_LogicalDisk -Filter 'DriveType=3' |
         Select-Object DeviceID, VolumeName, FileSystem,
             @{n='SizeGB';e={[math]::Round($_.Size/1GB,1)}},
@@ -136,7 +136,7 @@ Capture-Block 'Disks (local drives)' {
         Format-Table -AutoSize
 }
 
-Capture-Block 'PowerShell version' {
+Write-Block 'PowerShell version' {
     $PSVersionTable | Format-List
 }
 
@@ -145,40 +145,40 @@ Capture-Block 'PowerShell version' {
 # =============================================================================
 Write-Section '2. Networking'
 
-Capture-Block 'IP configuration' {
+Write-Block 'IP configuration' {
     Get-WmiObject Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True' |
         Select-Object Description, MACAddress, IPAddress, IPSubnet, DefaultIPGateway, DNSServerSearchOrder, DHCPEnabled, DNSDomainSuffixSearchOrder |
         Format-List
 }
 
-Capture-Block 'IPv4 routing table' { route print -4 }
-Capture-Block 'DNS cache (recent)' { ipconfig /displaydns 2>&1 | Select-Object -First 80 }
-Capture-Block 'Listening TCP ports' { netstat -ano -p TCP | Select-String 'LISTENING' }
-Capture-Block 'Active outbound connections' { netstat -ano -p TCP | Select-String 'ESTABLISHED' }
-Capture-Block 'Listening UDP ports (top 20)' { netstat -ano -p UDP | Select-Object -First 20 }
-Capture-Block 'Windows Firewall profile state' { netsh advfirewall show allprofiles state }
+Write-Block 'IPv4 routing table' { route print -4 }
+Write-Block 'DNS cache (recent)' { ipconfig /displaydns 2>&1 | Select-Object -First 80 }
+Write-Block 'Listening TCP ports' { netstat -ano -p TCP | Select-String 'LISTENING' }
+Write-Block 'Active outbound connections' { netstat -ano -p TCP | Select-String 'ESTABLISHED' }
+Write-Block 'Listening UDP ports (top 20)' { netstat -ano -p UDP | Select-Object -First 20 }
+Write-Block 'Windows Firewall profile state' { netsh advfirewall show allprofiles state }
 
 # =============================================================================
 # 3. USERS AND SESSIONS
 # =============================================================================
 Write-Section '3. Users and sessions'
 
-Capture-Block 'Local Administrators group' { net localgroup Administrators }
-Capture-Block 'Remote Desktop Users group' { net localgroup 'Remote Desktop Users' }
-Capture-Block 'Local user accounts' {
+Write-Block 'Local Administrators group' { net localgroup Administrators }
+Write-Block 'Remote Desktop Users group' { net localgroup 'Remote Desktop Users' }
+Write-Block 'Local user accounts' {
     Get-WmiObject Win32_UserAccount -Filter 'LocalAccount=True' |
         Select-Object Name, FullName, Disabled, Lockout, PasswordChangeable, PasswordExpires |
         Format-Table -AutoSize
 }
-Capture-Block 'Current sessions (query user)' { query user 2>&1 }
-Capture-Block 'Current sessions (query session)' { query session 2>&1 }
+Write-Block 'Current sessions (query user)' { query user 2>&1 }
+Write-Block 'Current sessions (query session)' { query session 2>&1 }
 
 # =============================================================================
 # 4. SERVICES AND SCHEDULED TASKS
 # =============================================================================
 Write-Section '4. Services and scheduled tasks'
 
-Capture-Block 'Running services' {
+Write-Block 'Running services' {
     Get-WmiObject Win32_Service |
         Where-Object { $_.State -eq 'Running' } |
         Select-Object Name, DisplayName, StartMode, StartName, PathName |
@@ -186,7 +186,7 @@ Capture-Block 'Running services' {
         Format-Table -AutoSize -Wrap
 }
 
-Capture-Block 'Services set to Auto start (regardless of current state)' {
+Write-Block 'Services set to Auto start (regardless of current state)' {
     Get-WmiObject Win32_Service |
         Where-Object { $_.StartMode -eq 'Auto' } |
         Select-Object Name, DisplayName, State, StartName |
@@ -194,7 +194,7 @@ Capture-Block 'Services set to Auto start (regardless of current state)' {
         Format-Table -AutoSize -Wrap
 }
 
-Capture-Block 'Scheduled tasks (summary)' {
+Write-Block 'Scheduled tasks (summary)' {
     schtasks /query /fo LIST /v 2>&1 |
         Select-String 'TaskName:|Task To Run:|Run As User:|Last Run Time:|Next Run Time:|Schedule Type:|Status:' |
         Out-String
@@ -205,7 +205,7 @@ Capture-Block 'Scheduled tasks (summary)' {
 # =============================================================================
 Write-Section '5. Installed software'
 
-Capture-Block 'Installed programs (Windows uninstall registry)' {
+Write-Block 'Installed programs (Windows uninstall registry)' {
     $keys = @(
         'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
         'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
@@ -551,14 +551,28 @@ Set-Content -Path $sqlFile -Value $sqlScript -Encoding ASCII
 
 Write-Heading 'SQL discovery output'
 try {
-    & $sqlcmd -S localhost -E -i $sqlFile -y 0 -W -o $sqlOutFile 2>&1 | Out-Null
+    # -y 0 = unlimited column display width (needed for long proc source output)
+    # Note: -y and -W are mutually exclusive in newer sqlcmd, so we use only -y
+    $sqlStderrFile = "$OutputDir\_dbm_discovery_stderr_$Timestamp.txt"
+    & $sqlcmd -S localhost -E -i $sqlFile -y 0 -o $sqlOutFile 2>$sqlStderrFile
+    $sqlExit = $LASTEXITCODE
+    Write-Line "sqlcmd exit code: $sqlExit"
     if (Test-Path $sqlOutFile) {
+        Write-Line '--- sqlcmd stdout ---'
         Get-Content $sqlOutFile | ForEach-Object { Write-Line $_ }
     } else {
         Write-Line '(sqlcmd produced no output file)'
     }
+    if (Test-Path $sqlStderrFile) {
+        $stderrContent = Get-Content $sqlStderrFile -ErrorAction SilentlyContinue
+        if ($stderrContent) {
+            Write-Line '--- sqlcmd stderr ---'
+            $stderrContent | ForEach-Object { Write-Line $_ }
+        }
+        Remove-Item $sqlStderrFile -Force -ErrorAction SilentlyContinue
+    }
 } catch {
-    Write-Line "sqlcmd failed: $($_.Exception.Message)"
+    Write-Line "sqlcmd failed to launch: $($_.Exception.Message)"
     Write-Line 'If this machine is not a SQL Server, or if the account running this script'
     Write-Line 'is not a SQL sysadmin, this section may be empty. That is expected.'
 }
@@ -597,7 +611,7 @@ foreach ($cfg in $configFiles) {
 # =============================================================================
 Write-Section '11. ODBC DSNs'
 
-Capture-Block 'System DSNs (64-bit)' {
+Write-Block 'System DSNs (64-bit)' {
     Get-ChildItem 'HKLM:\SOFTWARE\ODBC\ODBC.INI' -ErrorAction SilentlyContinue |
         ForEach-Object {
             $props = Get-ItemProperty $_.PSPath -ErrorAction SilentlyContinue
@@ -610,7 +624,7 @@ Capture-Block 'System DSNs (64-bit)' {
         } | Format-Table -AutoSize
 }
 
-Capture-Block 'System DSNs (32-bit / WOW6432)' {
+Write-Block 'System DSNs (32-bit / WOW6432)' {
     Get-ChildItem 'HKLM:\SOFTWARE\WOW6432Node\ODBC\ODBC.INI' -ErrorAction SilentlyContinue |
         ForEach-Object {
             $props = Get-ItemProperty $_.PSPath -ErrorAction SilentlyContinue
@@ -633,50 +647,53 @@ Write-Line "Please send this file to Dieselbrook: developer@pvm.co.za"
 # -----------------------------------------------------------------------------
 # TAMPER-EVIDENCE SIGNATURE
 # -----------------------------------------------------------------------------
-# Compute SHA-256 of the full output file as it stands now (before the signature
-# block below is added). The signature block marker lets a verifier know
-# exactly which bytes to hash to reproduce this value.
+# We use an explicit end-of-content marker that is INCLUDED in the hash scope.
+# This avoids ambiguity about trailing whitespace / newlines.
 #
 # To verify:
-#   (a) Read the file as bytes
-#   (b) Truncate at the first occurrence of the marker line:
-#         "===== DIESELBROOK TAMPER-EVIDENCE SIGNATURE (do not edit above) ====="
-#   (c) Compute SHA-256 over those bytes
-#   (d) Compare to the "SHA-256" value in the signature block below
-# If the values match, the content above the marker is unchanged since
+#   (a) Read the file as raw bytes
+#   (b) Find the line starting with '<<<DIESELBROOK-HASHED-CONTENT-ENDS-HERE>>>'
+#       - the scope is: start of file through the end of that line INCLUDING
+#         its line-ending bytes (CR and/or LF)
+#   (c) Compute SHA-256 over exactly that byte range
+#   (d) Compare to the "SHA-256" value in the signature block following the
+#       end-of-content marker
+# If the values match, the hashed range is byte-for-byte unchanged since
 # generation.
 # -----------------------------------------------------------------------------
 
-function Compute-Sha256OfFile($path) {
-    $sha = New-Object System.Security.Cryptography.SHA256Managed
-    try {
-        $bytes = [System.IO.File]::ReadAllBytes($path)
-        $hash  = $sha.ComputeHash($bytes)
-        return ([BitConverter]::ToString($hash)).Replace('-', '').ToLower()
-    } finally {
-        $sha.Dispose()
-    }
+function Get-Sha256OfFile($path) {
+    $sha   = New-Object System.Security.Cryptography.SHA256Managed
+    $bytes = [System.IO.File]::ReadAllBytes($path)
+    $hash  = $sha.ComputeHash($bytes)
+    return ([BitConverter]::ToString($hash)).Replace('-', '').ToLower()
 }
 
-$contentHash = Compute-Sha256OfFile $OutputFile
-$sigMarker   = '===== DIESELBROOK TAMPER-EVIDENCE SIGNATURE (do not edit above) ====='
-
-# Append the signature block (this changes the file, but the hash captured
-# above is of the content BEFORE this append, so verification still works).
+# Write the end-of-content marker as part of the hashed range.
+# Note: Out-File on PowerShell 2.0 / Windows defaults to CRLF line endings.
 Write-Line ''
-Write-Line $sigMarker
+Write-Line '<<<DIESELBROOK-HASHED-CONTENT-ENDS-HERE>>>'
+
+# Compute hash of the file as it now stands - this includes the end marker.
+$contentHash = Get-Sha256OfFile $OutputFile
+
+# Append the signature block AFTER the hash is computed.
+# The signature block is NOT part of the hashed range.
+Write-Line ''
+Write-Line '===== DIESELBROOK TAMPER-EVIDENCE SIGNATURE ====='
 Write-Line "Generated        : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')"
 Write-Line "Script version   : 1.0"
 Write-Line "Host             : $env:COMPUTERNAME"
 Write-Line "Generated by     : $env:USERDOMAIN\$env:USERNAME"
 Write-Line "Algorithm        : SHA-256"
-Write-Line "Scope            : all bytes of this file strictly BEFORE the marker line above"
+Write-Line "Scope            : all bytes from start of file through (and including) the line"
+Write-Line "                   '<<<DIESELBROOK-HASHED-CONTENT-ENDS-HERE>>>' and its terminator"
 Write-Line "SHA-256          : $contentHash"
-Write-Line '================================================================'
+Write-Line '================================================================='
 Write-Line ''
-Write-Line 'If the content above the marker has been edited after generation,'
-Write-Line 'recomputing SHA-256 over the pre-marker bytes will NOT match the value'
-Write-Line 'recorded here. The same hash is also written to a sidecar file (.sha256)'
+Write-Line 'If any byte in the hashed range has been altered since generation,'
+Write-Line 'recomputing SHA-256 over the same byte range will NOT match the value'
+Write-Line 'above. The same hash is also written to a sidecar file (.sha256)'
 Write-Line 'and printed to the PowerShell console at the end of the run.'
 
 # Write the sidecar .sha256 file
